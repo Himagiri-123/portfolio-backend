@@ -1,97 +1,117 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+// --- Typing Animation Logic ---
+const words = ["MERN Stack Developer", "Photographer", "Video Editor"];
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
 
-const app = express();
+function type() {
+    const textElement = document.getElementById("typing-text");
+    if (!textElement) return;
 
-// --- STEP 1: Port Configuration for Deployment ---
-// Render సర్వర్ ఆటోమేటిక్ గా ఒక Port ఇస్తుంది (process.env.PORT). 
-// అది లేకపోతే 5000 వాడుకుంటుంది.
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// --- STEP 2: MongoDB Atlas Connection ---
-mongoose.connect('mongodb+srv://himagiri:444624474@cluster0.abquzqx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-.then(() => console.log('✅ MongoDB Connected to Cloud!'))
-.catch(err => console.error('❌ Connection Error:', err));
-
-// --- STEP 3: Updated Schema (Projects వివరాలు కూడా సేవ్ అవ్వాలి) ---
-const MediaSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    url: { type: String, required: true },
-    mediaType: { type: String, required: true },
-    category: { type: String, default: 'General' },
+    const currentWord = words[wordIndex];
     
-    // Projects కోసం కొత్తగా యాడ్ చేసినవి (ఇవి లేకపోతే ప్రాజెక్ట్ వివరాలు సేవ్ కావు)
-    description: { type: String },
-    techStack: { type: String },
-    liveLink: { type: String },
-    repoLink: { type: String },
+    if (isDeleting) {
+        textElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+    } else {
+        textElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+    }
 
-    uploadedAt: { type: Date, default: Date.now }
-});
+    let typeSpeed = isDeleting ? 100 : 200;
 
-const Media = mongoose.model('Media', MediaSchema);
+    if (!isDeleting && charIndex === currentWord.length) {
+        isDeleting = true;
+        typeSpeed = 2000; 
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        typeSpeed = 500;
+    }
+    setTimeout(type, typeSpeed);
+}
 
-// --- STEP 4: Upload Route (Updated) ---
-app.post('/api/upload-media', async (req, res) => {
-    try {
-        console.log("📥 Data Received:", req.body);
+// --- Mobile Menu Toggle ---
+function toggleMenu() {
+    const navLinks = document.getElementById('nav-links');
+    if (navLinks) navLinks.classList.toggle('active');
+}
 
-        // Frontend నుంచి వచ్చే అన్ని వివరాలను తీసుకుంటున్నాం
-        const { title, url, mediaType, category, description, techStack, liveLink, repoLink } = req.body;
+// --- Particles Background Logic ---
+if (document.getElementById('particles-js')) {
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#00d2ff" },
+            "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+            "opacity": { "value": 0.5, "random": false },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#00d2ff", "opacity": 0.4, "width": 1 },
+            "move": { "enable": true, "speed": 4, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
+        },
+        "retina_detect": true
+    });
+}
 
-        if (!title || !url || !mediaType) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
+// --- EmailJS Logic ---
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        const newMedia = new Media({
-            title,
-            url,
-            mediaType,
-            category: category || "Photography",
-            description, // Project Description
-            techStack,   // Project Tech Stack
-            liveLink,    // Project Live Link
-            repoLink     // Project GitHub Link
+    const btn = document.querySelector('.submit-btn-modern');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+
+    const serviceID = "service_6pn7qwl"; 
+    const templateID = "template_wgjs27o";
+    const publicKey = "ziJLHC6Y41VzbXq11";
+
+    emailjs.sendForm(serviceID, templateID, this, publicKey)
+        .then(function() {
+            alert("Message Sent Successfully! 🎉");
+            btn.innerHTML = originalText;
+            document.getElementById('contact-form').reset();
+        }, function(error) {
+            alert("Failed to send message.");
+            btn.innerHTML = originalText;
+            console.log('FAILED...', error); 
         });
-
-        const savedMedia = await newMedia.save();
-        console.log("✅ Saved to Database:", savedMedia);
-
-        res.status(201).json({ message: "Saved Successfully!", data: savedMedia });
-
-    } catch (err) {
-        console.error("❌ Server Error:", err.message);
-        res.status(500).json({ error: err.message });
-    }
 });
 
-// --- STEP 5: Get Route ---
-app.get('/api/get-media', async (req, res) => {
+// --- NEW: Fetch Projects from Live Server (Render) ---
+// ఈ కోడ్ వల్ల మీ వెబ్‌సైట్ ఓపెన్ చేయగానే అడ్మిన్ ప్యానెల్‌లో అప్‌లోడ్ చేసినవి ఇక్కడ కనిపిస్తాయి.
+const API_URL = "https://himagiri-portfolio.onrender.com/api/get-media";
+
+async function loadPortfolioContent() {
+    // మీ HTML లో projects లేదా gallery కి సంబంధించిన ID ఉంటే ఇది పని చేస్తుంది
+    // ఉదాహరణకు: <div id="projects-container"></div>
+    const container = document.getElementById('projects-container'); 
+    if (!container) return; // కంటైనర్ లేకపోతే ఆగిపోతుంది
+
     try {
-        const media = await Media.find().sort({ uploadedAt: -1 });
-        res.json(media);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        
+        container.innerHTML = ''; // పాతవి క్లియర్ చేయడం
+        data.forEach(item => {
+            // ఇక్కడ మీ డిజైన్ ప్రకారం HTML వస్తుంది
+            const card = `
+                <div class="project-card">
+                    <img src="${item.url}" alt="${item.title}">
+                    <h3>${item.title}</h3>
+                </div>`;
+            container.innerHTML += card;
+        });
+    } catch (error) {
+        console.error("Error loading portfolio:", error);
     }
-});
+}
 
-// --- STEP 6: Delete Route ---
-app.delete('/api/delete-media/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Media.findByIdAndDelete(id);
-        res.json({ message: "Deleted Successfully" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// --- STEP 7: Start Server (Updated for Render) ---
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+document.addEventListener("DOMContentLoaded", () => {
+    type();
+    loadPortfolioContent(); // డేటా లోడ్ అవుతుంది
+    console.log("Portfolio Interactions Loaded!");
 });

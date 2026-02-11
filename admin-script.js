@@ -2,6 +2,9 @@
 let currentTab = 'Photography';
 let allMediaData = [];
 
+// --- API URL (Live Render Link) ---
+const API_BASE_URL = "https://himagiri-portfolio.onrender.com";
+
 // --- 1. Login Logic ---
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
@@ -20,15 +23,11 @@ if (loginForm) {
     });
 }
 
-// --- 2. Forgot Password Logic (New Security Question) ---
+// --- 2. Forgot Password Logic ---
 function forgotPassword() {
-    // సెక్యూరిటీ ప్రశ్న అడుగుతుంది
     const answer = prompt("Security Question: What is your childhood nickname?");
-    
-    // యూజర్ ఏమీ టైప్ చేయకపోయినా లేదా క్యాన్సిల్ చేసినా
     if (!answer) return;
 
-    // జవాబు చెక్ చేయడం (Small letters or Capital letters accepted)
     if (answer.toLowerCase() === "raju") {
         alert("Correct Answer! ✅\n\nYour Password is: 444624474\n\nPlease login now.");
     } else {
@@ -70,7 +69,7 @@ if (document.querySelector('.dashboard-container')) {
     navProjects.addEventListener('click', () => switchTab('Projects', 'Manage Projects'));
 }
 
-// --- 4. Upload Logic ---
+// --- 4. Upload Logic (Connected to Live Server) ---
 const uploadForm = document.getElementById('uploadForm');
 if (uploadForm) {
     uploadForm.addEventListener('submit', async (e) => {
@@ -95,6 +94,7 @@ if (uploadForm) {
         formData.append('upload_preset', 'himagiri_preset');
 
         try {
+            // Cloudinary Upload
             const cloudUrl = `https://api.cloudinary.com/v1_1/dlwzq8sbe/${type === 'video' ? 'video' : 'image'}/upload`;
             const response = await fetch(cloudUrl, { method: 'POST', body: formData });
             const data = await response.json();
@@ -114,7 +114,8 @@ if (uploadForm) {
                     payload.repoLink = document.getElementById('projRepo').value;
                 }
 
-                await fetch('http://localhost:5000/api/upload-media', {
+                // Send to Render Server
+                await fetch(`${API_BASE_URL}/api/upload-media`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -123,7 +124,7 @@ if (uploadForm) {
                 alert("Upload Successful! 🎉");
                 submitBtn.innerHTML = originalText;
                 uploadForm.reset();
-                loadAdminPhotos();
+                loadAdminPhotos(); // Refresh Grid
             }
         } catch (err) {
             alert("Upload failed: " + err.message);
@@ -132,16 +133,16 @@ if (uploadForm) {
     });
 }
 
-// --- 5. Fetch & Render ---
+// --- 5. Fetch & Render (From Live Server) ---
 async function loadAdminPhotos() {
     const grid = document.querySelector('.preview-grid');
     if (!grid) return;
 
     try {
-        const response = await fetch('http://localhost:5000/api/get-media');
+        const response = await fetch(`${API_BASE_URL}/api/get-media`);
         allMediaData = await response.json();
         renderGrid();
-    } catch (error) { console.error(error); }
+    } catch (error) { console.error("Error loading data:", error); }
 }
 
 function renderGrid() {
@@ -176,9 +177,10 @@ function renderGrid() {
     });
 }
 
+// --- Delete Function (Live Server) ---
 async function deletePhoto(id) {
     if (confirm("Delete this?")) {
-        await fetch(`http://localhost:5000/api/delete-media/${id}`, { method: 'DELETE' });
+        await fetch(`${API_BASE_URL}/api/delete-media/${id}`, { method: 'DELETE' });
         loadAdminPhotos();
     }
 }
