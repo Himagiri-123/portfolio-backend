@@ -121,3 +121,43 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             console.log('FAILED...', error); 
         });
 });
+
+
+const API_URL = "https://himagiri-portfolio.onrender.com/api/get-media";
+
+async function loadSkillsMedia() {
+    const photoContainer = document.getElementById('skills-photography-container');
+    const videoContainer = document.getElementById('skills-video-container');
+    
+    if (!photoContainer || !videoContainer) return;
+
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        photoContainer.innerHTML = '';
+        videoContainer.innerHTML = '';
+
+        data.forEach(item => {
+            const mediaItem = document.createElement('div');
+            mediaItem.className = 'skill-preview-item';
+
+            if (item.category === 'Photography' && item.mediaType === 'image') {
+                mediaItem.innerHTML = `<img src="${item.url}" alt="${item.title}" title="${item.title}">`;
+                photoContainer.appendChild(mediaItem);
+            } 
+            else if (item.category === 'Videos' || item.mediaType === 'video') {
+                mediaItem.innerHTML = `<video src="${item.url}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>`;
+                videoContainer.appendChild(mediaItem);
+            }
+        });
+    } catch (error) {
+        console.error("Error loading skills media:", error);
+    }
+}
+
+// పేజీ లోడ్ అవ్వగానే రన్ అవుతుంది
+document.addEventListener("DOMContentLoaded", () => {
+    type(); // మీ పాత టైపింగ్ లాజిక్
+    loadSkillsMedia(); // కొత్త స్కిల్స్ మీడియా లాజిక్
+});
