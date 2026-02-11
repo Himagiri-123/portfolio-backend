@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himagiri | MERN Developer & Photographer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+    <a href="#">
+        <i class="fas fa-code logo-icon"></i> HIMA<span class="glow-box">GIRI</span>
+    </a>
+</div>
+            
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
+
+<section id="home" class="hero">
+    <div id="particles-js"></div>
+    <div class="hero-content">
+        <h4 class="fade-in">Hi, I'm</h4>
+        <h1 class="glow-text">HIMAGIRI</h1>
+        <h2 class="typing-container">I am a <span id="typing-text"></span></h2>
+        
+        <p class="hero-description">
+            • Skilled MERN Stack Developer building high-performance web applications.<br>
+            • Passionate Photographer capturing life's finest moments through my lens.<br>
+            • Actively seeking remote IT opportunities to build innovative digital solutions.
+        </p>
+        <div class="hero-btns">
+    <a href="#projects" class="btn-primary">
+        <span>View My Work</span> <i class="fas fa-arrow-right"></i>
+    </a>
+    <a href="#contact" class="btn-secondary">
+        <span>Let's Talk</span> <i class="fas fa-comment-dots"></i>
+    </a>
+</div>
+    </div>
+</section>
+
+    <section id="about" class="container">
+    
+    <div class="about-wrapper">
+        <div class="about-image-col">
+            <img src="images/my-photo.jpg" alt="Himagiri Profile">
+        </div>
+        
+        <div class="about-text-col">
+            <h2 class="main-title" style="text-align: left; margin-bottom: 20px;">
+                About <span class="gradient-text">Me</span>
+            </h2>
+
+            <p>
+                I am a result-oriented <strong>MERN Full Stack Developer</strong> based in Srikakulam, trained at NxtWave. 
+                I specialize in building robust web applications with a focus on clean code and user-friendly designs.
+            </p>
+
+            <p>
+                Beyond lines of code, I am a <strong>creative enthusiast</strong> who enjoys <em>Photography</em> and <em>Video Editing</em> as a hobby. 
+                This artistic perspective helps me visualize better UI designs.
+            </p>
+
+            <p>
+                I am also deeply committed to social service. With over <strong>6+ years of volunteer experience</strong> in NGO activities (Grameena Vikas Sangham), 
+                I have learned the value of empathy, leadership, and community problem-solving.
+            </p>
+
+            <div class="about-details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Role:</span>
+                    <span class="detail-value">MERN Developer</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Education:</span>
+                    <span class="detail-value">B.Sc (MPCS) Graduate</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Social Work:</span>
+                    <span class="detail-value">6+ Years (NGO)</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Availability:</span>
+                    <span class="detail-value">Open to Remote / WFH</span>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+</section>
+
+    <section id="skills" class="container">
+    <div class="section-title">
+        <h2>Technical & Creative <span class="gradient-text">Skills</span></h2>
+    </div>
+    
+    <div class="skills-split-layout">
+        
+        <div class="skills-column left-col">
+            <h3 class="col-title">Technical <span class="highlight">Core</span></h3>
+            
+            <div class="skill-card tech-card frontend-glow">
+                <div class="icon-box"><i class="fab fa-react"></i></div>
+                <div class="card-info">
+                    <h3>Frontend Development</h3>
+                    <p>Expertise in building Static, Responsive, and Dynamic web apps with modern UI.</p>
+                    <a href="frontend-certs.html" class="view-cert">View Certificates</a>
+                </div>
+            </div>
+            
+            <div class="skill-card tech-card backend-glow">
+                <div class="icon-box"><i class="fas fa-server"></i></div>
+                <div class="card-info">
+                    <h3>Backend Development</h3>
+                    <p>Building robust APIs, database schemas, and server-side logic using Node.js & Express.</p>
+                    <a href="backend-certs.html" class="view-cert">View Certificates</a>
+                </div>
+            </div>
+
+            <div class="skill-card industry-card" onclick="window.open('certificates/industry-ready.pdf', '_blank')">
+                <div class="award-glow"><i class="fas fa-award"></i></div>
+                <div class="card-info">
+                    <h3>Industry Ready Developer</h3>
+                    <p>Trained rigorously at NxtWave CCBP 4.0. Built multiple real-world projects and mastered Full Stack technologies.</p>
+                    <span class="view-cert gold-btn">View Certificate</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="skills-column right-col">
+            <h3 class="col-title">Creative <span class="highlight">Vision</span></h3>
+
+            <div class="skill-card photography-card" onclick="window.location.href='photography.html?type=photos'">
+                <div class="icon-box photo-icon"><i class="fas fa-camera"></i></div>
+                <h3>Creative Photography</h3>
+                <p>Capturing life's moments and landscapes as a creative passion.</p>
+                <span class="view-cert">View My Clicks</span>
+            </div>
+            
+            <div class="admin-entry" style="margin: 20px 0;">
+                <a href="admin-login.html" class="lock-icon"><i class="fas fa-lock"></i> Admin Access</a>
+            </div>
+
+            <div class="skill-card video-card" onclick="window.location.href='photography.html?type=videos'">
+                <div class="icon-box video-icon"><i class="fas fa-video"></i></div>
+                <h3>Video Editing Hobby</h3>
+                <p>Adding music, cuts, and effects to make moments look cinematic.</p>
+                <span class="view-cert">Watch My Edits</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+   <section id="projects" class="container">
+    
+    <div class="section-title-wrapper">
+        <span class="sub-title">MY WORK</span>
+        <h2 class="main-title">Selected <span class="gradient-text">Professional Projects</span></h2>
+        <div class="title-bar-center"></div>
+    </div>
+
+    <div class="projects-grid">
+        
+        <div class="project-card">
+            <div class="card-image">
+                <img src="images/ngo-building.jpg" alt="Grameena Vikas Sangham NGO">
+            </div>
+            <div class="card-content">
+                <span class="project-tag">Live Project</span>
+                <h3>Grameena Vikas Sangham</h3>
+                <p>Designed and developed a comprehensive website for a Srikakulam-based NGO to enhance community outreach.</p>
+                <div class="tech-stack">
+                    <span>HTML5</span><span>CSS3</span><span>JavaScript</span>
+                </div>
+                <div class="card-links">
+                    <a href="https://himagiri-123.github.io/gvs-website/" target="_blank" class="btn-link">
+                        <i class="fas fa-external-link-alt"></i> View Project
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="card-image">
+                <img src="images/my-portfolio.jpg" alt="My Developer Portfolio">
+            </div>
+            <div class="card-content">
+                <span class="project-tag">MERN Stack</span>
+                <h3>Developer Portfolio</h3>
+                <p>A professional, responsive portfolio built to showcase my technical journey at NxtWave and creative skills.</p>
+                <div class="tech-stack">
+                    <span>React.js</span><span>Node.js</span><span>MongoDB</span>
+                </div>
+                <div class="card-links">
+                    <a href="index.html" class="btn-link">
+                        <i class="fas fa-desktop"></i> View Website
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="card-image">
+                <img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=1000&auto=format&fit=crop" alt="Quiz Game">
+            </div>
+            <div class="card-content">
+                <span class="project-tag">Mini Project</span>
+                <h3>Interactive Quiz Game</h3>
+                <p>A fun and engaging quiz application developed during my NxtWave training to test knowledge across various topics.</p>
+                <div class="tech-stack">
+                    <span>React</span><span>CSS</span><span>JavaScript</span>
+                </div>
+                <div class="card-links">
+                    <a href="https://quizplayhub.ccbp.tech/" target="_blank" class="btn-link">
+                        <i class="fas fa-play-circle"></i> Play Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div> <div class="projects-footer-content">
+        <p>
+            These are just a few highlights of my development journey. I actively build real-world applications using the MERN stack to solve practical problems. From responsive front-end designs to complex back-end architectures, I love turning ideas into code. Click below to explore my complete project archive, including experimental works and upcoming ideas.
+        </p>
+        
+        <a href="projects.html" class="view-all-btn">
+            View More Projects <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+</section>
+
+  <section id="contact" class="container">
+    
+    <div class="section-title-wrapper" style="margin-bottom: 40px;">
+        <span class="sub-title">GET IN TOUCH</span>
+        <h2 class="main-title">Contact <span class="gradient-text">Me</span></h2>
+        <div class="title-bar-center"></div>
+    </div>
+
+    <div class="contact-card-wrapper">
+        
+        <div class="glow-circle circle-1"></div>
+        <div class="glow-circle circle-2"></div>
+
+        <div class="contact-box-modern">
+            
+            <div class="form-side">
+                <h3 class="modern-title">Send a Message 🚀</h3>
+                
+                <form class="modern-form" id="contact-form">
+                    <div class="input-group-modern">
+                        <input type="text" name="user_name" required>
+                        <span class="floating-label">Your Name</span>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+
+                    <div class="input-group-modern">
+                        <input type="email" name="user_email" required>
+                        <span class="floating-label">Your Email</span>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+
+                    <div class="input-group-modern">
+                        <textarea name="message" rows="3" required></textarea>
+                        <span class="floating-label">Your Message</span>
+                        <i class="fas fa-comment-alt input-icon"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn-modern">
+                        Send Message <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="info-side">
+                <div class="info-content-modern">
+                    <h3>Let's Connect</h3>
+                    <p>Open for Freelance & Job Opportunities.</p>
+                    
+                    <div class="info-item-modern">
+                        <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                        <span>himagirigolla@gmail.com</span>
+                    </div>
+
+                    <div class="info-item-modern">
+                        <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                        <span>Srikakulam, AP</span>
+                    </div>
+
+                    <div class="social-modern">
+                        <a href="https://www.linkedin.com/in/" target="_blank" class="s-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/Himagiri-123" target="_blank" class="s-btn github"><i class="fab fa-github"></i></a>
+                        <a href="https://www.instagram.com/mr.majnu.1437_?igsh=bGNla3hvZW9vdDNi" target="_blank" class="s-btn instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="modern-footer">
+    <div class="footer-container">
+        
+        <div class="footer-left">
+            <h3 class="footer-name">Himagiri Golla</h3>
+            <p class="footer-role">MERN Full Stack Developer | Photographer</p>
+            <p class="copyright">&copy; 2026 All rights reserved.</p>
+        </div>
+
+        <div class="footer-center">
+            <p>Built with <span class="heart">Code</span> & <span class="passion">Passion</span> in Srikakulam 🇮🇳</p>
+        </div>
+
+        <div class="footer-right">
+            <div class="social-mini">
+                <a href="https://www.linkedin.com/in/himagiri-golla-9139822a4/" target="_blank" class="mini-icon linkedin"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/Himagiri-123" target="_blank" class="mini-icon github"><i class="fab fa-github"></i></a>
+                <a href="mailto:himagirigolla@gmail.com" class="mini-icon email"><i class="fas fa-envelope"></i></a>
+            </div>
+            
+            <a href="admin-login.html" class="admin-lock-mini" title="Admin Login">
+                <i class="fas fa-lock"></i>
+            </a>
+        </div>
+
+    </div>
+</footer>
+</section>
+    
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+<script src="script.js"></script> 
+</body>
+</html>

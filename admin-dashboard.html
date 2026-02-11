@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Himagiri Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="logo">HG Admin</div>
+            <ul>
+                <li id="nav-photos" class="active"><i class="fas fa-camera"></i> Photography</li>
+                <li id="nav-videos"><i class="fas fa-video"></i> Videos</li>
+                <li id="nav-projects"><i class="fas fa-project-diagram"></i> Projects</li>
+                <li class="logout-link"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h2 id="page-title">Manage Photography</h2>
+                <p>Upload and manage your content dynamically.</p>
+            </header>
+
+            <section class="upload-section">
+                <div class="upload-card">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Media</h3>
+                    
+                    <form id="uploadForm">
+                        <div class="input-box">
+                            <label>Title / Project Name</label>
+                            <input type="text" id="mediaTitle" placeholder="Enter title..." required>
+                        </div>
+                        
+                        <div id="projectFields" style="display: none;">
+                            <div class="input-box">
+                                <label>Description</label>
+                                <textarea id="projDesc" rows="3" placeholder="Write about the project..." 
+                                style="width:100%; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; outline:none;"></textarea>
+                            </div>
+
+                            <div class="input-box">
+                                <label>Tech Stack (Comma separated)</label>
+                                <input type="text" id="projTech" placeholder="Ex: React, Node.js, MongoDB">
+                            </div>
+
+                            <div class="input-box">
+                                <label>Live Demo Link</label>
+                                <input type="text" id="projLive" placeholder="https://your-project.com">
+                            </div>
+
+                            <div class="input-box">
+                                <label>GitHub Repo Link</label>
+                                <input type="text" id="projRepo" placeholder="https://github.com/...">
+                            </div>
+                        </div>
+
+                        <div class="input-box">
+                            <label>Choose File (Image or Video)</label>
+                            <input type="file" id="mediaFile" accept="image/*, video/*" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Upload to Live Site</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="recent-uploads">
+                <h3>Recent Uploads</h3>
+                <div class="preview-grid">
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="admin-script.js"></script>
+
+</body>
+</html>

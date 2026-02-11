@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Projects - Himagiri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div style="padding: 20px;">
+        <a href="index.html#projects" style="color:white; text-decoration:none; font-weight:bold;">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <section class="container" style="padding-top: 20px;">
+        <div class="section-title-wrapper">
+            <h2 class="main-title">All <span class="gradient-text">Projects</span></h2>
+        </div>
+
+        <div class="projects-grid" id="all-projects-grid">
+            
+            <div class="project-card">
+                <div class="card-image"><img src="images/ngo-building.jpg" alt="NGO Website"></div>
+                <div class="card-content">
+                    <span class="project-tag">Live Project</span>
+                    <h3>Grameena Vikas Sangham</h3>
+                    <p>Designed and developed a comprehensive website for a Srikakulam-based NGO.</p>
+                    <div class="tech-stack"><span>HTML5</span><span>CSS3</span><span>JS</span></div>
+                    <div class="card-links"><a href="https://himagiri-123.github.io/gvs-website/" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> View</a></div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-image"><img src="images/my-portfolio.jpg" alt="Portfolio"></div>
+                <div class="card-content">
+                    <span class="project-tag">MERN Stack</span>
+                    <h3>Developer Portfolio</h3>
+                    <p>Professional portfolio showcasing my technical journey and skills.</p>
+                    <div class="tech-stack"><span>React</span><span>Node</span><span>Mongo</span></div>
+                    <div class="card-links"><a href="#" class="btn-github"><i class="fab fa-github"></i> Code</a></div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-image"><img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=1000&auto=format&fit=crop" alt="Quiz"></div>
+                <div class="card-content">
+                    <span class="project-tag">Mini Project</span>
+                    <h3>Interactive Quiz Game</h3>
+                    <p>Fun and engaging quiz app developed during training.</p>
+                    <div class="tech-stack"><span>JS</span><span>CSS</span></div>
+                    <div class="card-links"><a href="https://quizplayhub.ccbp.tech/" target="_blank" class="btn-link"><i class="fas fa-play-circle"></i> Play</a></div>
+                </div>
+            </div>
+
+            </div>
+    </section>
+
+    <script>
+        // Fetch Dynamic Projects from DB
+        async function loadDynamicProjects() {
+            try {
+                const response = await fetch('http://localhost:5000/api/get-media');
+                const data = await response.json();
+                const grid = document.getElementById('all-projects-grid');
+
+                // Filter only 'Projects'
+                const projects = data.filter(item => item.category === 'Projects');
+
+                projects.forEach(proj => {
+                    const techSpans = proj.techStack ? proj.techStack.split(',').map(t => `<span>${t.trim()}</span>`).join('') : '';
+                    
+                    const html = `
+                    <div class="project-card">
+                        <div class="card-image">
+                            <img src="${proj.url}" alt="${proj.title}">
+                        </div>
+                        <div class="card-content">
+                            <span class="project-tag">Latest</span>
+                            <h3>${proj.title}</h3>
+                            <p>${proj.description || 'No description provided.'}</p>
+                            <div class="tech-stack">${techSpans}</div>
+                            <div class="card-links">
+                                ${proj.liveLink ? `<a href="${proj.liveLink}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> Live</a>` : ''}
+                                ${proj.repoLink ? `<a href="${proj.repoLink}" target="_blank" class="btn-github"><i class="fab fa-github"></i> Code</a>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                    
+                    grid.innerHTML += html;
+                });
+
+            } catch (err) { console.error("Error loading projects:", err); }
+        }
+
+        window.onload = loadDynamicProjects;
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Gallery - Himagiri</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Gallery Styles */
+        .gallery-header { text-align: center; padding: 40px 20px; color: white; }
+        .gallery-header h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, #00d2ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .gallery-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+            padding: 20px 5%; 
+        }
+
+        .gallery-item { 
+            border-radius: 15px; 
+            overflow: hidden; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+
+        .gallery-item:hover { transform: translateY(-5px); border-color: #00d2ff; }
+
+        .gallery-item img, .gallery-item video { width: 100%; height: 220px; object-fit: cover; cursor: pointer; }
+        
+        .gallery-info { padding: 15px; text-align: center; color: #cbd5e1; }
+        .gallery-info h3 { font-size: 1rem; font-weight: 500; }
+
+        /* Lightbox (Zoom Effect) */
+        .lightbox { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+        .lightbox img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+
+        /* Back Button */
+        .back-nav { position: fixed; top: 20px; left: 20px; z-index: 100; }
+        .back-btn { text-decoration: none; color: white; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .back-btn:hover { background: #00d2ff; border-color: #00d2ff; }
+    </style>
+</head>
+<body>
+
+    <div class="back-nav">
+        <a href="index.html#skills" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Skills</a>
+    </div>
+
+    <div class="gallery-header">
+        <h1 id="page-title">Loading...</h1>
+        <p id="page-desc">Here are some of my best works.</p>
+    </div>
+
+    <div class="gallery-container">
+        </div>
+
+    <div id="imageModal" class="lightbox">
+        <span class="close-btn">&times;</span>
+        <img id="fullImage">
+    </div>
+
+    <script>
+        async function loadMyWork() {
+            const grid = document.querySelector('.gallery-container');
+            const pageTitle = document.getElementById('page-title');
+            const pageDesc = document.getElementById('page-desc');
+            
+            // 1. URL నుండి Type తెలుసుకోవాలి (photos or videos?)
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type'); // 'photos' or 'videos'
+
+            // టైటిల్ మార్చడం
+            if (type === 'videos') {
+                pageTitle.innerText = "Cinematic Video Edits 🎬";
+                pageDesc.innerText = "A collection of my video editing experiments.";
+                document.title = "My Videos - Himagiri";
+            } else {
+                pageTitle.innerText = "Creative Photography 📸";
+                pageDesc.innerText = "Capturing moments through my lens.";
+                document.title = "My Photography - Himagiri";
+            }
+
+            try {
+                // డేటా తెచ్చుకోవడం
+                const response = await fetch('http://localhost:5000/api/get-media');
+                const data = await response.json();
+
+                grid.innerHTML = "";
+
+                // 2. Filter Logic (అసలైన పని ఇక్కడే జరుగుతుంది)
+                const filteredData = data.filter(item => {
+                    if (type === 'videos') {
+                        return item.mediaType === 'video'; // వీడియోలు మాత్రమే
+                    } else {
+                        return item.mediaType === 'image'; // ఫోటోలు మాత్రమే
+                    }
+                });
+
+                if (filteredData.length === 0) {
+                    grid.innerHTML = "<p style='color:#94a3b8; text-align:center; grid-column:1/-1;'>No content found in this category yet.</p>";
+                    return;
+                }
+
+                // 3. Display
+                filteredData.forEach(item => {
+                    let mediaElement;
+                    if (item.mediaType === 'video') {
+                        // వీడియో అయితే ప్లేయర్ చూపించు
+                        mediaElement = `<video src="${item.url}" controls></video>`;
+                    } else {
+                        // ఫోటో అయితే ఇమేజ్ చూపించు
+                        mediaElement = `<img src="${item.url}" alt="${item.title}" class="clickable-img">`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'gallery-item';
+                    card.innerHTML = `
+                        ${mediaElement}
+                        <div class="gallery-info">
+                            <h3>${item.title}</h3>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                // ఇమేజ్ క్లిక్ చేస్తే జూమ్ అయ్యే కోడ్ (Lightbox)
+                if (type !== 'videos') attachClickEvents();
+
+            } catch (error) {
+                console.error("Error:", error);
+                grid.innerHTML = "<p style='color:red; text-align:center;'>Server Error. Please run 'node server.js'</p>";
+            }
+        }
+
+        // Lightbox Logic
+        function attachClickEvents() {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("fullImage");
+            const closeBtn = document.querySelector(".close-btn");
+
+            document.querySelectorAll('.clickable-img').forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.style.display = "flex";
+                    modalImg.src = this.src;
+                });
+            });
+
+            closeBtn.onclick = () => modal.style.display = "none";
+            modal.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; };
+        }
+
+        window.onload = loadMyWork;
+    </script>
+
+</body>
+</html>
