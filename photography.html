@@ -70,11 +70,9 @@
             const pageTitle = document.getElementById('page-title');
             const pageDesc = document.getElementById('page-desc');
             
-            // 1. URL నుండి Type తెలుసుకోవాలి (photos or videos?)
             const urlParams = new URLSearchParams(window.location.search);
-            const type = urlParams.get('type'); // 'photos' or 'videos'
+            const type = urlParams.get('type'); 
 
-            // టైటిల్ మార్చడం
             if (type === 'videos') {
                 pageTitle.innerText = "Cinematic Video Edits 🎬";
                 pageDesc.innerText = "A collection of my video editing experiments.";
@@ -86,34 +84,31 @@
             }
 
             try {
-                // డేటా తెచ్చుకోవడం
-                const response = await fetch('http://localhost:5000/api/get-media');
+                // --- RENDER LIVE LINK (Corrected) ---
+                const response = await fetch('https://himagiri-portfolio.onrender.com/api/get-media');
                 const data = await response.json();
 
                 grid.innerHTML = "";
 
-                // 2. Filter Logic (అసలైన పని ఇక్కడే జరుగుతుంది)
+                // Filter Logic
                 const filteredData = data.filter(item => {
                     if (type === 'videos') {
-                        return item.mediaType === 'video'; // వీడియోలు మాత్రమే
+                        return item.category === 'Videos' || item.mediaType === 'video';
                     } else {
-                        return item.mediaType === 'image'; // ఫోటోలు మాత్రమే
+                        return item.category === 'Photography' || item.mediaType === 'image';
                     }
                 });
 
                 if (filteredData.length === 0) {
-                    grid.innerHTML = "<p style='color:#94a3b8; text-align:center; grid-column:1/-1;'>No content found in this category yet.</p>";
+                    grid.innerHTML = "<p style='color:#94a3b8; text-align:center; grid-column:1/-1;'>No content found yet.</p>";
                     return;
                 }
 
-                // 3. Display
                 filteredData.forEach(item => {
                     let mediaElement;
                     if (item.mediaType === 'video') {
-                        // వీడియో అయితే ప్లేయర్ చూపించు
                         mediaElement = `<video src="${item.url}" controls></video>`;
                     } else {
-                        // ఫోటో అయితే ఇమేజ్ చూపించు
                         mediaElement = `<img src="${item.url}" alt="${item.title}" class="clickable-img">`;
                     }
 
@@ -128,16 +123,14 @@
                     grid.appendChild(card);
                 });
 
-                // ఇమేజ్ క్లిక్ చేస్తే జూమ్ అయ్యే కోడ్ (Lightbox)
                 if (type !== 'videos') attachClickEvents();
 
             } catch (error) {
                 console.error("Error:", error);
-                grid.innerHTML = "<p style='color:red; text-align:center;'>Server Error. Please run 'node server.js'</p>";
+                grid.innerHTML = "<p style='color:red; text-align:center;'>Unable to load gallery. Please try again later.</p>";
             }
         }
 
-        // Lightbox Logic
         function attachClickEvents() {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("fullImage");
