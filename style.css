@@ -5262,3 +5262,41 @@ html {
     transform: scale(1.05);
 }
 
+/* =========================================
+   SIMPLE TEXT LINK FIX (No Buttons, No Lines)
+   ========================================= */
+
+.creative-glass-card .view-cert {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.85rem;      
+    font-weight: 700;        
+    text-transform: uppercase; 
+    letter-spacing: 1px;     
+    color: #00d2ff !important; /* Cyan Color */
+    
+    /* బాక్సులు, బోర్డర్లు, గీతలు అన్నీ తీసేస్తున్నాం */
+    background: none !important;
+    border: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    
+    transition: transform 0.3s ease;
+}
+
+/* Hover చేసినప్పుడు */
+.creative-glass-card:hover .view-cert {
+    color: #fff !important;      /* వైట్ కలర్ */
+    transform: translateX(5px);  /* కొంచెం కుడివైపు జరుగుతుంది */
+    text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); /* చిన్న గ్లో */
+}
+
+/* Video Card Link Color (Purple) */
+.creative-glass-card .video-icon ~ .view-cert {
+    color: #a855f7 !important; 
+}
+
+.creative-glass-card:hover .video-icon ~ .view-cert {
+    text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+}
