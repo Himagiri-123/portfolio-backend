@@ -5348,3 +5348,104 @@ html {
     color: #fff !important;
     text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
 }
+
+
+
+/* =========================================
+   1. STYLISH HEADINGS & CAPTIONS FIX
+   ========================================= */
+.stylish-heading {
+    font-size: 1.4rem;
+    font-weight: 800; /* Extra Bold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(to right, #fff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.skill-card p {
+    font-size: 0.95rem;
+    line-height: 1.6; /* లైన్ల మధ్య గ్యాప్ పెంచాను */
+    color: #cbd5e1;
+    margin-bottom: 20px;
+    min-height: 60px; /* 2-3 లైన్స్ కచ్చితంగా ఉండేలా */
+}
+
+/* =========================================
+   2. ADMIN BUTTON RED HOVER FIX
+   ========================================= */
+.admin-lock-mini {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 8px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-lock-mini:hover {
+    color: #ef4444 !important;       /* Red Text */
+    border-color: #ef4444 !important; /* Red Border */
+    background: rgba(239, 68, 68, 0.1); /* Light Red BG */
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* =========================================
+   3. FOOTER FULL WIDTH FIX
+   ========================================= */
+.modern-footer {
+    width: 100%;             /* స్క్రీన్ మొత్తం వెడల్పు */
+    max-width: 100%;         /* పరిమితి లేదు */
+    margin: 0;               /* మార్జిన్ లేదు */
+    border-radius: 0;        /* రౌండ్ కార్నర్స్ వద్దు */
+    background: #0f172a;     /* డార్క్ బ్యాక్‌గ్రౌండ్ */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 0;
+    margin-top: 80px;
+}
+
+.footer-container {
+    max-width: 1200px;       /* కంటెంట్ మాత్రం మధ్యలో ఉంటుంది */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* =========================================
+   4. MOBILE VIEW CENTER ALIGNMENT FIX
+   ========================================= */
+@media (max-width: 768px) {
+    .skills-split-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* కార్డులు సెంటర్‌కి */
+    }
+
+    .skills-column {
+        width: 100%;
+        max-width: 350px; /* మొబైల్‌లో కార్డు వెడల్పు */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* కార్డులు మధ్యలో ఉండేలా */
+    }
+
+    .skill-card {
+        width: 100%;
+        text-align: center; /* టెక్స్ట్ సెంటర్ */
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
