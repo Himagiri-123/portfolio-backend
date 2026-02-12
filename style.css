@@ -5300,3 +5300,42 @@ html {
 .creative-glass-card:hover .video-icon ~ .view-cert {
     text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
 }
+
+
+/* =========================================
+   FIX: Make Creative Links Look Exactly Like Frontend Card
+   ========================================= */
+
+.creative-glass-card .view-cert {
+    /* 1. బాక్సులు, బోర్డర్లు, బ్యాక్‌గ్రౌండ్స్ అన్నీ తీసేస్తున్నాం */
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    text-decoration: none !important;
+    
+    /* 2. Frontend Card Text Style (Same Font & Color) */
+    color: #00d2ff !important; /* Cyan Color */
+    font-weight: 700;          /* Bold */
+    text-transform: uppercase; /* Capital Letters */
+    font-size: 0.85rem;        /* Same size as tech card */
+    letter-spacing: 1px;
+    margin-top: 15px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Hover చేసినప్పుడు */
+.creative-glass-card:hover .view-cert {
+    color: #fff !important;      /* వైట్ కలర్ */
+    transform: translateX(5px);  /* కొంచెం ముందుకు జరుగుతుంది */
+    text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
+}
+
+/* Video Card Link Color (Purple Mix) */
+.creative-glass-card .video-icon ~ .view-cert {
+    color: #a855f7 !important; 
+}
+.creative-glass-card:hover .video-icon ~ .view-cert {
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+}
