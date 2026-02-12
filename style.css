@@ -5068,3 +5068,57 @@ html {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+
+/* =========================================
+   Updated Creative Glass Cards (Force Apply)
+   ========================================= */
+
+.creative-glass-card {
+    /* !important వాడటం వల్ల పాత డార్క్ కలర్ పోయి, ఈ గ్లాస్ ఎఫెక్ట్ కచ్చితంగా వస్తుంది */
+    background: rgba(255, 255, 255, 0.05) !important; 
+    backdrop-filter: blur(12px) !important;         
+    -webkit-backdrop-filter: blur(12px) !important; /* Safari కోసం */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    
+    border-radius: 16px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* బ్లర్ ఎఫెక్ట్ సరిగ్గా పనిచేయడానికి */
+}
+
+.creative-glass-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1) !important; /* Hover అయినప్పుడు కొంచెం బ్రైట్ గా */
+    border-color: #00d2ff !important;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+}
+
+/* కార్డు లోపల టెక్స్ట్ కలర్స్ */
+.creative-glass-card h3 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    color: #fff !important;
+}
+
+.creative-glass-card p {
+    color: #cbd5e1 !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* కార్డు లోపల ఐకాన్స్ కలర్ (Gradient) */
+.creative-glass-card .icon-box i {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
