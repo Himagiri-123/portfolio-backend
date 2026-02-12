@@ -5190,27 +5190,113 @@ html {
 
 
 
-/* "View All Clicks" Link Style (NO LINES AT ALL) */
-.creative-glass-card .view-cert {
-    display: inline-block;
-    margin-top: 15px;
-    font-size: 0.9rem;
+/* =========================================
+   Premium Creative Cards (Cosmic Glow Style)
+   ========================================= */
+
+.creative-glass-card {
+    position: relative;
+    /* డీప్ డార్క్ గ్రేడియంట్ బ్యాక్‌గ్రౌండ్ */
+    background: linear-gradient(145deg, #131b2e, #0b0f19); 
+    border-radius: 24px; /* ఇంకాస్త ఎక్కువ రౌండ్ కార్నర్స్ */
+    padding: 35px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.03); /* చాలా సన్నని బోర్డర్ */
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); /* చాలా స్మూత్ యానిమేషన్ */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* డీప్ షాడో */
+    z-index: 1;
+}
+
+/* --- Hover Effects (The Premium Feel) --- */
+.creative-glass-card:hover {
+    transform: translateY(-12px); /* పైకి లేస్తుంది */
+    border-color: rgba(255, 255, 255, 0.1);
+    /* వెనుక నుండి గ్లో వస్తుంది */
+    box-shadow: 0 20px 50px rgba(0, 210, 255, 0.15), 
+                0 0 0 1px rgba(0, 210, 255, 0.1); 
+}
+
+/* --- Special Glow Background Circle --- */
+.creative-glass-card::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(0, 210, 255, 0.15), transparent 70%);
+    border-radius: 50%;
+    transition: 0.5s ease;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.creative-glass-card:hover::before {
+    transform: scale(1.5); /* Hover చేస్తే పెద్దది అవుతుంది */
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
+}
+
+/* --- Icons Style (Large & Glowing) --- */
+.creative-glass-card .icon-box i {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom right, #00d2ff, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3)); /* ఐకాన్ కూడా మెరుస్తుంది */
+    transition: transform 0.4s ease;
+}
+
+.creative-glass-card:hover .icon-box i {
+    transform: scale(1.15) rotate(-5deg); /* ఐకాన్ మూమెంట్ */
+}
+
+/* --- Typography --- */
+.creative-glass-card h3 {
+    font-size: 1.5rem;
     font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
     letter-spacing: 0.5px;
+}
+
+.creative-glass-card p {
+    font-size: 1rem;
+    color: #94a3b8; /* ప్రీమియం గ్రే కలర్ */
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* --- "View All Clicks" Link (NO LINES, JUST ARROW) --- */
+.creative-glass-card .view-cert {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* టెక్స్ట్ కి బాణం గుర్తుకు మధ్య గ్యాప్ */
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #38bdf8 !important; /* స్కై బ్లూ కలర్ */
     
-    color: #00d2ff !important; /* Cyan Text Color */
-    
-    /* --- REMOVING ALL LINES --- */
-    text-decoration: none !important; /* డిఫాల్ట్ అండర్ లైన్ ఉండదు */
-    border: none !important;          /* మనం ఇచ్చే బోర్డర్ కూడా ఉండదు */
-    outline: none !important;         /* అవుట్ లైన్ ఉండదు */
+    /* ఎలాంటి గీతలు ఉండవు */
+    text-decoration: none !important;
+    border: none !important;
     
     transition: all 0.3s ease;
 }
 
+/* లింక్ పక్కన ఒక చిన్న బాణం (Arrow) యాడ్ చేస్తున్నాం */
+.creative-glass-card .view-cert::after {
+    content: '→'; /* బాణం గుర్తు */
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    opacity: 0; /* మొదట కనిపించదు */
+    transform: translateX(-10px);
+}
+
 /* Hover చేసినప్పుడు */
 .creative-glass-card:hover .view-cert {
-    color: #fff !important;           /* టెక్స్ట్ వైట్ అవుతుంది */
-    text-shadow: 0 0 8px rgba(0, 210, 255, 0.6); /* గీతకు బదులు టెక్స్ట్ మెరుస్తుంది (Glow) */
-    transform: translateX(5px);       /* కొంచెం పక్కకు జరుగుతుంది */
+    color: #a855f7 !important; /* పర్పుల్ కలర్‌కి మారుతుంది */
+}
+
+.creative-glass-card:hover .view-cert::after {
+    opacity: 1; /* బాణం కనిపిస్తుంది */
+    transform: translateX(0); /* బాణం ముందుకు జరుగుతుంది */
 }
