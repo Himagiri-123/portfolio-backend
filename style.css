@@ -5162,27 +5162,28 @@ html {
     transform: scale(1.1) rotate(5deg); /* ఐకాన్ చిన్నగా కదులుతుంది */
 }
 
-/* "View All Clicks" & "Watch My Edits" Button Style */
+/* "View All Clicks" Button Style */
+
+/* "View All Clicks" Link Style (Clean Single Line) */
 .creative-glass-card .view-cert {
     display: inline-block;
     margin-top: 15px;
-    padding: 10px 24px; /* బటన్ సైజు */
-    background: rgba(255, 255, 255, 0.05); /* లైట్ బ్యాక్‌గ్రౌండ్ */
-    color: #00d2ff !important;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 50px; /* రౌండ్ బటన్ */
-    border: 1px solid rgba(0, 210, 255, 0.3); /* సన్నని బోర్డర్ */
-    text-decoration: none !important; /* ఆ రెండు గీతలు పోతాయి (ముఖ్యమైనది) */
+    
+    color: #00d2ff !important;        /* Text Color (Cyan) */
+    text-decoration: none !important; /* పాత అండర్ లైన్ తీసేస్తుంది (ముఖ్యమైనది) */
+    border-bottom: 2px solid #00d2ff; /* మన కొత్త సింగిల్ లైన్ */
+    
+    padding-bottom: 3px; /* టెక్స్ట్ కి లైన్ కి మధ్య గ్యాప్ */
+    background: none;    /* బ్యాక్‌గ్రౌండ్ వద్దు */
+    box-shadow: none;    /* నీడ వద్దు */
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover చేసినప్పుడు బటన్ కలర్ మారుతుంది */
+/* Hover చేసినప్పుడు */
 .creative-glass-card:hover .view-cert {
-    background: linear-gradient(90deg, #00d2ff, #a855f7); /* గ్రేడియంట్ కలర్ */
-    color: #ffffff !important;
-    border-color: transparent;
-    transform: scale(1.05); /* చిన్నగా జూమ్ అవుతుంది */
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); /* గ్లో ఎఫెక్ట్ */
+    color: #fff !important;          /* వైట్ టెక్స్ట్ */
+    border-bottom-color: #a855f7;    /* లైన్ కలర్ మారుతుంది (Purple) */
+    transform: translateX(5px);      /* కొంచెం కుడి వైపు జరుగుతుంది */
 }
