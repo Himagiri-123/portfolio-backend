@@ -14,7 +14,6 @@ body {
     line-height: 1.6;
     color: #f4f7f6;
     background-color: #0f172a;
-    overflow-x: hidden;
 }
 
 /* --- Navbar --- */
@@ -34,27 +33,26 @@ body {
 }
 
 .logo a {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 26px;
+    font-weight: 900;
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
-.logo-icon {
+.logo a span {
     color: #00d2ff;
-}
-
-.glow-box {
-    color: #00d2ff;
-    padding: 2px 5px;
-    border: 1px solid #00d2ff;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border: 2px solid #00d2ff;
     border-radius: 4px;
-    margin-left: 5px;
+    transition: 0.3s ease;
+}
+
+.logo a:hover span {
+    background-color: #00d2ff;
+    color: #ffffff;
 }
 
 .nav-links {
@@ -75,69 +73,89 @@ body {
 
 .nav-links a:hover { color: #00d2ff; opacity: 1; }
 
-/* Mobile Menu */
-.menu-icon { display: none; cursor: pointer; }
-.bar { width: 25px; height: 3px; background-color: white; margin: 5px; transition: 0.4s; }
-
-@media screen and (max-width: 768px) {
-    .menu-icon { display: block; }
-    .nav-links {
-        display: none; flex-direction: column; width: 100%;
-        background-color: #1e293b; position: absolute; top: 70px; left: 0; padding: 30px 0;
-        text-align: center;
-    }
-    .nav-links.active { display: flex; }
-    .nav-links li { margin: 15px 0; }
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0; height: 2px;
+    background: #00d2ff;
+    bottom: -5px; left: 0;
+    transition: 0.3s;
 }
 
-/* --- Hero Section --- */
+.nav-links a:hover::after { width: 100%; }
+
+/* --- Hero Content Spacing & Styling --- */
+/* --- Hero Section Fix --- */
 .hero {
     height: 100vh;
     background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
-                url('https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2070'); 
+                url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80'); 
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding: 0 10%;
     text-align: left;
-    position: relative;
-}
-
-#particles-js {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
 }
 
 .hero-content {
-    z-index: 2;
-    max-width: 800px;
+    display: flex;
+    flex-direction: column; /* ఎలిమెంట్స్ అన్నీ ఒకదాని కింద ఒకటి రావడానికి */
 }
 
 .hero-content h4 {
     font-size: 1.4rem;
     color: #00d2ff;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* లైన్ల మధ్య దూరం */
+    font-weight: 400;
 }
 
 .hero-content h1 {
-    font-size: 4rem;
+    font-size: 5rem;
     font-weight: 900;
     color: #ffffff;
-    margin-bottom: 15px;
-    line-height: 1.1;
+    margin-bottom: 20px; /* పేరు కింద గ్యాప్ */
+    letter-spacing: 5px;
+    line-height: 1.2;
 }
 
+/* Trending Typing Text Color */
 .typing-container {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: #ffffff;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* ఈ లైన్ కింద గ్యాప్ */
+    font-weight: 500;
 }
 
+#typing-text {
+    color: #00d2ff; /* Trending Neon Cyan */
+    text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); /* Glowing effect */
+    font-weight: 700;
+}
+
+/* కింది h2 ట్యాగ్ కోసం */
+.hero-content .typing-text {
+    font-size: 1.8rem;
+    color: #cbd5e1;
+    margin-bottom: 30px; /* దీని కింద గ్యాప్ */
+    font-weight: 400;
+}
+
+.hero-content p {
+    max-width: 550px;
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-bottom: 40px;
+    line-height: 1.8; /* పారాగ్రాఫ్ లైన్ల మధ్య స్పేస్ */
+}
+
+.hero-btns {
+    display: flex;
+    gap: 20px;
+}
+
+/* Trending Color: Electric Purple to Cyan Gradient */
 #typing-text {
     background: linear-gradient(to right, #a855f7, #06b6d4);
     -webkit-background-clip: text;
@@ -146,298 +164,5139 @@ body {
 }
 
 .hero-content p {
-    font-size: 1.1rem;
-    color: #94a3b8;
-    margin-bottom: 30px;
     max-width: 600px;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    margin-bottom: 45px; /* పారాగ్రాఫ్ కింద గ్యాప్ పెంచాను */
+    line-height: 1.8; /* లైన్ల మధ్య స్పేస్ పెంచాను */
 }
 
+/* Cursor style to match trending color */
+#typing-text::after {
+    content: '|';
+    color: #a855f7;
+    -webkit-text-fill-color: #a855f7;
+    animation: blink 0.7s infinite;
+    margin-left: 5px;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Hero Buttons Layout */
 .hero-btns {
     display: flex;
     gap: 20px;
 }
 
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .hero {
+        padding: 0 5%;
+        justify-content: center;
+        text-align: center;
+    }
+    .hero-content h1 { font-size: 3rem; }
+    .hero-content h4 { font-size: 1.2rem; }
+    .typing-container { font-size: 1.5rem; }
+    .hero-btns { flex-direction: column; align-items: center; }
+}
+
+/* --- Buttons --- */
 .btn-primary, .btn-secondary {
-    padding: 12px 30px;
+    padding: 14px 35px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: 0.3s;
+    display: inline-block;
+    transition: 0.4s ease;
 }
 
 .btn-primary {
     background: linear-gradient(135deg, #00d2ff, #3a7bd5);
     color: white;
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
 }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3); }
 
 .btn-secondary {
     border: 2px solid #00d2ff;
     color: #00d2ff;
-}
-.btn-secondary:hover { background: rgba(0, 210, 255, 0.1); transform: translateY(-3px); }
-
-@media (max-width: 768px) {
-    .hero { padding: 0 5%; text-align: center; justify-content: center; }
-    .hero-content h1 { font-size: 2.5rem; }
-    .hero-btns { flex-direction: column; align-items: center; }
+    margin-left: 15px;
 }
 
-/* --- Sections Common --- */
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: #ffffff;
+    color: #00d2ff;
+}
+
+.btn-secondary:hover { background: rgba(0, 210, 255, 0.1); transform: translateY(-5px); }
+
+/* --- Sections & Grid --- */
 .container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: auto;
-    padding: 80px 20px;
+    padding: 100px 20px;
 }
 
-.section-title {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.section-title h2 {
-    font-size: 2.5rem;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.gradient-text {
-    background: linear-gradient(to right, #00d2ff, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* --- About Section --- */
-.about-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-}
-
-.about-image-col img {
-    width: 300px;
-    border-radius: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.about-text-col {
-    flex: 1;
-}
-
-.about-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.detail-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.detail-label { display: block; font-size: 0.8rem; color: #94a3b8; }
-.detail-value { font-weight: bold; color: #fff; }
-
-@media (max-width: 768px) {
-    .about-wrapper { flex-direction: column; text-align: center; }
-    .about-details-grid { grid-template-columns: 1fr; }
-}
-
-/* =========================================
-   SKILLS SECTION (Clean & Perfect)
-   ========================================= */
-
-.skills-split-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
-}
-
-.col-title {
-    text-align: center;
-    font-size: 1.5rem;
-    color: #fff;
-    margin-bottom: 25px;
-}
-
-.highlight { color: #00d2ff; }
-
-/* -- Skill Cards Common Style -- */
-.skill-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+#about, #skills {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.skill-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
+.section-title { text-align: center; margin-bottom: 4rem; width: 100%; }
+
+.grid, .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
 }
 
-/* Icon & Text */
-.skill-card .icon-box {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
-    color: #00d2ff;
+.card, .skill-card {
+    background: #1e293b;
+    padding: 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.4s;
+    text-align: center;
 }
 
-.skill-card h3 {
-    font-size: 1.2rem;
-    color: #fff;
-    margin-bottom: 8px;
-}
-
-.skill-card p {
-    font-size: 0.9rem;
-    color: #94a3b8;
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-/* -- The Link Style (Clean Text - No Buttons) -- */
-.view-cert {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #00d2ff;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.view-cert:hover {
-    color: #fff;
-    transform: translateX(5px);
-    text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
-}
-
-/* -- Creative Cards Special Glow -- */
-.creative-glass-card {
-    background: linear-gradient(145deg, #1e293b, #0f172a);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.creative-glass-card:hover {
+.card:hover, .skill-card:hover {
+    transform: translateY(-10px);
     border-color: #00d2ff;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
 }
 
-.creative-glass-card .video-icon i { color: #a855f7; }
-.creative-glass-card .video-icon ~ .view-cert { color: #a855f7; }
-.creative-glass-card:hover .video-icon ~ .view-cert { text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); color: #fff; }
+.skill-card i { font-size: 3rem; color: #00d2ff; margin-bottom: 20px; }
 
-@media (max-width: 768px) {
-    .skills-split-layout { grid-template-columns: 1fr; }
+/* --- About Section Specifics --- */
+.about-wrapper { display: flex; align-items: center; gap: 50px; }
+.profile-img {
+    width: 300px; height: auto; border-radius: 15px;
+    border: 3px solid #00d2ff; box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+}
+.personal-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
+.personal-info span { color: #00d2ff; font-weight: bold; }
+
+/* --- Mobile Menu --- */
+.menu-icon { display: none; cursor: pointer; }
+.bar { width: 25px; height: 3px; background-color: white; margin: 5px; transition: 0.4s; }
+
+@media screen and (max-width: 768px) {
+    .menu-icon { display: block; }
+    .nav-links {
+        display: none; flex-direction: column; width: 100%;
+        background-color: #1e293b; position: absolute; top: 70px; left: 0; padding: 30px 0;
+    }
+    .nav-links.active { display: flex; }
+    .nav-links li { margin: 15px 0; }
+    .about-wrapper { flex-direction: column; text-align: center; }
+    .personal-info { grid-template-columns: 1fr; }
+    .hero-content h1 { font-size: 3rem; }
 }
 
-/* --- Projects Section --- */
+
+/* --- Projects Section Styles --- */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
+    margin-top: 40px;
 }
 
 .project-card {
     background: #1e293b;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+    padding: 30px;
+    position: relative;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: #00d2ff;
+    box-shadow: 0 15px 35px rgba(0, 210, 255, 0.1);
+}
+
+.project-info h3 {
+    color: #00d2ff;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+.project-info p {
+    color: #94a3b8;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+/* Tech Tags */
+.project-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.project-tags li {
+    background: rgba(0, 210, 255, 0.1);
+    color: #00d2ff;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Small Buttons */
+.btn-small {
+    padding: 8px 20px;
+    background: #00d2ff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin-right: 10px;
     transition: 0.3s;
 }
 
-.project-card:hover { transform: translateY(-10px); border-color: #00d2ff; }
+.btn-small.outline {
+    background: transparent;
+    border: 1px solid #00d2ff;
+    color: #00d2ff;
+}
 
-.project-card img { width: 100%; height: 200px; object-fit: cover; }
+.btn-small:hover {
+    opacity: 0.8;
+}
 
-.card-content { padding: 20px; }
-.card-content h3 { color: #fff; margin-bottom: 10px; }
-.card-content p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; }
+
+/* --- Contact Section Styles --- */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    background: #1e293b;
+    padding: 50px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contact-info h3 {
+    font-size: 2rem;
+    color: #00d2ff;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item i {
+    color: #00d2ff;
+    font-size: 1.2rem;
+}
+
+/* Social Icons */
+.social-links {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+}
+
+.social-links a {
+    font-size: 1.5rem;
+    color: #cbd5e1;
+    transition: 0.3s;
+}
+
+.social-links a:hover {
+    color: #00d2ff;
+    transform: translateY(-5px);
+}
+
+/* Form Styles */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input, .contact-form textarea {
+    padding: 15px;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.contact-form input:focus, .contact-form textarea:focus {
+    outline: none;
+    border-color: #00d2ff;
+}
+
+@media (max-width: 768px) {
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        padding: 30px;
+    }
+}
+/* --- Job Status Badge --- */
+.job-status {
+    margin: 20px 0;
+}
+
+.status-badge {
+    background: rgba(0, 210, 255, 0.1);
+    color: #00d2ff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: bold;
+    border: 1px solid #00d2ff;
+    display: inline-block;
+    animation: pulse 2s infinite; /* మెరుస్తున్న యానిమేషన్ */
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
+}
+
+.contact-info p {
+    color: #cbd5e1;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.contact-wrapper {
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5); /* మరింత డెప్త్ కోసం */
+}
+
+.hero-description {
+    width: 100%; 
+    max-width: 900px; /* వెడల్పు పెంచడం వల్ల టెక్స్ట్ కిందకి విరగదు */
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    margin-bottom: 35px;
+    line-height: 1.6;
+    text-align: left;
+    white-space: nowrap; /* ఇది టెక్స్ట్ ని ఒకే లైన్ లో ఉంచుతుంది */
+}
+
+/* మొబైల్ ఫోన్లలో మాత్రం టెక్స్ట్ చిన్నది అయ్యి సర్దుకుంటుంది */
+@media (max-width: 768px) {
+    .hero-description {
+        font-size: 0.85rem;
+        white-space: normal; /* మొబైల్ లో మాత్రం కిందకి రావాలి లేకపోతే స్క్రీన్ పక్కకి వెళ్ళిపోతుంది */
+        max-width: 100%;
+    }
+}
+
+/* --- Official Profile Photo Styling --- */
+.profile-img {
+    width: 320px; 
+    height: 400px;
+    object-fit: cover; /* ముఖం స్పష్టంగా కనిపించేలా సర్దుబాటు చేస్తుంది */
+    border-radius: 15px; /* మోడ్రన్ కర్వ్స్ */
+    border: 4px solid #1e293b; /* డార్క్ ఇన్నర్ బోర్డర్ */
+    outline: 2px solid #00d2ff; /* బయట సన్నని నియాన్ బ్లూ గ్లో లైన్ */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* ఫోటో పేజీ నుండి ముందుకు వచ్చినట్లు కనిపిస్తుంది */
+    transition: all 0.4s ease-in-out;
+}
+
+/* ఫోటో మీద మౌస్ పెట్టినప్పుడు చిన్న మెరుపు */
+.profile-img:hover {
+    transform: scale(1.03) translateY(-5px);
+    outline-color: #a855f7; /* రంగు మారుతుంది */
+    box-shadow: 0 25px 60px rgba(168, 85, 247, 0.3);
+}
+
+/* ఫోటో వెనుక ఒక ప్రొఫెషనల్ షేప్ */
+.about-image {
+    position: relative;
+    padding: 10px;
+}
+
+.about-image::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 100px;
+    height: 100px;
+    border-top: 5px solid #00d2ff;
+    border-right: 5px solid #00d2ff;
+    border-radius: 0 15px 0 0;
+    z-index: -1;
+}
+
+/* --- Clickable Skill Cards --- */
+.skill-card {
+    cursor: pointer; /* మౌస్ పెట్టినప్పుడు చేయి గుర్తు వస్తుంది */
+    position: relative;
+    overflow: hidden;
+    background: #1e293b;
+    padding: 40px 30px;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.skill-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #00d2ff;
+    box-shadow: 0 15px 40px rgba(0, 210, 255, 0.2);
+}
+
+.view-cert {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.skill-card:hover .view-cert {
+    border-bottom-color: #00d2ff;
+}
+
+/* Icon Animation */
+.skill-card i {
+    font-size: 3.5rem;
+    color: #00d2ff;
+    margin-bottom: 20px;
+    transition: transform 0.4s;
+}
+
+.skill-card:hover i {
+    transform: rotateY(360deg);
+}
+
+/* --- Compact & Centered Skill Cards --- */
+#skills {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* హెడ్డింగ్ మరియు గ్రిడ్ ని సెంటర్ చేస్తుంది */
+    justify-content: center;
+    min-height: 100vh;
+    padding: 80px 20px;
+}
+
+.skills-grid {
+    display: grid;
+    /* కార్డ్ సైజు తగ్గించడానికి minmax ని 220px కి మార్చాను */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+    gap: 20px;
+    width: 100%;
+    max-width: 950px; /* గ్రిడ్ వెడల్పును నియంత్రించి సెంటర్ లో ఉంచుతుంది */
+    justify-content: center; /* కార్డ్స్ తక్కువగా ఉన్నప్పుడు మధ్యలోకి తెస్తుంది */
+}
+
+.skill-card {
+    background: #1e293b;
+    padding: 25px 20px; /* ప్యాడింగ్ తగ్గించాను */
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skill-card i {
+    font-size: 2.5rem; /* ఐకాన్ సైజు తగ్గించాను */
+    color: #00d2ff;
+    margin-bottom: 15px;
+}
+
+.skill-card h3 {
+    font-size: 1.2rem; /* హెడ్డింగ్ సైజు తగ్గించాను */
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.skill-card p {
+    font-size: 0.9rem; /* టెక్స్ట్ సైజు తగ్గించాను */
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.view-cert {
+    font-size: 0.75rem;
+    margin-top: 12px;
+}
+
+
+
+
+
+/* Skills Grid ని మధ్యలోకి తెచ్చి, 3 కార్డుల వెడల్పుకు పరిమితం చేయడం */
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* కార్డులను మధ్యలోకి తెస్తుంది */
+    gap: 25px;
+    max-width: 850px; /* ఇది చాలా ముఖ్యం: 3 కార్డులు మాత్రమే పట్టేలా చేస్తుంది */
+    margin: 40px auto 0 auto; /* మొత్తం గ్రిడ్ ని సెంటర్ చేస్తుంది */
+}
+
+/* కార్డు వెడల్పును కచ్చితంగా ఉంచడం */
+.skill-card {
+    width: 260px; /* కార్డు సైజు మరీ పెద్దగా లేకుండా చేస్తుంది */
+    background: #1e293b;
+    padding: 25px 20px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    flex-grow: 0; /* కార్డులు అనవసరంగా సాగకుండా చూస్తుంది */
+}
+
+/* మొబైల్ ఫోన్లలో కార్డులు సరిగ్గా కనిపించడానికి */
+@media (max-width: 768px) {
+    .skills-grid {
+        max-width: 100%;
+    }
+    .skill-card {
+        width: 100%; /* మొబైల్ లో ఒక్కో కార్డు పూర్తి వెడల్పు తీసుకుంటుంది */
+        max-width: 300px;
+    }
+}
+
+
+
+.footer {
+    text-align: center;
+    padding: 30px;
+    background: #0f172a;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* --- Responsive Skills Heading Fix --- */
+.section-title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 15px; /* అంచులకు అంటుకోకుండా గ్యాప్ ఇస్తుంది */
+}
+
+.section-title h2 {
+    font-size: 2.5rem; /* డెస్క్‌టాప్ సైజు */
+    color: #ffffff;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.3;
+    max-width: 100%;
+    word-wrap: break-word; /* టెక్స్ట్ కట్ అవ్వకుండా కిందకు విరుగుతుంది */
+}
+
+/* మొబైల్ స్క్రీన్ల కోసం (Responsive Design) */
+@media (max-width: 768px) {
+    .section-title h2 {
+        font-size: 1.8rem; /* మొబైల్ లో ఫాంట్ సైజు తగ్గిస్తుంది */
+        letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title h2 {
+        font-size: 1.5rem; /* చిన్న ఫోన్ల కోసం ఇంకాస్త తగ్గిస్తుంది */
+    }
+}
+
+/* --- Ultra Stylish Skills Heading --- */
+#skills .section-title {
+    text-align: center;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+#skills .section-title h2 {
+    font-size: clamp(2rem, 8vw, 3.5rem) !important; /* స్క్రీన్ ని బట్టి సైజు మారుతుంది */
+    font-weight: 900 !important;
+    /* Gradient Color: Blue to Purple */
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+/* హెడ్డింగ్ కింద స్టైలిష్ అండర్ లైన్ */
+#skills .section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 5px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* మౌస్ పాయింటర్ పెట్టినప్పుడు అండర్ లైన్ వెడల్పు పెరుగుతుంది */
+#skills .section-title:hover h2::after {
+    width: 120px;
+}
+
+/* --- Projects Sidebar Layout --- */
+.projects-row-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 15px;
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+
+.projects-grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* కార్డులు ఎడమ నుండి మొదలవుతాయి */
+}
+
+.project-card {
+    background: #1e293b;
+    width: 380px; /* ప్రాజెక్ట్ కార్డులు కొంచెం పెద్దగా ఉంటే బాగుంటాయి */
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: #a855f7;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.project-content {
+    padding: 25px;
+}
+
+.project-tag {
+    font-size: 0.7rem;
+    background: rgba(0, 210, 255, 0.1);
+    color: #00d2ff;
+    padding: 5px 12px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.project-card h3 {
+    margin-top: 15px;
+    color: #ffffff;
+    font-size: 1.4rem;
+}
+
+.project-card p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
 
 .tech-stack span {
     font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-right: 5px;
     color: #cbd5e1;
+    background: #0f172a;
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
-.card-links { margin-top: 15px; }
-.btn-link { color: #00d2ff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+.project-link {
+    color: #00d2ff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
 
-/* --- Contact Section --- */
-.contact-box-modern {
+/* --- Projects Sidebar Alignment Fix --- */
+.projects-row-container {
     display: flex;
-    background: rgba(255, 255, 255, 0.05);
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 15px; /* Skills సెక్షన్ లాగే తక్కువ గ్యాప్ */
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* ప్రాజెక్ట్స్ హెడ్డింగ్ కిందకు జరపడానికి */
+#projects .section-title-side {
+    flex: 0 0 200px;
+    text-align: left;
+    padding-top: 50px; /* ఇది హెడ్డింగ్ ని కార్డుల లెవల్ కి తెస్తుంది */
+}
+
+#projects .section-title-side h2 {
+    font-size: 1.7rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+/* --- Large & Impactful Projects Heading --- */
+#projects .section-title-side {
+    flex: 0 0 280px; /* హెడ్డింగ్ పెద్దది కాబట్టి వెడల్పు కొంచెం పెంచాను */
+    text-align: left;
+    /* హెడ్డింగ్ సైజు పెరిగింది కాబట్టి అలైన్‌మెంట్ కోసం padding తగ్గించాను */
+    padding-top: 35px; 
+}
+
+#projects .section-title-side h2 {
+    /* Font size పెంచాను - స్క్రీన్ ని బట్టి ఆటోమేటిక్ గా మారుతుంది */
+    font-size: clamp(2.2rem, 6vw, 3.2rem) !important; 
+    font-weight: 900 !important;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* హెడ్డింగ్ కింద ఉన్న లైన్ ని కూడా కొంచెం వెడల్పు చేద్దాం */
+#projects .title-line {
+    width: 60px;
+    height: 6px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+/* --- Side-by-Side Project Cards Layout --- */
+.projects-row-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px; /* హెడ్డింగ్ మరియు కార్డుల మధ్య గ్యాప్ */
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+
+/* పెద్ద హెడ్డింగ్ అలైన్‌మెంట్ */
+#projects .section-title-side {
+    flex: 0 0 300px; /* హెడ్డింగ్ వెడల్పు */
+    text-align: left;
+    padding-top: 40px; /* కార్డుల వరుసకు సమానంగా ఉండటానికి */
+}
+
+#projects .section-title-side h2 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem) !important; /* పెద్ద హెడ్డింగ్ */
+    font-weight: 900 !important;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+}
+
+/* కార్డులను పక్కపక్కనే ఉంచే గ్రిడ్ */
+.projects-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: row; /* కార్డులను పక్కపక్కనే ఉంచుతుంది */
+    flex-wrap: nowrap; /* ఒకే వరుసలో ఉండటానికి */
+    gap: 25px;
+    justify-content: flex-start;
+}
+
+.project-card {
+    background: #1e293b;
+    flex: 1; /* రెండు కార్డులు సమాన వెడల్పు తీసుకుంటాయి */
+    min-width: 350px; /* కనీస వెడల్పు */
+    max-width: 500px; /* గరిష్ట వెడల్పు */
     border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+}
+
+/* మొబైల్ ఫోన్లలో ఒకదాని కింద ఒకటి రావడానికి */
+@media (max-width: 1024px) {
+    .projects-row-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .projects-grid {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    #projects .section-title-side {
+        text-align: center;
+        padding-top: 0;
+        margin-bottom: 40px;
+    }
+}
+
+/* --- Projects Grid Styling --- */
+.projects-grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap; /* కార్డులు కిందకు రావడానికి */
+    gap: 20px;
+    justify-content: center; /* కార్డులను మధ్యలోకి తెస్తుంది */
+    max-width: 850px; /* ఇది 2 కార్డుల వెడల్పును నియంత్రిస్తుంది */
+}
+
+.project-card {
+    background: #1e293b;
+    width: 380px; /* ప్రతి కార్డు వెడల్పు */
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: #00d2ff;
+    box-shadow: 0 15px 35px rgba(0, 210, 255, 0.15);
+}
+
+/* ప్రాజెక్ట్ లింక్ స్టైల్ */
+.project-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #00d2ff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+.project-link:hover {
+    color: #a855f7;
+    text-decoration: underline;
+}
+
+/* --- Contact Sidebar Layout --- */
+/* --- Professional Contact Section --- */
+#contact {
+    padding: 60px 20px;
+    background-color: #0f172a;
+}
+
+.contact-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contact-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px 25px;
+    border-radius: 15px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 320px; /* డెస్క్‌టాప్‌లో వెడల్పు */
+    transition: 0.3s;
+}
+
+.contact-item:hover {
+    border-color: #00d2ff;
+    transform: translateY(-5px);
+    background: rgba(0, 210, 255, 0.05);
+}
+
+.contact-item i {
+    font-size: 1.8rem;
+    color: #00d2ff;
+}
+
+.contact-text .label {
+    display: block;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.contact-text .value {
+    display: block;
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* --- Mobile Responsive Fix --- */
+@media (max-width: 480px) {
+    #contact {
+        padding: 40px 10px;
+    }
+
+    .contact-grid {
+        flex-direction: column; /* ఒకదాని కింద ఒకటి */
+        align-items: center;
+    }
+
+    .contact-item {
+        width: 100%; /* మొబైల్ స్క్రీన్ మొత్తం వెడల్పు */
+        max-width: 300px;
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .contact-item i {
+        font-size: 1.5rem;
+    }
+
+    .contact-text .value {
+        font-size: 0.85rem; /* ఈమెయిల్ కట్ అవ్వకుండా చిన్న సైజు */
+        word-break: break-all; /* మొబైల్‌లో పొడవైన ఈమెయిల్ పట్టడానికి */
+    }
+}
+
+.badge {
+    display: inline-block;
+    margin-top: 30px;
+    background: #00d2ff;
+    color: #0f172a;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.footer {
+    padding: 40px 20px;
+    background: #0f172a;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+
+/* --- Email Chat Style --- */
+.contact-item.email-chat {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 15px;
+    text-decoration: none;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.contact-item.email-chat:hover {
+    transform: scale(1.05);
+    border-color: #00d2ff;
+    box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+}
+
+.contact-icon i {
+    font-size: 1.8rem;
+    color: #00d2ff;
+    animation: pulse 2s infinite; /* చిన్న యానిమేషన్ */
+}
+
+.contact-text .label {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-text .value {
+    display: block;
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* ఐకాన్ కి చిన్న పల్స్ యానిమేషన్ */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.contact-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.contact-text .label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.contact-text .value {
+    font-size: 1rem;
+    color: #ffffff;
+    word-break: break-all; /* చిన్న స్క్రీన్ల మీద ఈమెయిల్ కట్ అవ్వకుండా ఉంటుంది */
+}
+
+
+/* --- Professional Footer Styles --- */
+.footer {
+    background-color: #0f172a; /* Dark background to match theme */
+    padding: 60px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-socials {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-socials a {
+    color: #94a3b8;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.footer-socials a:hover {
+    color: #00d2ff;
+    transform: translateY(-5px);
+}
+
+.footer-info p {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    margin: 5px 0;
+    letter-spacing: 0.5px;
+}
+
+.footer-tagline {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.footer-tagline span {
+    color: #a855f7; /* Highlighting 'Code' and 'Passion' */
+    font-weight: 600;
+}
+
+/* Scroll to top smooth effect */
+html {
+    scroll-behavior: smooth;
+}
+
+
+
+
+/* --- Contact Section Layout --- */
+#contact {
+    display: flex;
+    flex-wrap: wrap; /* మొబైల్‌లో ఒకదాని కింద ఒకటి రావడానికి */
+    gap: 40px;
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Side Title Styling --- */
+.contact-title-side {
+    flex: 1;
+    min-width: 200px;
+}
+
+.contact-title-side h2 {
+    font-size: 3rem;
+    line-height: 1.1;
+    color: #ffffff;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    margin-top: 15px;
+    border-radius: 2px;
+}
+
+/* --- Main Content Styling --- */
+.contact-content {
+    flex: 2;
+    min-width: 300px;
+}
+
+.contact-header {
+    margin-bottom: 40px;
+}
+
+.contact-header h3 {
+    font-size: 1.8rem;
+    color: #00d2ff;
+    margin-bottom: 15px;
+}
+
+.contact-header p {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.contact-header strong {
+    color: #ffffff;
+    border-bottom: 1px solid #a855f7;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    #contact {
+        flex-direction: column; /* మొబైల్‌లో టైటిల్ పైన, కంటెంట్ కింద వస్తుంది */
+        padding: 40px 15px;
+        text-align: center;
+    }
+
+    .contact-title-side h2 {
+        font-size: 2.2rem;
+    }
+
+    .title-line {
+        margin: 15px auto; /* లైన్ మధ్యలోకి రావడానికి */
+    }
+
+    .contact-header h3 {
+        font-size: 1.4rem;
+    }
+}
+
+
+/* --- Get In Touch Title Styling --- */
+.contact-title-side h2 {
+    font-size: 3.5rem; /* సైజు మీకు నచ్చినట్లు అడ్జస్ట్ చేసుకోవచ్చు */
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    
+    /* Gradient Color Effect */
+    background: linear-gradient(135deg, #00d2ff 0%, #a855f7 100%);
+    -webkit-background-clip: text; /* టెక్స్ట్‌కి మాత్రమే కలర్ అప్లై అవ్వడానికి */
+    -webkit-text-fill-color: transparent;
+    
+    /* Subtle Glow Effect */
+    filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+    margin-bottom: 10px;
+}
+
+/* టైటిల్ కింద ఉన్న లైన్ కి కూడా కలర్ ఇద్దాం */
+.title-line {
+    width: 80px;
+    height: 5px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+}
+
+/* మొబైల్ కోసం చిన్న అడ్జస్ట్మెంట్ */
+@media (max-width: 768px) {
+    .contact-title-side h2 {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+    .title-line {
+        margin: 10px auto; /* మొబైల్‌లో లైన్ మధ్యలోకి రావడానికి */
+    }
+}
+
+
+.glow-text {
+    font-size: 5rem; /* మీకు నచ్చిన సైజుకి అడ్జస్ట్ చేసుకోండి */
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: left;
+    letter-spacing: 5px;
+    
+    /* Multi-color Gradient Magic */
+    /* Blue, Purple, and Pink షేడ్స్ కలిపిన గ్రేడియంట్ */
+    background: linear-gradient(to right, #00d2ff, #3b82f6, #a855f7, #ec4899);
+    
+    /* టెక్స్ట్ లోపల మాత్రమే కలర్ కనిపించడానికి */
+    background-clip: text;
+    -webkit-background-clip: text;
+    
+    /* అసలు టెక్స్ట్ కలర్ ని ట్రాన్సుపరెంట్ చేయడం */
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    
+    /* Glowing Effect - ఇది చీకటిలో మెరుస్తున్నట్లు చూపిస్తుంది */
+    filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.5));
+    
+    /* చిన్న యానిమేషన్ (Optional) - రంగులు మెల్లగా కదులుతున్నట్లు కనిపిస్తాయి */
+    background-size: 200% auto;
+    animation: textShine 3s linear infinite;
+}
+
+/* రంగులు కదలడానికి యానిమేషన్ కోడ్ */
+@keyframes textShine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* మొబైల్ రెస్పాన్సివ్ - మీ Vivo T4 Pro కోసం */
+@media (max-width: 768px) {
+    .glow-text {
+        font-size: 3rem;
+        letter-spacing: 2px;
+    }
+}
+
+
+/* Industry Ready Card - Special Styling */
+.industry-card {
+    border: 1.5px solid rgba(255, 215, 0, 0.4) !important; /* Golden Border */
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(255, 215, 0, 0.05)) !important;
+    position: relative;
     overflow: hidden;
 }
 
-.form-side { flex: 1.5; padding: 40px; }
-.info-side { flex: 1; background: rgba(0, 0, 0, 0.2); padding: 40px; }
+.industry-card:hover {
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2) !important;
+    transform: translateY(-10px);
+}
 
-.input-group-modern input, .input-group-modern textarea {
-    width: 100%;
-    padding: 15px;
+.industry-card i {
+    color: #ffd700 !important; /* Golden Icon */
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+}
+
+.industry-card .view-cert {
+    color: #ffd700 !important;
+    font-weight: bold;
+}
+
+/* మెరిసే యానిమేషన్ */
+.award-glow {
+    animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+
+/* --- Photography Row Layout --- */
+.photography-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.02); /* Light background for contrast */
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Specific Style for Photography Card */
+.photography-card {
+    min-width: 300px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(0, 210, 255, 0.05)) !important;
+    border-color: rgba(0, 210, 255, 0.3) !important;
+}
+
+.photography-card i {
+    color: #ff7e5f !important; /* Sunset Orange for creative feel */
+    filter: drop-shadow(0 0 10px rgba(255, 126, 95, 0.4));
+}
+
+/* --- Right Side Text Styling --- */
+.photography-info {
+    flex: 1;
+    max-width: 500px;
+    text-align: left;
+}
+
+.photography-info h3 {
+    font-size: 1.5rem;
+    color: #00d2ff;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.photography-info p {
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+/* --- Mobile Responsive Fix --- */
+@media (max-width: 768px) {
+    .photography-section {
+        flex-direction: column; /* మొబైల్‌లో ఒకదాని కింద ఒకటి */
+        text-align: center;
+    }
+    .photography-info {
+        text-align: center;
+    }
+    .photography-card {
+        width: 100%;
+    }
+}
+
+/* Container for both buttons */
+.back-navigation {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* బటన్ల మధ్య గ్యాప్ */
+    flex-wrap: wrap; /* మొబైల్‌లో ఒకదాని కింద ఒకటి రావడానికి */
+}
+
+/* Base Button Style */
+.back-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Primary Button (Home) - Gradient Look */
+.primary-back {
+    background: linear-gradient(135deg, #00d2ff, #3b82f6);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+}
+
+.primary-back:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 210, 255, 0.5);
+    filter: brightness(1.1);
+}
+
+/* Secondary Button (Skills) - Glass Look */
+.secondary-back {
     background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.secondary-back:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #a855f7;
+    transform: translateY(-3px);
+    color: #a855f7;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .back-navigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .back-home-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+
+/* --- Buttons Side-by-Side Layout --- */
+.back-navigation-container {
+    display: flex;            /* పక్కపక్కనే రావడానికి */
+    justify-content: center;   /* మధ్యలోకి రావడానికి */
+    gap: 20px;                /* బటన్ల మధ్య ఖాళీ */
+    margin-top: 50px;
+    flex-wrap: nowrap;        /* ఒకే లైన్లో ఉంచుతుంది */
+}
+
+.back-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    white-space: nowrap;      /* టెక్స్ట్ విడిపోకుండా ఒకే లైన్లో ఉండటానికి */
+    transition: 0.3s ease;
+}
+
+/* Primary Color (Home) */
+.primary-btn {
+    background: linear-gradient(135deg, #00d2ff, #3b82f6);
+    color: white;
     border: none;
+}
+
+/* Secondary Color (Skills) */
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+}
+
+.back-home-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+}
+
+/* మొబైల్ లో కూడా ఒకే లైన్లో ఇరుగ్గా అనిపిస్తేనే కిందకు వచ్చేలా */
+@media (max-width: 480px) {
+    .back-navigation-container {
+        flex-direction: column; /* మొబైల్ లో మాత్రం ఒకదాని కింద ఒకటి ఉంటేనే క్లిక్ చేయడానికి వీలుగా ఉంటుంది */
+        align-items: center;
+    }
+    .back-home-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+
+
+
+.admin-entry {
+    margin-top: 20px;
+    opacity: 0.3; /* తక్కువగా కనిపిస్తుంది */
+    transition: 0.3s;
+}
+
+.admin-entry:hover {
+    opacity: 1; /* మౌస్ పెట్టినప్పుడు మాత్రమే స్పష్టంగా కనిపిస్తుంది */
+}
+
+.lock-icon {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+
+#typing-text {
+    color: #00d2ff !important; /* స్కై బ్లూ కలర్ */
+    font-weight: bold;
+    min-height: 1.2em;
+    display: inline-block;
+}
+
+/* ఆ కోడ్ ఐకాన్ (< >) స్టైల్ */
+.logo-icon {
+    font-size: 1.5rem;
+    color: #a855f7; /* పర్పుల్ కలర్ */
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    
+    /* ఈ లైన్ చాలా ముఖ్యం - ఇది లేకపోతే తిరగదు */
+    display: inline-block; 
+    
+    /* స్మూత్ యానిమేషన్ కోసం */
+    transition: all 0.6s ease-in-out;
+}
+
+/* --- Hover Effects (మౌస్ పెట్టినప్పుడు) --- */
+
+/* 1. ఐకాన్ తిరుగుతుంది (ఇప్పుడు పనిచేస్తుంది) */
+.logo a:hover .logo-icon {
+    transform: rotate(360deg) scale(1.2); /* రౌండ్ గా తిరిగి జూమ్ అవుతుంది */
+    color: #00d2ff; /* బ్లూ కలర్ అవుతుంది */
+}
+
+/* --- Stylish Logo Design (Restored) --- */
+.logo a {
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ఐకాన్ మరియు పేరు మధ్య గ్యాప్ */
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+}
+
+/* ఆ కోడ్ ఐకాన్ (< >) స్టైల్ */
+.logo-icon {
+    font-size: 1.5rem;
+    color: #a855f7; /* పర్పుల్ కలర్ */
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    transition: transform 0.6s ease-in-out;
+}
+
+/* "GIRI" బాక్స్ స్టైల్ */
+.glow-box {
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(168, 85, 247, 0.1));
+    color: #00d2ff;
+    padding: 2px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); /* నియాన్ గ్లో */
+    margin-left: 5px;
+    transition: all 0.3s ease;
+}
+
+/* --- Hover Effects (మౌస్ పెట్టినప్పుడు) --- */
+/* 1. ఐకాన్ తిరుగుతుంది */
+.logo a:hover .logo-icon {
+    transform: rotate(360deg) scale(1.2);
+    color: #00d2ff; /* రంగు మారుతుంది */
+}
+
+/* 2. "GIRI" బాక్స్ మెరుస్తుంది */
+.logo a:hover .glow-box {
+    background: #00d2ff;
+    color: #0f172a; /* టెక్స్ట్ డార్క్ అవుతుంది */
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
+    transform: translateY(-2px);
+    border-color: #00d2ff;
+}
+
+/* 3. "HIMA" టెక్స్ట్ కొద్దిగా వెలుగుతుంది */
+.logo a:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* --- Particles Background Fixes --- */
+
+.hero {
+    position: relative; /* ఇది ముఖ్యం */
+    /* మీ పాత బ్యాక్‌గ్రౌండ్ ఇమేజ్ అలాగే ఉంచండి, దాని మీద ఇది వస్తుంది */
+    overflow: hidden; /* బయటకి వెళ్ళకుండా */
+}
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: transparent; /* పాత ఇమేజ్ కనిపించేలా */
+    z-index: 1; /* వెనుక ఉండాలి */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* టెక్స్ట్ పార్టికల్స్ కంటే పైన ఉండాలి, లేకపోతే బటన్స్ పని చేయవు */
+}
+
+
+.hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    /* --- Black Glass & Coding Background --- */
+    background: 
+        /* 1. Black Glass Overlay (ఇదే ఆ నల్లటి అద్దం ఎఫెక్ట్ ఇస్తుంది) */
+        linear-gradient(to bottom, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.85)),
+        
+        /* 2. Coding Lines Image (వెనుక కనిపించే కోడ్) */
+        url('https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2070&auto=format&fit=crop'); 
+
+    background-size: cover;
+    background-position: center;
+    
+    /* 3. Parallax Effect (స్క్రోల్ చేసినప్పుడు ఇమేజ్ కదలకుండా ఫిక్స్ అయి ఉంటుంది) */
+    background-attachment: fixed; 
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 10%;
+    text-align: left;
+}
+
+/* --- 3D Photo Effect (Updated Size) --- */
+.about-image {
+    position: relative;
+    
+    /* ఇక్కడ సైజులు పెంచాను */
+    width: 400px;  /* 320px నుండి 400px కి మార్చాను (వెడల్పు పెరిగింది) */
+    height: 480px; /* వెడల్పుకు తగ్గట్టు హైట్ కూడా పెంచాను */
+    
+    /* మొబైల్ ఫోన్ల కోసం (స్క్రీన్ దాటి పోకుండా) */
+    max-width: 100%; 
+    
+    /* 3D స్పేస్ */
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    margin: 0 auto; /* సెంటర్ అవ్వడానికి */
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ఫోటో సాగదీయకుండా కరెక్ట్ గా కట్ అవుతుంది */
+    border-radius: 20px; /* కర్వ్స్ కొంచెం పెంచాను */
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    
+    /* 3D Pop-out Effect */
+    transform: translateZ(50px); 
+    transition: all 0.3s ease;
+}
+
+/* వెనుక ఉండే బార్డర్ బాక్స్ */
+.about-image::before {
+    content: '';
+    position: absolute;
+    top: 25px; /* పొజిషన్ అడ్జస్ట్ చేశాను */
+    left: 25px;
+    width: 100%;
+    height: 100%;
+    border: 4px solid #00d2ff; /* థిక్నెస్ పెంచాను */
+    border-radius: 20px;
+    transform: translateZ(20px);
+    z-index: -1;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+}
+
+
+/* --- Stylish Hero Buttons --- */
+.hero-btns {
+    display: flex;
+    gap: 25px; /* బటన్ల మధ్య గ్యాప్ */
+    margin-top: 20px;
+}
+
+/* Common Styles for Both Buttons */
+.btn-primary, .btn-secondary {
+    position: relative;
+    padding: 15px 35px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px; /* పిల్ షేప్ */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* టెక్స్ట్ కి ఐకాన్ కి మధ్య గ్యాప్ */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* బౌన్సీ ఎఫెక్ట్ */
+    overflow: hidden;
+}
+
+/* --- Button 1: View My Work (Glowing Gradient) --- */
+.btn-primary {
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3); /* బ్లూ గ్లో */
+    z-index: 1;
+}
+
+/* మౌస్ పెట్టినప్పుడు */
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.05); /* పైకి లేస్తుంది */
+    box-shadow: 0 20px 40px rgba(168, 85, 247, 0.5); /* పర్పుల్ గ్లో పెరుగుతుంది */
+}
+
+/* షైన్ ఎఫెక్ట్ (కాంతి వెళ్ళినట్లు ఉంటుంది) */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.btn-primary:hover::before {
+    left: 100%; /* లైట్ ఎడమ నుండి కుడికి వెళ్తుంది */
+}
+
+/* ఐకాన్ కదలిక */
+.btn-primary:hover i {
+    transform: translateX(5px); /* బాణం గుర్తు ముందుకు జరుగుతుంది */
+}
+
+
+/* --- Button 2: Let's Talk (Glassmorphism) --- */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05); /* గ్లాస్ ఎఫెక్ట్ */
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+/* మౌస్ పెట్టినప్పుడు */
+.btn-secondary:hover {
+    background: #ffffff; /* వైట్ బ్యాక్‌గ్రౌండ్ వస్తుంది */
+    color: #0f172a; /* టెక్స్ట్ డార్క్ అవుతుంది */
+    border-color: #ffffff;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+/* ఐకాన్ కదలిక */
+.btn-secondary:hover i {
+    transform: rotate(15deg) scale(1.2); /* చాట్ ఐకాన్ షేక్ అవుతుంది */
+    color: #a855f7;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    .hero-btns {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+        width: 100%;
+        align-items: center;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%; /* ఫుల్ వెడల్పు */
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+
+/* --- Profile Image Fix --- */
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    
+    /* ఈ లైన్ చాలా ముఖ్యం - ఇది ఫోటోని పైనుండి చూపిస్తుంది, సో తల కట్ అవ్వదు */
+    object-position: top center; 
+    
+    border-radius: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    transform: translateZ(50px); 
+    transition: all 0.3s ease;
+}
+
+
+/* --- Simple & Classy Photo Effect --- */
+
+/* ఫోటో ఉండే బాక్స్ */
+.about-image {
+    position: relative;
+    width: 400px; /* లాప్ టాప్ లో వెడల్పు */
+    height: 480px;
+    max-width: 100%; /* మొబైల్ కోసం */
+    margin: 0 auto;
+    border-radius: 20px;
+    /* పాత 3D కోడ్ తీసేశాను */
+}
+
+/* అసలైన ఫోటో స్టైల్ */
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center; /* తల కట్ అవ్వకుండా */
+    border-radius: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    /* మామూలుగా ఉన్నప్పుడు చిన్న నీడ */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease; /* స్మూత్ యానిమేషన్ కోసం */
+    position: relative;
+    z-index: 2;
+}
+
+/* ఫోటో వెనుక ఉండే బ్లూ ఫ్రేమ్ */
+.about-image::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #00d2ff; /* మీ థీమ్ కలర్ */
+    border-radius: 20px;
+    z-index: 1;
+    transition: all 0.4s ease;
+    opacity: 0.7; /* కొంచెం డల్ గా ఉంటుంది మొదట్లో */
+}
+
+/* --- HOVER EFFECT (మౌస్ పెట్టినప్పుడు) --- */
+
+/* 1. ఫోటో జూమ్ అయ్యి మెరుస్తుంది */
+.about-image:hover .profile-img {
+    transform: scale(1.03); /* కొద్దిగా జూమ్ అవుతుంది */
+    border-color: #00d2ff; /* బోర్డర్ బ్లూ కలర్ అవుతుంది */
+    /* మంచి బ్లూ నియాన్ గ్లో */
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.6), 
+                0 10px 40px rgba(0, 210, 255, 0.3);
+}
+
+/* 2. వెనుక ఉన్న ఫ్రేమ్ కూడా కొంచెం కదులుతుంది */
+.about-image:hover::before {
+    top: 20px;
+    left: 20px;
+    opacity: 1; /* ఫుల్ గా కనిపిస్తుంది */
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    .about-image {
+        width: 280px;
+        height: 350px;
+    }
+}
+
+/* --- Fix for Download CV Button Sizing --- */
+.about-text .btn-primary {
+    /* బటన్ బాక్స్ మొత్తం ఆక్రమించకుండా ఆపుతుంది */
+    display: inline-flex; 
+    
+    /* టెక్స్ట్ ఎంత ఉందో అంతే వెడల్పు తీసుకుంటుంది */
+    width: auto !important; 
+    
+    /* సైజు మరీ చిన్నగా/పెద్దగా అవ్వకుండా కంట్రోల్స్ */
+    min-width: 160px; 
+    max-width: 220px; 
+    
+    /* టెక్స్ట్ సెంటర్ లో ఉండటానికి */
+    justify-content: center; 
+    align-items: center;
+    
+    margin-top: 25px; /* పైన కొంచెం గ్యాప్ */
+}
+
+/* మొబైల్ ఫోన్లో మాత్రం సెంటర్ లో ఉండాలి కాబట్టి */
+@media (max-width: 768px) {
+    .about-text .btn-primary {
+        margin: 20px auto; /* మొబైల్ లో ఆటోమేటిక్ గా సెంటర్ అవుతుంది */
+    }
+}
+
+/* --- Split Layout for Skills --- */
+.skills-split-layout {
+    display: flex;
+    justify-content: center;
+    gap: 60px; /* లెఫ్ట్ కి రైట్ కి మధ్య గ్యాప్ */
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start; /* పై నుండి మొదలవ్వాలి */
+}
+
+/* Columns Style */
+.skills-column {
+    flex: 1; /* రెండు వైపులా సమాన వెడల్పు */
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* కార్డుల మధ్య గ్యాప్ */
+    max-width: 450px;
+}
+
+/* Column Headings (Technical / Creative) */
+.col-title {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.col-title .highlight {
+    color: #00d2ff; /* హైలైట్ కలర్ */
+}
+.right-col .col-title .highlight {
+    color: #a855f7; /* క్రియేటివ్ వైపు పర్పుల్ హైలైట్ */
+}
+
+/* Card Styling Update */
+.skill-card {
+    width: 100%; /* కాలమ్ లో ఎంత స్థలం ఉంటే అంత తీసుకుంటుంది */
+    padding: 30px;
+    background: #1e293b;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+/* Video Card Special Style */
+.video-card:hover {
+    border-color: #ef4444; /* రెడ్ బోర్డర్ (YouTube Style) */
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+}
+
+.video-card:hover i {
+    color: #ef4444; /* ఐకాన్ రెడ్ అవుతుంది */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .skills-split-layout {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+        align-items: center;
+        gap: 50px;
+    }
+    
+    .skills-column {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* --- Updated Technical Skills Layout --- */
+
+.tech-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+/* కార్డులను పెద్దగా చేసే స్టైల్ */
+.tech-card {
+    flex: 1; /* ఉన్న ప్లేస్ లో సమానంగా సర్దుకుంటాయి */
+    padding: 30px 20px; /* లోపల గ్యాప్ పెంచాను */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* కంటెంట్ ని నిలువుగా సర్దుతుంది */
+    min-height: 250px; /* కార్డు మరీ చిన్నగా అవ్వకుండా చూస్తుంది */
+}
+
+/* ఐకాన్స్ సైజు పెంచాను */
+.tech-card i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+/* టైటిల్ సైజు */
+.tech-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* పేరాగ్రాఫ్ టెక్స్ట్ స్టైల్ */
+.tech-card p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* మొబైల్ రెస్పాన్సివ్ */
+@media (max-width: 768px) {
+    .tech-row {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+    }
+}
+
+/* --- Admin Access Button Centering --- */
+.admin-entry {
+    width: 100%; /* ఆ కాలమ్ లో ఉన్న వెడల్పు మొత్తం తీసుకుంటుంది */
+    display: flex;
+    justify-content: center; /* కరెక్ట్ గా మధ్యలో పెడుతుంది */
+    align-items: center;
+    margin-top: 25px; /* పైన ఉన్న కార్డుల నుండి గ్యాప్ */
+}
+
+/* బటన్ స్టైల్ (ఇది మీకు ఆల్రెడీ ఉంటే పర్లేదు, లేకపోతే ఇది వాడుకోండి) */
+.lock-icon {
+    text-decoration: none;
+    color: #94a3b8; /* గ్రే కలర్ (మరీ హైలైట్ అవ్వకుండా) */
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* మౌస్ పెట్టినప్పుడు */
+.lock-icon:hover {
+    color: #ef4444; /* రెడ్ కలర్ (డేంజర్ జోన్ అన్నట్లు) */
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* --- Gap Adjustment --- */
+.skills-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+    /* ఇక్కడ గ్యాప్ తగ్గించాను (Cards మధ్య దూరం తగ్గుతుంది) */
+    gap: 15px; 
+    
+    max-width: 450px;
+}
+
+/* --- Admin Button Spacing Reduced --- */
+.admin-entry {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* మార్జిన్ పూర్తిగా తగ్గించేశాను (గ్యాప్ మాత్రమే పనిచేస్తుంది) */
+    margin: 0; 
+}
+
+/* --- View Certificate Link Style --- */
+.view-cert {
+    text-decoration: none; /* ఆ పెద్ద గీతను ఇది తీసేస్తుంది */
+    color: #00d2ff; /* మీ థీమ్ బ్లూ కలర్ */
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block; /* బటన్ లాగా ప్రవర్తించడానికి */
+    margin-top: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+    border: none; /* బోర్డర్ ఏమైనా ఉంటే పోతుంది */
+}
+
+/* --- Hover Effect (మౌస్ పెట్టినప్పుడు మాత్రమే) --- */
+/* టెక్స్ట్ కింద ఒక సన్నని గీత యానిమేషన్ లాగా వస్తుంది */
+.view-cert::after {
+    content: '';
+    position: absolute;
+    width: 0; /* మొదట గీత ఉండదు */
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #a855f7; /* పర్పుల్ కలర్ లైన్ */
+    transition: width 0.3s ease;
+}
+
+/* మౌస్ పెడితే గీత పెరుగుతుంది */
+.view-cert:hover::after {
+    width: 100%;
+}
+
+.view-cert:hover {
+    color: #a855f7; /* టెక్స్ట్ కలర్ మారుతుంది */
+    transform: translateX(5px); /* కొద్దిగా ముందుకు జరుగుతుంది */
+}
+
+/* --- Professional Glassmorphism Projects Grid --- */
+
+.projects-grid {
+    display: grid;
+    /* స్క్రీన్ సైజును బట్టి ఎన్ని పట్టాలో ఆటోమేటిక్ గా డిసైడ్ చేస్తుంది */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 40px; /* కార్డుల మధ్య గ్యాప్ */
+    margin-top: 40px;
+    padding: 0 10px;
+}
+
+/* Glass Card Style */
+.project-card {
+    background: rgba(255, 255, 255, 0.03); /* పారదర్శకమైన వైట్ */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* సన్నని గ్లాస్ బోర్డర్ */
+    backdrop-filter: blur(10px); /* వెనుక బ్లర్ అవుతుంది */
+    border-radius: 20px;
+    overflow: hidden; /* ఇమేజ్ బయటకు రాకుండా */
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Hover Effect: పైకి లేచి గ్లో అవుతుంది */
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(0, 210, 255, 0.5); /* బ్లూ బోర్డర్ */
+    box-shadow: 0 20px 40px rgba(0, 210, 255, 0.2); /* బ్లూ గ్లో */
+}
+
+/* Image Section */
+.card-image {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* మౌస్ పెట్టినప్పుడు ఇమేజ్ జూమ్ అవుతుంది */
+.project-card:hover .card-image img {
+    transform: scale(1.1);
+}
+
+/* Card Content */
+.card-content {
+    padding: 25px;
+    text-align: left;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.card-content p {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Tech Stack Tags (చిన్న బాక్సులు) */
+.tech-stack {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.tech-stack span {
+    background: rgba(0, 210, 255, 0.1);
+    color: #00d2ff;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+}
+
+/* Buttons (Demo & Code) */
+.card-links {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-link, .btn-github {
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Demo Button Style */
+.btn-link {
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white;
+    border: none;
+}
+.btn-link:hover {
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Github Button Style */
+.btn-github {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.btn-github:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+
+/* --- Projects Grid: Single Line Fix --- */
+
+.projects-grid {
+    display: grid;
+    /* ఇది ముఖ్యం: 3 కార్డులు సమానంగా పంచుకుంటాయి */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 25px; /* కార్డుల మధ్య గ్యాప్ */
+    margin-top: 40px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+/* కంటైనర్ వెడల్పు సరిపోకపోతే పెంచుకోవచ్చు */
+.container {
+    max-width: 1300px; /* పేజీ వెడల్పు కొంచెం పెంచాను, సో 3 కార్డులు ఈజీగా ఫిట్ అవుతాయి */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Mobile Responsive Rules --- */
+
+/* లాప్ టాప్ స్క్రీన్ మరీ చిన్నగా ఉంటే (Tablet Mode) 2 కార్డులు */
+@media (max-width: 992px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+/* మొబైల్ ఫోన్లో (Mobile Mode) 1 కార్డు */
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* --- Projects Section Styles --- */
+
+.projects-grid {
+    display: grid;
+    /* స్క్రీన్ వెడల్పు 1000px కంటే ఎక్కువ ఉంటే 3 కార్డులు పక్కపక్కన వస్తాయి */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; /* కార్డుల మధ్య గ్యాప్ */
+    margin-top: 40px;
+    padding: 0 10px;
+}
+
+/* Glass Card Style */
+.project-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column; /* కంటెంట్ నిలువుగా సెట్ అవ్వడానికి */
+    position: relative;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(0, 210, 255, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 210, 255, 0.2);
+}
+
+/* Project Tag (Live Project, MERN Stack etc.) */
+.project-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 210, 255, 0.2);
+    color: #00d2ff;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 2;
+    border: 1px solid rgba(0, 210, 255, 0.4);
+}
+
+/* Image Styling */
+.card-image {
+    height: 180px; /* ఇమేజ్ హైట్ ఫిక్స్ చేశాను */
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.project-card:hover .card-image img {
+    transform: scale(1.1);
+}
+
+/* Content Styling */
+.card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* కార్డులు సమాన హైట్ లో ఉండటానికి */
+}
+
+.card-content h3 {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.card-content p {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+/* Tech Stack Chips */
+.tech-stack {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tech-stack span {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+}
+
+/* Links / Buttons */
+.card-links {
+    margin-top: auto; /* బటన్ ఎప్పుడూ కింద ఉండేలా */
+}
+
+.btn-link, .btn-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-link {
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white;
+}
+
+.btn-github {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn-link:hover, .btn-github:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 992px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr); /* టాబ్లెట్ లో 2 కార్డులు */
+    }
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr; /* మొబైల్ లో 1 కార్డు */
+    }
+}
+
+/* --- Projects Grid Center Alignment --- */
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 కార్డులు ఒకే లైన్ లో */
+    gap: 30px;
+    margin: 40px auto; /* గ్రిడ్ పేజీ మధ్యలో ఉండటానికి */
+    padding: 0 10px;
+    max-width: 1300px; /* మరీ సాగదీయకుండా కంట్రోల్ */
+}
+
+/* Card Styling */
+.project-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CENTER CONTENT LOGIC --- */
+.card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    
+    /* ఇవి ముఖ్యం: అంతా సెంటర్ అవ్వడానికి */
+    text-align: center; 
+    align-items: center; 
+}
+
+/* Tech Stack Chips Center */
+.tech-stack {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center; /* ట్యాగ్స్ సెంటర్ లోకి */
+    flex-wrap: wrap;
+}
+
+/* Links Center */
+.card-links {
+    margin-top: auto;
+    display: flex;
+    justify-content: center; /* బటన్ సెంటర్ లోకి */
+    width: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Stylish Section Heading --- */
+
+.section-title-wrapper {
+    text-align: center;
+    margin-bottom: 60px; /* కింద ఉన్న కార్డులకు గ్యాప్ */
+    position: relative;
+}
+
+/* చిన్న సబ్-టైటిల్ (MY WORK) */
+.sub-title {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 4px; /* అక్షరాల మధ్య గ్యాప్ */
+    color: #94a3b8;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* మెయిన్ హెడ్డింగ్ */
+.main-title {
+    font-size: 3rem; /* పెద్ద సైజు */
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* "Professional Projects" కి కలర్ మ్యాజిక్ */
+.gradient-text {
+    background: linear-gradient(to right, #00d2ff, #a855f7); /* బ్లూ టు పర్పుల్ */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* టెక్స్ట్ ట్రాన్స్పరెంట్ అయ్యి వెనుక కలర్ కనిపిస్తుంది */
+    
+    /* లైట్ గా గ్లో ఎఫెక్ట్ */
+    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.3));
+}
+
+/* కింద ఉండే మెరుస్తున్న గీత */
+.title-bar-center {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    margin: 0 auto; /* సెంటర్ లోకి */
+    border-radius: 10px;
+    position: relative;
+}
+
+/* ఆ గీత వెనుక ఇంకో గ్లోయింగ్ లేయర్ */
+.title-bar-center::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    filter: blur(10px); /* బ్లర్ ఎఫెక్ట్ (గ్లో కోసం) */
+    opacity: 0.7;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2rem; /* మొబైల్ లో సైజు తగ్గుతుంది */
+    }
+    
+    .sub-title {
+        font-size: 0.8rem;
+    }
+}
+
+
+/* --- Stylish Card Headings --- */
+
+.card-content h3 {
+    font-size: 1.5rem;
+    font-weight: 800; /* మంచి బోల్డ్ ఫాంట్ */
+    color: #ffffff;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px; /* అక్షరాల మధ్య కొంచెం గ్యాప్ */
+    transition: all 0.3s ease;
+    
+    /* టెక్స్ట్ క్లియర్ గా కనిపించడానికి చిన్న షాడో */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Hover Effect (మౌస్ పెట్టినప్పుడు మ్యాజిక్) --- */
+
+/* కార్డు మీద మౌస్ పెడితే హెడ్డింగ్ కలర్ మారుతుంది */
+.project-card:hover .card-content h3 {
+    color: #00d2ff; /* నియాన్ బ్లూ కలర్ */
+    
+    /* అక్షరాలు మెరుస్తున్నట్లు (Glow) చేసే ఎఫెక్ట్ */
+    text-shadow: 0 0 15px rgba(0, 210, 255, 0.6), 
+                 0 0 30px rgba(0, 210, 255, 0.3);
+                 
+    transform: scale(1.05); /* కొద్దిగా పెద్దది అవుతుంది */
+}
+
+/* --- Ultra Stylish Card Headings (Single Line) --- */
+
+.card-content h3 {
+    /* 1. Single Line Logic (ఎంత పెద్ద పేరున్నా ఒకే లైన్ లో ఉంటుంది) */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; /* పేరు మరీ పెద్దగా ఉంటే చివరన ... అని వస్తుంది */
+    
+    /* 2. Font Style */
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-transform: uppercase; /* అన్నీ క్యాపిటల్ లెటర్స్ లో బాగుంటాయి */
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    
+    /* 3. Gradient Text Magic (రంగుల టెక్స్ట్) */
+    background: linear-gradient(to right, #fff, #a855f7); /* వైట్ టు పర్పుల్ */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* రంగు కనిపించడానికి టెక్స్ట్ ట్రాన్స్పరెంట్ */
+    
+    transition: all 0.4s ease;
+}
+
+/* --- Hover Effect (మౌస్ పెట్టినప్పుడు) --- */
+.project-card:hover .card-content h3 {
+    /* కలర్ మారుతుంది (Blue Gradient) */
+    background: linear-gradient(to right, #00d2ff, #fff); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    /* కొంచెం ముందుకు జరుగుతుంది */
+    transform: translateX(5px);
+    
+    /* గ్లో ఎఫెక్ట్ (Text Shadow పనిచేయదు కాబట్టి Drop Shadow వాడాలి) */
+    filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
+}
+
+/* --- Fix for Long Titles (Single Line Fit) --- */
+
+.card-content h3 {
+    /* 1. Single Line Safety */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; /* ఒకవేళ మరీ పెద్దగా ఉంటే చివర ... వస్తుంది, బయటకు వెళ్ళదు */
+    width: 100%; /* బాక్స్ లోపల మాత్రమే ఉండేలా */
+    display: block;
+    
+    /* 2. Font Size Adjustment */
+    font-size: 1.3rem; /* 1.6rem నుండి తగ్గించాను - ఇప్పుడు పర్ఫెక్ట్ గా ఫిట్ అవుతుంది */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* గ్యాప్ కూడా తగ్గించాను */
+    margin-bottom: 15px;
+    
+    /* 3. Gradient Style (Same as before) */
+    background: linear-gradient(to right, #fff, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    transition: all 0.4s ease;
+}
+
+/* మౌస్ పెట్టినప్పుడు */
+.project-card:hover .card-content h3 {
+    background: linear-gradient(to right, #00d2ff, #fff); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    /* స్పేస్ తక్కువ ఉంది కాబట్టి, మూవ్మెంట్ తీసేశాను లేదా తగ్గించాను */
+    transform: translateX(2px); 
+    filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
+}
+
+.card-content {
+    padding: 20px 15px; /* ఎడమ, కుడి వైపు స్పేస్ తగ్గించాను, అప్పుడు టెక్స్ట్ కి ఎక్కువ ప్లేస్ దొరుకుతుంది */
+    /* మిగతా కోడ్ సేమ్ */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
+    align-items: center;
+}
+
+/* --- Fix: Full Name in Single Line --- */
+
+.card-content {
+    /* ప్రక్కల గ్యాప్ (Padding) తగ్గించాను, అప్పుడు టెక్స్ట్ కి ఎక్కువ జాగా దొరుకుతుంది */
+    padding: 20px 5px; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
+    align-items: center;
+}
+
+.card-content h3 {
+    width: 100%;
+    white-space: nowrap; /* లైన్ బ్రేక్ అవ్వదు */
+    overflow: hidden; /* బాక్స్ దాటితే కనిపించదు (సేఫ్టీ కోసం) */
+    text-overflow: clip; /* చుక్కలు (...) రాకుండా చూస్తుంది */
+    
+    /* ఫాంట్ అడ్జస్ట్మెంట్స్ */
+    font-size: 1.2rem; /* సైజు కొంచెం తగ్గించాను (Perfect Fit కోసం) */
+    font-weight: 800;
+    text-transform: uppercase;
+    
+    /* అక్షరాలను దగ్గరగా జరపడం వల్ల పెద్ద పేరు కూడా పడుతుంది */
+    letter-spacing: -0.5px; 
+    
+    margin-bottom: 15px;
+    
+    /* Gradient Style */
+    background: linear-gradient(to right, #fff, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    transition: all 0.4s ease;
+}
+
+/* Hover Effect */
+.project-card:hover .card-content h3 {
+    background: linear-gradient(to right, #00d2ff, #fff); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    /* స్పేస్ లేదు కాబట్టి కదలిక వద్దు, జస్ట్ గ్లో చాలు */
+    filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.5));
+}
+
+@media (max-width: 480px) {
+    .card-content h3 {
+        font-size: 1rem; /* మొబైల్ లో చిన్నగా */
+    }
+}
+
+.top-nav-buttons {
+    position: fixed; /* పేజీ స్క్రోల్ చేసినా ఇవి అక్కడే ఉంటాయి */
+    top: 25px;
+    left: 25px;
+    display: flex;
+    gap: 15px; /* రెండు బటన్ల మధ్య గ్యాప్ */
+    z-index: 1000; /* అన్నిటికంటే పైన కనిపించడానికి */
+}
+
+/* బటన్ స్టైల్ (Glass Effect) */
+.nav-btn {
+    text-decoration: none;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05); /* లైట్ గ్లాస్ బ్యాక్‌గ్రౌండ్ */
+    padding: 10px 20px;
+    border-radius: 30px; /* రౌండ్ షేప్ */
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ఐకాన్ కి టెక్స్ట్ కి మధ్య గ్యాప్ */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ఐకాన్ కలర్ */
+.nav-btn i {
+    color: #00d2ff; /* మీ థీమ్ బ్లూ */
+    transition: 0.3s;
+}
+
+/* --- Hover Effect (మౌస్ పెట్టినప్పుడు) --- */
+.nav-btn:hover {
+    background: rgba(0, 210, 255, 0.1); /* లైట్ బ్లూ టింట్ వస్తుంది */
+    border-color: #00d2ff;
+    color: #00d2ff;
+    transform: translateY(-3px); /* కొంచెం పైకి లేస్తుంది */
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); /* గ్లో ఎఫెక్ట్ */
+}
+
+/* హోవర్ చేసినప్పుడు ఐకాన్ వైట్ అవుతుంది */
+.nav-btn:hover i {
+    color: #ffffff;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 600px) {
+    .top-nav-buttons {
+        top: 15px;
+        left: 15px;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+
+/* --- Professional About Me Styling --- */
+
+.about-content {
+    max-width: 900px;
+    margin: 0 auto; /* సెంటర్ లోకి */
+}
+
+/* పేరాగ్రాఫ్ స్టైల్ */
+.about-content p {
+    font-size: 1.05rem;
+    line-height: 1.8; /* లైన్ల మధ్య గ్యాప్ ఉంటే చదవడానికి బాగుంటుంది */
+    color: #cbd5e1; /* లైట్ గ్రే కలర్ */
+    margin-bottom: 20px;
+    text-align: justify; /* టెక్స్ట్ రెండు వైపులా సమానంగా ఉంటుంది */
+}
+
+/* హైలైట్ చేసిన పదాలు (MERN, Creative, etc.) */
+.about-content strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.about-content em {
+    color: #00d2ff; /* ఫోటోగ్రఫీ, వీడియో ఎడిటింగ్ కి బ్లూ కలర్ */
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* --- Details Grid (Role, Education, etc.) --- */
+.about-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* రెండు కాలమ్స్ */
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* ఆ బాక్సుల డిజైన్ (Glass Effect) */
+.detail-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent; /* ఎడమ వైపు బోర్డర్ కోసం */
+}
+
+/* మౌస్ పెట్టినప్పుడు */
+.detail-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-3px);
+    border-left: 3px solid #a855f7; /* పర్పుల్ బోర్డర్ వస్తుంది */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* లేబుల్ (Role, Education..) */
+.detail-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+/* వాల్యూ (MERN Developer, 6+ Years...) */
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* NGO Work ని స్పెషల్ గా హైలైట్ చేయడానికి (Optional) */
+.detail-item:nth-child(3) .detail-value {
+    color: #00d2ff; /* బ్లూ కలర్ లో కనిపిస్తుంది */
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 600px) {
+    .about-details-grid {
+        grid-template-columns: 1fr; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+    }
+    
+    .about-content p {
+        text-align: left; /* మొబైల్ లో జస్టిఫై వద్దు */
+    }
+}
+
+
+/* --- Colorful About Me Grid --- */
+
+/* 1. MERN Developer (Blue - Tech) */
+.detail-item:nth-child(1) {
+    border-left: 3px solid #00d2ff; /* Cyan Border */
+    background: linear-gradient(90deg, rgba(0, 210, 255, 0.05), transparent); /* Light Blue Tint */
+}
+.detail-item:nth-child(1) .detail-value {
+    color: #00d2ff;
+}
+
+/* 2. Education (Purple - Knowledge) */
+.detail-item:nth-child(2) {
+    border-left: 3px solid #a855f7; /* Purple Border */
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.05), transparent);
+}
+.detail-item:nth-child(2) .detail-value {
+    color: #a855f7;
+}
+
+/* 3. Volunteer Work (Orange/Gold - Social Service) */
+.detail-item:nth-child(3) {
+    border-left: 3px solid #f59e0b; /* Gold Border */
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05), transparent);
+}
+.detail-item:nth-child(3) .detail-value {
+    color: #f59e0b;
+}
+
+/* 4. Availability (Green - Open/Go) */
+.detail-item:nth-child(4) {
+    border-left: 3px solid #22c55e; /* Green Border */
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.05), transparent);
+}
+.detail-item:nth-child(4) .detail-value {
+    color: #22c55e;
+}
+
+/* --- Common Style for all items (Base Style) --- */
+.detail-item {
+    /* పైన ఇచ్చిన కలర్స్ కాకుండా మిగతా బేసిక్ స్టైల్స్ */
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* సన్నని గ్రే బోర్డర్ */
+    /* border-left కలర్స్ పైన ఓవర్రైడ్ అవుతాయి */
+    transition: all 0.3s ease;
+}
+
+/* మౌస్ పెట్టినప్పుడు గ్లో అవ్వడానికి */
+.detail-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3); /* మొత్తం బోర్డర్ కొంచెం లైట్ అవుతుంది */
+}
+
+
+/* --- Professional Heading Style (Reused) --- */
+
+.section-title-wrapper {
+    text-align: center;
+    margin-bottom: 40px; /* కింద కంటెంట్ కి గ్యాప్ */
+    position: relative;
+}
+
+.sub-title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #94a3b8; /* గ్రే కలర్ */
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.main-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* "Me" అనే పదానికి రంగులు */
+.gradient-text {
+    background: linear-gradient(to right, #00d2ff, #a855f7); /* Blue to Purple */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.4)); /* Glow Effect */
+}
+
+/* కింద గీత */
+.title-bar-center {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.5); /* Line Glow */
+}
+
+/* --- About Section Layout (Text Left - Photo Right) --- */
+
+.about-wrapper {
+    display: flex;
+    align-items: center; /* నిలువుగా సెంటర్ అవుతాయి */
+    justify-content: space-between;
+    gap: 50px; /* టెక్స్ట్ కి ఫోటోకి మధ్య గ్యాప్ */
+    margin-top: 40px;
+}
+
+/* Left Column: Text */
+.about-text-col {
+    flex: 1; /* మిగిలిన స్పేస్ అంతా ఇది తీసుకుంటుంది */
+    text-align: left; /* టెక్స్ట్ ఎడమ వైపుకి ఉంటుంది */
+}
+
+.about-text-col p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+/* Right Column: Image */
+.about-image-col {
+    flex: 0 0 350px; /* ఫోటోకి ఫిక్స్డ్ వెడల్పు (అవసరమైతే మార్చుకోండి) */
+    position: relative;
+}
+
+.about-image-col img {
+    width: 100%;
+    border-radius: 20px; /* కార్నర్స్ రౌండ్ గా */
+    border: 2px solid rgba(255, 255, 255, 0.1); /* సన్నని బోర్డర్ */
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); /* బ్లూ గ్లో వెనుక */
+    transition: all 0.5s ease;
+}
+
+/* ఫోటో మీద మౌస్ పెడితే */
+.about-image-col img:hover {
+    transform: scale(1.02); /* కొంచెం జూమ్ */
+    box-shadow: 0 0 50px rgba(168, 85, 247, 0.4); /* పర్పుల్ గ్లో */
+    border-color: #a855f7;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 900px) {
+    .about-wrapper {
+        flex-direction: column-reverse; /* మొబైల్ లో ఫోటో పైన, టెక్స్ట్ కింద */
+        text-align: center;
+    }
+
+    .about-text-col {
+        text-align: center; /* మొబైల్ లో టెక్స్ట్ సెంటర్ */
+    }
+    
+    .about-text-col p {
+        text-align: left; /* పేరాగ్రాఫ్స్ మాత్రం లెఫ్ట్ */
+    }
+
+    .about-image-col {
+        flex: 0 0 auto;
+        width: 80%; /* మొబైల్ లో ఫోటో సైజు */
+        max-width: 300px;
+        margin-bottom: 30px;
+    }
+}
+
+
+/* --- About Image Section (Fixed Size & Responsive) --- */
+
+.about-image-col {
+    flex: 0 0 350px; /* ఇమేజ్ కాలమ్ వెడల్పు */
+    display: flex;
+    justify-content: center; /* ఇమేజ్ ని సెంటర్ లో ఉంచుతుంది */
+    align-items: center;
+}
+
+.about-image-col img {
+    /* --- Desktop Size Control --- */
+    width: 300px;       /* వెడల్పు ఫిక్స్ చేశాం */
+    height: 320px;      /* ఎత్తు తగ్గించాం (మరీ పొడవుగా ఉండదు, పాస్ పోర్ట్ సైజ్ లాగా) */
+    
+    /* ఇది చాలా ముఖ్యం: ఫోటోని సాగదీయకుండా, బాక్స్ లో కరెక్ట్ గా కట్ చేస్తుంది */
+    object-fit: cover;  
+    object-position: top; /* ముఖం (Top part) కట్ అవ్వకుండా చూస్తుంది */
+    
+    border-radius: 20px; /* మూలలు రౌండ్ గా */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    transition: all 0.5s ease;
+}
+
+/* Hover Effect */
+.about-image-col img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);
+    border-color: #a855f7;
+}
+
+/* --- Mobile Responsive Fix --- */
+@media (max-width: 900px) {
+    .about-wrapper {
+        flex-direction: column-reverse; /* మొబైల్ లో ఫోటో పైన, టెక్స్ట్ కింద */
+        gap: 30px;
+    }
+
+    .about-image-col {
+        width: 100%;
+        flex: none;
+        margin-bottom: 20px;
+    }
+
+    .about-image-col img {
+        /* మొబైల్ లో సైజు ఇంకా తగ్గించాం */
+        width: 220px;  
+        height: 220px; /* మొబైల్ లో స్క్వేర్ (Square) గా ఉంటే బాగుంటుంది */
+    }
+}
+
+/* --- Landscape Contact Section --- */
+
+.contact-row {
+    display: flex; /* పక్కపక్కన రావడానికి */
+    justify-content: space-between; /* రెండిటి మధ్య గ్యాప్ */
+    align-items: center; /* నిలువుగా సెంటర్ */
+    gap: 50px; /* మధ్యలో గ్యాప్ */
+    max-width: 1000px;
+    margin: 40px auto 0; /* పైన హెడ్డింగ్ నుండి గ్యాప్ */
+    padding: 20px;
+    
+    /* మొత్తం బాక్స్ కి ఒక గ్లాస్ లుక్ (Optional) */
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- Left Side: Form --- */
+.contact-form-col {
+    flex: 1.2; /* ఫామ్ కొంచెం వెడల్పుగా ఉంటుంది */
+    width: 100%;
+}
+
+.contact-form input, 
+.contact-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3); /* డార్క్ బ్యాక్ గ్రౌండ్ */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    color: #fff;
+    margin-bottom: 20px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.contact-form input:focus, 
+.contact-form textarea:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+}
+
+/* --- Right Side: Logo & Info --- */
+.contact-info-col {
+    flex: 0.8; /* లోగో సైడ్ కొంచెం తక్కువ వెడల్పు */
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03); /* లోగో వెనుక లైట్ బాక్స్ */
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Big Logo Icon Styling */
+.contact-logo i {
+    font-size: 4rem; /* లోగో ఐకాన్ చాలా పెద్దదిగా */
+    color: #00d2ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+    animation: float 3s ease-in-out infinite; /* గాలిలో తేలుతున్నట్లు యానిమేషన్ */
+}
+
+.contact-info-col h3 {
+    color: #fff;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.contact-info-col p {
+    color: #94a3b8;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+/* Info Items (Email, Location) */
+.info-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #cbd5e1;
+    font-size: 1rem;
+}
+
+.info-box i {
+    color: #a855f7; /* పర్పుల్ ఐకాన్స్ */
+}
+
+/* Social Icons Row */
+.social-icons-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.social-icon:hover {
+    background: #00d2ff;
+    color: #000;
+    transform: translateY(-3px);
+}
+
+/* --- Mobile Responsive (ఒకదాని కింద ఒకటి) --- */
+@media (max-width: 768px) {
+    .contact-row {
+        flex-direction: column-reverse; /* మొబైల్ లో లోగో పైన, ఫామ్ కింద (లేదా column వాడొచ్చు) */
+        gap: 30px;
+    }
+    
+    .contact-info-col, .contact-form-col {
+        width: 100%;
+        flex: auto;
+    }
+}
+
+/* Floating Animation Keyframes */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- Contact Section Fix --- */
+
+/* 1. Heading Alignment (Top Center) */
+.section-title-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 50px; /* హెడ్డింగ్ కి, ఫామ్ కి మధ్య గ్యాప్ */
+}
+
+/* 2. Main Container (Holds Left & Right sides) */
+.contact-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* పైకి సమానంగా */
+    gap: 50px; /* మధ్యలో గ్యాప్ */
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- LEFT SIDE: FORM --- */
+.contact-left {
+    flex: 1; /* సగం స్పేస్ తీసుకుంటుంది */
+    background: rgba(255, 255, 255, 0.03);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.contact-left h3 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+/* Inputs Style */
+.contact-form input, 
+.contact-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
     color: #fff;
     margin-bottom: 15px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.contact-form input:focus, 
+.contact-form textarea:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+}
+
+/* Button */
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+/* --- RIGHT SIDE: INFO --- */
+.contact-right {
+    flex: 1; /* మిగిలిన సగం స్పేస్ */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+/* Big Animated Icon */
+.big-icon {
+    font-size: 5rem;
+    color: #00d2ff;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+.contact-right h3 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.contact-right p {
+    color: #94a3b8;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* Info List (Email, Location) */
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.info-item:hover {
+    background: rgba(0, 210, 255, 0.1);
+    border-color: #00d2ff;
+}
+
+.info-item i {
+    color: #a855f7;
+    font-size: 1.2rem;
+}
+
+/* Social Icons */
+.social-row {
+    display: flex;
+    gap: 20px;
+}
+
+.s-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.s-icon:hover {
+    background: #00d2ff;
+    color: #000;
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+}
+
+/* Float Animation */
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 900px) {
+    .contact-container {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+    }
+    
+    .contact-right {
+        order: -1; /* మొబైల్ లో ఇన్ఫో పైన, ఫామ్ కింద రావాలంటే ఇది వాడండి. వద్దు అనుకుంటే ఈ లైన్ తీసేయండి */
+        margin-bottom: 30px;
+    }
+}
+
+/* --- Ultra Compact Contact Section --- */
+
+/* Main Container: Wide & Low Height */
+.contact-box-wide {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* రెండు బాక్సులు సమాన హైట్ */
+    gap: 20px;
+    max-width: 1200px; /* స్క్రీన్ వెడల్పు వాడుకుంటుంది */
+    width: 95%;
+    margin: 0 auto;
+    
+    /* మొత్తం బాక్స్ కి గ్లాస్ లుక్ */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px; /* బయట ప్యాడింగ్ తగ్గించాను */
+}
+
+.box-title {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* --- LEFT: FORM SIDE --- */
+.contact-form-side {
+    flex: 1.5; /* ఫామ్ ఎక్కువ వెడల్పు */
+    padding-right: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1); /* మధ్యలో గీత */
+}
+
+/* Inputs in One Row */
+.input-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.compact-form input, 
+.compact-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 15px; /* ప్యాడింగ్ తగ్గించి హైట్ సేవ్ చేశా */
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Textarea Height Fixed */
+.compact-form textarea {
+    resize: none;
+    height: 80px; /* ఫిక్స్డ్ హైట్ */
+    margin-bottom: 15px;
+}
+
+.compact-form input:focus, 
+.compact-form textarea:focus {
+    border-color: #00d2ff;
+    box-shadow: 0 0 5px rgba(0, 210, 255, 0.2);
+}
+
+/* Wide Button */
+.submit-btn-wide {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(90deg, #00d2ff, #a855f7);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn-wide:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+/* --- RIGHT: INFO SIDE --- */
+.contact-info-side {
+    flex: 1; /* ఇన్ఫో తక్కువ వెడల్పు */
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 210, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00d2ff;
+    font-size: 1.5rem;
+}
+
+.info-desc {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Details (Email/Location) */
+.info-details {
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.detail-row i {
+    color: #a855f7;
+}
+
+/* Social Icons */
+.social-compact {
+    display: flex;
+    gap: 10px;
+}
+
+.social-compact a {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.social-compact a:hover {
+    background: #00d2ff;
+    color: #000;
+    transform: translateY(-3px);
+}
+
+/* --- MOBILE & LAPTOP RESPONSIVE --- */
+
+/* Laptop (Medium Screens) */
+@media (max-width: 1024px) {
+    .contact-box-wide {
+        width: 100%;
+        padding: 15px;
+    }
+}
+
+/* Mobile (Small Screens) */
+@media (max-width: 768px) {
+    .contact-box-wide {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .contact-form-side {
+        border-right: none; /* గీత తీసేయాలి */
+        padding-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* కింద గీత వస్తుంది */
+        padding-bottom: 20px;
+    }
+
+    .contact-info-side {
+        padding-left: 0;
+    }
+
+    .input-row {
+        flex-direction: column; /* మొబైల్ లో పేరు, ఈమెయిల్ ఒకదాని కింద ఒకటి */
+        gap: 10px;
+    }
+}
+
+/* --- Ultra Stylish Social Icons (Brand Colors) --- */
+
+.social-compact {
+    display: flex;
+    gap: 15px; /* ఐకాన్ల మధ్య గ్యాప్ */
+    margin-top: 20px;
+}
+
+.s-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    /* గ్లాస్ ఎఫెక్ట్ */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    
+    /* స్మూత్ బౌన్సీ యానిమేషన్ */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Hover Effects (మౌస్ పెట్టినప్పుడు) --- */
+
+.s-icon:hover {
+    transform: translateY(-5px) scale(1.1); /* పైకి లేచి కొంచెం పెద్దది అవుతుంది */
+    border-color: transparent;
+    color: #fff;
+}
+
+/* 1. LinkedIn Blue Style */
+.s-icon.linkedin:hover {
+    background: #0077b5;
+    box-shadow: 0 0 20px rgba(0, 119, 181, 0.6); /* బ్లూ గ్లో */
+}
+
+/* 2. GitHub Dark Style */
+.s-icon.github:hover {
+    background: #171515;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); /* వైట్ గ్లో */
+}
+
+/* 3. Instagram Gradient Style */
+.s-icon.instagram:hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    box-shadow: 0 0 20px rgba(214, 36, 159, 0.6); /* పింక్ గ్లో */
+}
+
+
+/* --- Ultra Modern Contact Section --- */
+
+.contact-card-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Background Glowing Orbs (వెనుక మెరిసే బంతులు) */
+.glow-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.circle-1 {
+    width: 200px;
+    height: 200px;
+    background: #a855f7; /* Purple */
+    top: -50px;
+    left: 10%;
+}
+
+.circle-2 {
+    width: 250px;
+    height: 250px;
+    background: #00d2ff; /* Blue */
+    bottom: -50px;
+    right: 10%;
+}
+
+/* Glassmorphism Card */
+.contact-box-modern {
+    display: flex;
+    width: 100%;
+    max-width: 1000px;
+    background: rgba(20, 20, 30, 0.6); /* Dark transparent bg */
+    backdrop-filter: blur(20px); /* Glass Effect */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Left Side: Form --- */
+.form-side {
+    flex: 1.5;
+    padding: 40px;
+}
+
+.modern-title {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Floating Input Group */
+.input-group-modern {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+/* Inputs & Textarea */
+.input-group-modern input,
+.input-group-modern textarea {
+    width: 100%;
+    padding: 15px 15px 15px 45px; /* Icon కోసం space */
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
     border-radius: 5px;
 }
 
+/* Focus Effect (క్లిక్ చేసినప్పుడు) */
+.input-group-modern input:focus,
+.input-group-modern textarea:focus {
+    border-bottom-color: #00d2ff;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Floating Label (పేరు పైకి వెళ్ళడం) */
+.floating-label {
+    position: absolute;
+    left: 45px;
+    top: 15px;
+    color: #94a3b8;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+/* టైప్ చేస్తున్నప్పుడు లేబుల్ పైకి వెళ్ళడానికి */
+.input-group-modern input:focus ~ .floating-label,
+.input-group-modern input:valid ~ .floating-label,
+.input-group-modern textarea:focus ~ .floating-label,
+.input-group-modern textarea:valid ~ .floating-label {
+    top: -20px;
+    left: 0;
+    font-size: 0.85rem;
+    color: #00d2ff;
+}
+
+/* Input Icons */
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    color: #94a3b8;
+    transition: 0.3s;
+}
+
+.input-group-modern input:focus ~ .input-icon,
+.input-group-modern textarea:focus ~ .input-icon {
+    color: #00d2ff;
+}
+
+/* Button */
 .submit-btn-modern {
     width: 100%;
     padding: 15px;
     background: linear-gradient(135deg, #00d2ff, #a855f7);
     border: none;
-    color: white;
+    border-radius: 50px; /* Round Button */
+    color: #fff;
     font-weight: bold;
-    border-radius: 50px;
+    font-size: 1.1rem;
     cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
 }
 
-@media (max-width: 768px) {
-    .contact-box-modern { flex-direction: column; }
+.submit-btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(168, 85, 247, 0.5);
 }
 
-/* --- Footer --- */
+/* --- Right Side: Info --- */
+.info-side {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(168, 85, 247, 0.1));
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-content-modern h3 {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.info-content-modern p {
+    color: #cbd5e1;
+    margin-bottom: 40px;
+}
+
+.info-item-modern {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.icon-box {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00d2ff;
+}
+
+.info-item-modern span {
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Social Icons */
+.social-modern {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.s-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.s-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+.s-btn.linkedin:hover { color: #0077b5; }
+.s-btn.github:hover { color: #000; }
+.s-btn.instagram:hover { color: #d6249f; }
+
+/* --- Mobile Responsive --- */
+@media (max-width: 900px) {
+    .contact-box-modern {
+        flex-direction: column;
+    }
+    
+    .form-side, .info-side {
+        padding: 30px 20px;
+    }
+    
+    .circle-1, .circle-2 {
+        opacity: 0.4; /* Mobile లో గ్లో తగ్గిద్దాం */
+    }
+}
+
+/* --- Compact & Modern Contact Section (Reduced Height) --- */
+
+.contact-card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0; /* బయట స్పేస్ తగ్గించాను */
+    position: relative;
+}
+
+/* Background Glowing Orbs */
+.glow-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.circle-1 {
+    width: 250px;
+    height: 250px;
+    background: #a855f7;
+    top: -20px;
+    left: 5%;
+}
+
+.circle-2 {
+    width: 250px;
+    height: 250px;
+    background: #00d2ff;
+    bottom: -20px;
+    right: 5%;
+}
+
+/* Main Box (Wide but Compact Height) */
+.contact-box-modern {
+    display: flex;
+    width: 95%;
+    max-width: 1200px; /* వెడల్పు బాగుంటుంది */
+    background: rgba(20, 20, 30, 0.6); 
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+}
+
+/* --- Left Side: Form --- */
+.form-side {
+    flex: 1.4;
+    padding: 30px 40px; /* హైట్ తగ్గడానికి ప్యాడింగ్ తగ్గించాను */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modern-title {
+    color: #fff;
+    font-size: 1.6rem; /* ఫాంట్ సైజు కొంచెం అడ్జస్ట్ చేశాను */
+    margin-bottom: 25px; /* టైటిల్ కింద గ్యాప్ తగ్గించాను */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Input Groups (Compact) */
+.input-group-modern {
+    position: relative;
+    margin-bottom: 25px; /* బాక్సుల మధ్య గ్యాప్ బాగా తగ్గించాను */
+}
+
+.input-group-modern input,
+.input-group-modern textarea {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* ఇన్పుట్ సైజు కొంచెం తగ్గించాను */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group-modern textarea {
+    resize: none; /* బాక్స్ సాగదీయకుండా */
+}
+
+/* Focus Effect */
+.input-group-modern input:focus,
+.input-group-modern textarea:focus {
+    border-color: #00d2ff;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
+}
+
+/* Floating Label Adjustment */
+.floating-label {
+    position: absolute;
+    left: 45px;
+    top: 14px; /* టెక్స్ట్ పొజిషన్ అడ్జస్ట్ చేశాను */
+    color: #94a3b8;
+    pointer-events: none;
+    transition: 0.3s;
+    font-size: 0.95rem;
+}
+
+/* Move Label Up */
+.input-group-modern input:focus ~ .floating-label,
+.input-group-modern input:valid ~ .floating-label,
+.input-group-modern textarea:focus ~ .floating-label,
+.input-group-modern textarea:valid ~ .floating-label {
+    top: -22px;
+    left: 0;
+    font-size: 0.85rem;
+    color: #00d2ff;
+    font-weight: 600;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 14px;
+    color: #94a3b8;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.input-group-modern input:focus ~ .input-icon,
+.input-group-modern textarea:focus ~ .input-icon {
+    color: #00d2ff;
+}
+
+/* Button */
+.submit-btn-modern {
+    width: 100%;
+    padding: 12px; /* బటన్ హైట్ తగ్గించాను */
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 5px;
+}
+
+.submit-btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
+}
+
+/* --- Right Side: Info --- */
+.info-side {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.05), rgba(168, 85, 247, 0.05));
+    padding: 30px 40px; /* ప్యాడింగ్ తగ్గించాను */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-content-modern h3 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.info-content-modern p {
+    color: #cbd5e1;
+    font-size: 1rem;
+    margin-bottom: 30px; /* గ్యాప్ తగ్గించాను */
+    line-height: 1.5;
+}
+
+.info-item-modern {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px; /* ఐటమ్స్ మధ్య గ్యాప్ తగ్గించాను */
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.info-item-modern:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+}
+
+.icon-box {
+    width: 40px; /* ఐకాన్ సైజు తగ్గించాను */
+    height: 40px;
+    background: rgba(0, 210, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00d2ff;
+    font-size: 1.1rem;
+}
+
+.info-item-modern span {
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Social Icons */
+.social-modern {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.s-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.s-btn:hover {
+    transform: translateY(-3px);
+    background: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.s-btn.linkedin:hover { color: #0077b5; }
+.s-btn.github:hover { color: #000; }
+.s-btn.instagram:hover { color: #d6249f; }
+
+/* --- Mobile Responsive --- */
+@media (max-width: 900px) {
+    .contact-box-modern {
+        flex-direction: column;
+        width: 92%;
+    }
+    
+    .form-side, .info-side {
+        padding: 25px 20px;
+        border-left: none;
+    }
+    
+    .input-group-modern {
+        margin-bottom: 20px;
+    }
+}
+
+
+
+
+/* --- Compact & Stylish Footer --- */
+
 .modern-footer {
-    background: #0f172a;
-    padding: 40px 0;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: #0f0f16; /* డార్క్ బ్యాక్ గ్రౌండ్ */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* పైన సన్నని గీత */
+    padding: 20px 0; /* హైట్ తక్కువగా ఉండటానికి తక్కువ ప్యాడింగ్ */
+    position: relative;
     margin-top: 50px;
 }
 
-.footer-socials a {
+.footer-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* ఎడమ, మధ్య, కుడి వైపుకు జరుపుతుంది */
+    align-items: center; /* అన్నీ ఒకే లైన్ లో ఉంటాయి */
+    flex-wrap: wrap; /* మొబైల్ లో ఆటోమేటిక్ గా కిందకు వస్తాయి */
+    gap: 20px;
+}
+
+/* --- Left Side --- */
+.footer-left {
+    text-align: left;
+}
+
+.footer-name {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.footer-role {
     color: #94a3b8;
-    margin: 0 10px;
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+}
+
+.copyright {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+/* --- Center: Tagline --- */
+.footer-center p {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.footer-center span {
+    font-weight: bold;
+}
+
+/* Gradient Text for "Code" & "Passion" */
+.footer-center .heart {
+    color: #00d2ff;
+}
+
+.footer-center .passion {
+    background: linear-gradient(to right, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* --- Right Side: Socials --- */
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.social-mini {
+    display: flex;
+    gap: 15px;
+}
+
+.mini-icon {
+    color: #94a3b8;
     font-size: 1.2rem;
     transition: 0.3s;
+    position: relative;
 }
-.footer-socials a:hover { color: #00d2ff; }
 
-/* --- Admin Lock Link --- */
-.admin-entry { text-align: right; margin: 10px 0; }
-.admin-entry a { color: #64748b; text-decoration: none; font-size: 0.8rem; }
+/* Hover Effects */
+.mini-icon:hover {
+    transform: translateY(-3px);
+}
+
+.linkedin:hover { color: #0077b5; text-shadow: 0 0 10px rgba(0, 119, 181, 0.5); }
+.github:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.email:hover { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+
+/* --- Admin Lock (Subtle) --- */
+.admin-lock-mini {
+    color: #334155; /* డార్క్ గ్రే (ఎక్కువగా కనిపించదు) */
+    font-size: 0.9rem;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.admin-lock-mini:hover {
+    color: #ef4444; /* మౌస్ పెడితే రెడ్ కలర్ వస్తుంది */
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column; /* మొబైల్ లో ఒకదాని కింద ఒకటి */
+        text-align: center;
+        gap: 25px;
+    }
+
+    .footer-left {
+        text-align: center;
+    }
+    
+    .footer-right {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+
+/* --- Projects Footer Section (Dynamic Look) --- */
+
+.projects-footer-content {
+    width: 100%;
+    max-width: 1100px; /* పైన ఉన్న గ్రిడ్ బాక్సుల సైజుకి మ్యాచ్ అవుతుంది */
+    margin: 60px auto 0; /* పైన గ్యాప్ మరియు సెంటర్ అలైన్‌మెంట్ */
+    text-align: center;
+    padding: 0 20px; /* మొబైల్ లో టెక్స్ట్ అంచులకి తగలకూడదు */
+    position: relative;
+}
+
+.projects-footer-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #cbd5e1; /* కూల్ గ్రే కలర్ */
+    margin-bottom: 35px;
+    max-width: 900px; /* మరీ పొడవుగా సాగకుండా చదవడానికి బాగుండేలా */
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* చిన్న గ్లో ఎఫెక్ట్ */
+}
+
+/* Stylish Button */
+.view-all-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.5px;
+}
+
+/* Button Hover Animation */
+.view-all-btn:hover {
+    transform: translateY(-5px); /* కొంచెం పైకి లేస్తుంది */
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.6); /* గ్లో పెరుగుతుంది */
+    background: linear-gradient(135deg, #a855f7, #00d2ff); /* రంగులు రివర్స్ అవుతాయి */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .projects-footer-content {
+        margin-top: 40px;
+    }
+    
+    .projects-footer-content p {
+        font-size: 1rem;
+    }
+}
+
+
+/* --- Projects Footer Section (New Styles) --- */
+
+.projects-footer-content {
+    width: 100%;
+    max-width: 1000px; /* కరెక్ట్ గా సెంటర్ లోకి రావడానికి */
+    margin: 50px auto 0; /* పైన గ్యాప్, లెఫ్ట్-రైట్ ఆటో (సెంటర్) */
+    text-align: center; /* టెక్స్ట్ సెంటర్ */
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* కచ్చితంగా మధ్యలో ఉండేలా */
+}
+
+.projects-footer-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    margin-bottom: 30px;
+    max-width: 850px; /* మరీ చివర్ల వరకు సాగకుండా */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Stylish Button Design */
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    color: white !important; /* రంగు మారకుండా */
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+/* Button Hover Effect */
+.view-all-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.6);
+    background: linear-gradient(135deg, #a855f7, #00d2ff);
+}
+
+/* Mobile View Adjustments */
+@media (max-width: 768px) {
+    .projects-footer-content {
+        margin-top: 30px;
+    }
+    .projects-footer-content p {
+        font-size: 0.95rem;
+    }
+    .view-all-btn {
+        width: 100%; /* మొబైల్ లో బటన్ పెద్దగా వస్తుంది */
+        justify-content: center;
+    }
+}
+
+
+
+
+/* --- Skills Section Styles (Glassmorphism & Dynamic Glow) --- */
+
+.skills-split-layout {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.skills-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.tech-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* --- MASTER CARD STYLE (అన్నింటికీ గ్లాస్ ఎఫెక్ట్) --- */
+.skill-card {
+    background: rgba(255, 255, 255, 0.03); /* లైట్ ట్రాన్స్‌పరెన్సీ */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* సన్నని బోర్డర్ */
+    backdrop-filter: blur(12px); /* వెనుక బ్లర్ ఎఫెక్ట్ (గ్లాస్) */
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Hover Effects (కార్డు పైకి లేచి మెరుస్తుంది) */
+.skill-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Icons Styling */
+.icon-box {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.skill-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.skill-card p {
+    font-size: 0.9rem;
+    color: #b0b3b8;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.view-cert {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: 0.3s;
+    display: inline-block;
+    margin-top: auto;
+}
+
+/* --- Individual Card Colors (ప్రతి కార్డుకి ఒక రంగు) --- */
+
+/* Frontend - Cyan Blue */
+.frontend-glow:hover {
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    border-color: #00d2ff;
+}
+.frontend-glow .icon-box i { color: #00d2ff; }
+.frontend-glow .view-cert { color: #00d2ff; }
+
+/* Backend - Green/Teal */
+.backend-glow:hover {
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+}
+.backend-glow .icon-box i { color: #2ecc71; }
+.backend-glow .view-cert { color: #2ecc71; }
+
+/* Photography - Orange/Red */
+.photography-card:hover {
+    box-shadow: 0 0 30px rgba(255, 87, 34, 0.2);
+    border-color: #ff5722;
+}
+.photo-icon i { color: #ff5722; }
+.photography-card .view-cert { color: #ff5722; }
+
+/* Video Editing - Purple/Blue */
+.video-card:hover {
+    box-shadow: 0 0 30px rgba(0, 123, 255, 0.2);
+    border-color: #007bff;
+}
+.video-icon i { color: #007bff; }
+.video-card .view-cert { color: #007bff; }
+
+/* Industry Ready - Gold (Special Glow) */
+.industry-card {
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.05), rgba(0, 0, 0, 0));
+}
+.industry-card:hover {
+    border-color: #ffd700;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+}
+.award-glow i {
+    color: #ffd700;
+    font-size: 3rem;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+}
+.gold-btn {
+    color: #ffd700;
+}
+
+/* --- Admin Access Link --- */
+.admin-entry {
+    text-align: center;
+    margin: 15px 0;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+.admin-entry:hover { opacity: 1; }
+.lock-icon {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .tech-row { flex-direction: column; }
+    .skills-split-layout { flex-direction: column; }
+}
+
+
+/* --- Skills Section Styles --- */
+
+.skills-split-layout {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* మొబైల్ లో కిందకి వచ్చేలా */
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.skills-column {
+    flex: 1; /* రెండు వైపులా సమానంగా తీసుకుంటుంది */
+    min-width: 320px; /* మరీ చిన్నగా అవ్వకుండా */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* కార్డుల మధ్య గ్యాప్ */
+}
+
+/* --- Tech Card Styling (Wide & Slim Look) --- */
+.tech-card {
+    display: flex;
+    flex-direction: row; /* పక్క పక్కన వచ్చేలా (Side by Side) */
+    align-items: center; /* వర్టికల్ గా సెంటర్ */
+    gap: 20px;
+    padding: 20px 25px; /* హైట్ తగ్గించడానికి ప్యాడింగ్ తగ్గించాను */
+    min-height: auto; /* హైట్ లిమిట్ తీసేసాను */
+    text-align: left; /* టెక్స్ట్ ఎడమ వైపుకి */
+}
+
+.tech-card .icon-box {
+    font-size: 2.2rem;
+    margin-bottom: 0; /* ఐకాన్ కింద గ్యాప్ వద్దు */
+    min-width: 50px; /* ఐకాన్ స్పేస్ ఫిక్స్డ్ గా */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tech-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.tech-card p {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.tech-card .view-cert {
+    font-size: 0.8rem;
+    margin-top: 0;
+}
+
+/* --- Industry Card Alignment (Matching Tech Cards) --- */
+.industry-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+    padding: 25px;
+}
+.industry-card .award-glow {
+    font-size: 2.5rem;
+    min-width: 50px;
+    text-align: center;
+}
+.industry-card h3 { margin-bottom: 5px; }
+
+/* --- Creative Side (Right Col) --- */
+/* మీరు మార్చొద్దు అన్నారు కాబట్టి పాత స్టైల్స్ అలాగే ఉంటాయి */
+.photography-card, .video-card {
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+/* --- Common Glass Effect (అన్నింటికీ సేమ్ లుక్) --- */
+.skill-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.skill-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Colors */
+.frontend-glow:hover { border-color: #00d2ff; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+.frontend-glow i, .frontend-glow .view-cert { color: #00d2ff; }
+
+.backend-glow:hover { border-color: #2ecc71; box-shadow: 0 0 20px rgba(46, 204, 113, 0.2); }
+.backend-glow i, .backend-glow .view-cert { color: #2ecc71; }
+
+.industry-card:hover { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+.industry-card i, .gold-btn { color: #ffd700; }
+
+/* Right Side Colors */
+.photography-card:hover { border-color: #ff5722; box-shadow: 0 0 20px rgba(255, 87, 34, 0.2); }
+.photo-icon i, .photography-card .view-cert { color: #ff5722; }
+
+.video-card:hover { border-color: #007bff; box-shadow: 0 0 20px rgba(0, 123, 255, 0.2); }
+.video-icon i, .video-card .view-cert { color: #007bff; }
+
+
+
+/* --- Skills Section Styles --- */
+
+.skills-split-layout {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.skills-column {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* కార్డుల మధ్య గ్యాప్ కొంచెం పెంచాను */
+}
+
+/* --- Tech Card Styling (Taller & Bigger) --- */
+.tech-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+    padding: 35px 30px; /* హైట్ పెరగడానికి ప్యాడింగ్ పెంచాను */
+    min-height: 180px; /* కచ్చితంగా ఇంత హైట్ ఉండేలా */
+    text-align: left;
+}
+
+.tech-card .icon-box {
+    font-size: 2.8rem; /* ఐకాన్ సైజు కొంచెం పెంచాను */
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tech-card h3 {
+    font-size: 1.3rem; /* హెడ్డింగ్ సైజు పెంచాను */
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.tech-card p {
+    font-size: 0.95rem; /* టెక్స్ట్ సైజు పెంచాను */
+    color: #b0b3b8;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* --- Industry Card (Matches Tech Cards) --- */
+.industry-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+    text-align: left;
+    padding: 35px 30px; /* పైన ఉన్న వాటికి సమానంగా */
+    min-height: 180px;
+}
+.industry-card .award-glow {
+    font-size: 3rem;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* --- Creative Side (Right Col) --- */
+/* ఇవి ఆల్రెడీ పెద్దగా ఉన్నాయి కాబట్టి అలాగే ఉంచాను */
+.photography-card, .video-card {
+    padding: 40px 30px; /* ఇవి కూడా నిండుగా ఉండటానికి */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-height: 250px; /* ఇవి కొంచెం ఎక్కువే ఉంటాయి */
+}
+
+/* --- Common Glass Effect --- */
+.skill-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.skill-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Colors */
+.frontend-glow:hover { border-color: #00d2ff; box-shadow: 0 0 25px rgba(0, 210, 255, 0.25); }
+.frontend-glow i, .frontend-glow .view-cert { color: #00d2ff; }
+
+.backend-glow:hover { border-color: #2ecc71; box-shadow: 0 0 25px rgba(46, 204, 113, 0.25); }
+.backend-glow i, .backend-glow .view-cert { color: #2ecc71; }
+
+.industry-card:hover { border-color: #ffd700; box-shadow: 0 0 25px rgba(255, 215, 0, 0.25); }
+.industry-card i, .gold-btn { color: #ffd700; }
+
+.photography-card:hover { border-color: #ff5722; box-shadow: 0 0 25px rgba(255, 87, 34, 0.25); }
+.photo-icon i, .photography-card .view-cert { color: #ff5722; }
+
+.video-card:hover { border-color: #007bff; box-shadow: 0 0 25px rgba(0, 123, 255, 0.25); }
+.video-icon i, .video-card .view-cert { color: #007bff; }
+
+.view-cert {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .skills-split-layout { flex-direction: column; }
+    .tech-card, .industry-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+}
+
+
+/* --- New Technical Card Style (Neon Glow) --- */
+.modern-tech-glow {
+    background: rgba(17, 25, 40, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-tech-glow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+    border-color: #00d2ff;
+}
+
+.modern-tech-glow::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: 0.5s;
+}
+
+.modern-tech-glow:hover::before {
+    left: 100%;
+}
+
+/* --- Creative Cards Glass Effect (Same for Photo & Video) --- */
+.creative-glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.creative-glass-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(0, 210, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+.creative-glass-card h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.creative-glass-card p {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+
+
+/* --- Creative Cards Glass Effect --- */
+.creative-glass-card {
+    background: rgba(255, 255, 255, 0.05) !important; /* Glass Background */
+    backdrop-filter: blur(12px);         /* Blur Effect */
+    -webkit-backdrop-filter: blur(12px); /* Safari Support */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Thin Border */
+    border-radius: 16px;
+    padding: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.creative-glass-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #00d2ff;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+}
+
+.creative-glass-card h3 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+.creative-glass-card p {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* Icons Style inside Glass Card */
+.creative-glass-card .icon-box {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================
+   Latest Stylish Creative Cards (Neon & Glow)
+   ========================================= */
+
+.creative-glass-card {
+    position: relative;
+    background: linear-gradient(145deg, #1a1f2e, #11151f); /* Premium Dark Background */
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle border */
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Smooth Bounce Effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Hover చేసినప్పుడు కార్డు పైకి లేస్తుంది + మెరుస్తుంది */
+.creative-glass-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- The Magic Gradient Border Effect --- */
+.creative-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 20px;
+    padding: 2px; /* Border Thickness */
+    background: linear-gradient(45deg, #00d2ff, transparent, #a855f7);
+    -webkit-mask: 
+       linear-gradient(#fff 0 0) content-box, 
+       linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.creative-glass-card:hover::before {
+    opacity: 1; /* Hover చేస్తే బోర్డర్ ఫుల్ గా వెలుగుతుంది */
+}
+
+/* --- Glowing Background Blob on Hover --- */
+.creative-glass-card::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(0, 210, 255, 0.2), transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1;
+}
+
+.creative-glass-card:hover::after {
+    transform: translate(-50%, -50%) scale(2); /* మధ్యలో నుండి గ్లో వస్తుంది */
+}
+
+/* --- Typography & Icons Styling --- */
+.creative-glass-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 15px 0 10px 0;
+    letter-spacing: 0.5px;
+}
+
+.creative-glass-card p {
+    font-size: 0.95rem;
+    color: #b0b8c4;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+/* Icons Style (Gradient Color) */
+.creative-glass-card .icon-box i {
+    font-size: 2.5rem;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.4s ease;
+}
+
+.creative-glass-card:hover .icon-box i {
+    transform: scale(1.1) rotate(5deg); /* ఐకాన్ చిన్నగా కదులుతుంది */
+}
+
+/* "View All Clicks" Button Style */
+
+/* "View All Clicks" Link Style (Clean Single Line) */
+.creative-glass-card .view-cert {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    
+    color: #00d2ff !important;        /* Text Color (Cyan) */
+    text-decoration: none !important; /* పాత అండర్ లైన్ తీసేస్తుంది (ముఖ్యమైనది) */
+    border-bottom: 2px solid #00d2ff; /* మన కొత్త సింగిల్ లైన్ */
+    
+    padding-bottom: 3px; /* టెక్స్ట్ కి లైన్ కి మధ్య గ్యాప్ */
+    background: none;    /* బ్యాక్‌గ్రౌండ్ వద్దు */
+    box-shadow: none;    /* నీడ వద్దు */
+    transition: all 0.3s ease;
+}
+
+/* Hover చేసినప్పుడు */
+.creative-glass-card:hover .view-cert {
+    color: #fff !important;          /* వైట్ టెక్స్ట్ */
+    border-bottom-color: #a855f7;    /* లైన్ కలర్ మారుతుంది (Purple) */
+    transform: translateX(5px);      /* కొంచెం కుడి వైపు జరుగుతుంది */
+}
+
+
+/* =========================================
+   Final Premium Creative Cards (Force Apply)
+   ========================================= */
+
+.creative-glass-card {
+    position: relative;
+    /* డీప్ డార్క్ గ్రేడియంట్ */
+    background: linear-gradient(145deg, #0f172a, #1e293b) !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    /* నియాన్ బోర్డర్ */
+    border: 1px solid rgba(56, 189, 248, 0.1) !important;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Hover Effects */
+.creative-glass-card:hover {
+    transform: translateY(-10px) !important;
+    border-color: #38bdf8 !important; /* Cyan Border on Hover */
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.2) !important; /* Glow Effect */
+}
+
+/* Typography */
+.creative-glass-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff !important;
+    margin-bottom: 10px;
+}
+
+.creative-glass-card p {
+    font-size: 0.95rem;
+    color: #cbd5e1 !important;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Icons */
+.creative-glass-card .icon-box i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- BUTTON STYLE (NO LINES) --- */
+.creative-glass-card .view-cert {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #38bdf8 !important; /* Cyan Color */
+    
+    /* పాత గీతలు మొత్తం తీసేస్తున్నాం */
+    text-decoration: none !important; 
+    border: none !important;
+    
+    background: rgba(56, 189, 248, 0.1); /* లైట్ బ్యాక్‌గ్రౌండ్ */
+    padding: 8px 15px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.creative-glass-card:hover .view-cert {
+    background: #38bdf8 !important;
+    color: #000 !important; /* టెక్స్ట్ బ్లాక్ అవుతుంది */
+    transform: scale(1.05);
+}
+
+/* =========================================
+   SIMPLE TEXT LINK FIX (No Buttons, No Lines)
+   ========================================= */
+
+.creative-glass-card .view-cert {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.85rem;      
+    font-weight: 700;        
+    text-transform: uppercase; 
+    letter-spacing: 1px;     
+    color: #00d2ff !important; /* Cyan Color */
+    
+    /* బాక్సులు, బోర్డర్లు, గీతలు అన్నీ తీసేస్తున్నాం */
+    background: none !important;
+    border: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    
+    transition: transform 0.3s ease;
+}
+
+/* Hover చేసినప్పుడు */
+.creative-glass-card:hover .view-cert {
+    color: #fff !important;      /* వైట్ కలర్ */
+    transform: translateX(5px);  /* కొంచెం కుడివైపు జరుగుతుంది */
+    text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); /* చిన్న గ్లో */
+}
+
+/* Video Card Link Color (Purple) */
+.creative-glass-card .video-icon ~ .view-cert {
+    color: #a855f7 !important; 
+}
+
+.creative-glass-card:hover .video-icon ~ .view-cert {
+    text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+}
