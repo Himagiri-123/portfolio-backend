@@ -5262,3 +5262,110 @@ html {
     transform: scale(1.05);
 }
 
+/* =========================================
+   FINAL CLEAN & PREMIUM CARD STYLES
+   ========================================= */
+
+/* 1. Layout Fixes */
+.skills-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .skills-split-layout { grid-template-columns: 1fr; }
+}
+
+/* 2. Common Card Structure */
+.skill-card {
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3. Technical Cards (Left Side) - Dark & Clean */
+.premium-card {
+    background: #111827; /* Dark Grey */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.premium-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 4. Creative Cards (Right Side) - Glass Effect */
+.premium-glass-card {
+    background: linear-gradient(145deg, #1e293b, #0f172a); /* Premium Dark Blue-Grey */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle Border */
+    backdrop-filter: blur(10px);
+}
+
+.premium-glass-card:hover {
+    transform: translateY(-5px);
+    border-color: #00d2ff; /* Hover చేస్తే Cyan Border */
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15); /* Soft Glow */
+}
+
+/* 5. Icon Styles */
+.skill-card .icon-box {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+.premium-glass-card .photo-icon i { color: #00d2ff; } /* Cyan Icon */
+.premium-glass-card .video-icon i { color: #a855f7; } /* Purple Icon */
+
+/* 6. Text Styles */
+.skill-card h3 {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.skill-card p {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* 7. THE BUTTONS (No Lines, Pill Shape) */
+.pill-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none !important; /* NO LINES */
+    border-radius: 50px; /* Round Shape */
+    transition: 0.3s;
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Default Blue Button */
+.pill-btn { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-color: #38bdf8; }
+.pill-btn:hover { background: #38bdf8; color: #000; }
+
+/* Cyan Button (Photography) */
+.pill-btn.cyan { background: rgba(0, 210, 255, 0.1); color: #00d2ff; border-color: #00d2ff; }
+.pill-btn.cyan:hover { background: #00d2ff; color: #000; box-shadow: 0 0 15px #00d2ff; }
+
+/* Purple Button (Video) */
+.pill-btn.purple { background: rgba(168, 85, 247, 0.1); color: #a855f7; border-color: #a855f7; }
+.pill-btn.purple:hover { background: #a855f7; color: #fff; box-shadow: 0 0 15px #a855f7; }
+
+/* Gold Button (Certificate) */
+.pill-btn.gold { background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: #facc15; }
+.pill-btn.gold:hover { background: #facc15; color: #000; }
