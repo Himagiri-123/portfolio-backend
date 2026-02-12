@@ -5021,3 +5021,50 @@ html {
     font-size: 0.95rem;
     line-height: 1.5;
 }
+
+
+
+/* --- Creative Cards Glass Effect --- */
+.creative-glass-card {
+    background: rgba(255, 255, 255, 0.05) !important; /* Glass Background */
+    backdrop-filter: blur(12px);         /* Blur Effect */
+    -webkit-backdrop-filter: blur(12px); /* Safari Support */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Thin Border */
+    border-radius: 16px;
+    padding: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.creative-glass-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #00d2ff;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+}
+
+.creative-glass-card h3 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+.creative-glass-card p {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* Icons Style inside Glass Card */
+.creative-glass-card .icon-box {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
