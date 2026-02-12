@@ -5071,54 +5071,110 @@ html {
 
 
 /* =========================================
-   Updated Creative Glass Cards (Force Apply)
+   Latest Stylish Creative Cards (Neon & Glow)
    ========================================= */
 
 .creative-glass-card {
-    /* !important వాడటం వల్ల పాత డార్క్ కలర్ పోయి, ఈ గ్లాస్ ఎఫెక్ట్ కచ్చితంగా వస్తుంది */
-    background: rgba(255, 255, 255, 0.05) !important; 
-    backdrop-filter: blur(12px) !important;         
-    -webkit-backdrop-filter: blur(12px) !important; /* Safari కోసం */
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    
-    border-radius: 16px;
-    padding: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     position: relative;
+    background: linear-gradient(145deg, #1a1f2e, #11151f); /* Premium Dark Background */
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle border */
     overflow: hidden;
-    z-index: 1; /* బ్లర్ ఎఫెక్ట్ సరిగ్గా పనిచేయడానికి */
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Smooth Bounce Effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
+/* Hover చేసినప్పుడు కార్డు పైకి లేస్తుంది + మెరుస్తుంది */
 .creative-glass-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1) !important; /* Hover అయినప్పుడు కొంచెం బ్రైట్ గా */
-    border-color: #00d2ff !important;
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* కార్డు లోపల టెక్స్ట్ కలర్స్ */
+/* --- The Magic Gradient Border Effect --- */
+.creative-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 20px;
+    padding: 2px; /* Border Thickness */
+    background: linear-gradient(45deg, #00d2ff, transparent, #a855f7);
+    -webkit-mask: 
+       linear-gradient(#fff 0 0) content-box, 
+       linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.creative-glass-card:hover::before {
+    opacity: 1; /* Hover చేస్తే బోర్డర్ ఫుల్ గా వెలుగుతుంది */
+}
+
+/* --- Glowing Background Blob on Hover --- */
+.creative-glass-card::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(0, 210, 255, 0.2), transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1;
+}
+
+.creative-glass-card:hover::after {
+    transform: translate(-50%, -50%) scale(2); /* మధ్యలో నుండి గ్లో వస్తుంది */
+}
+
+/* --- Typography & Icons Styling --- */
 .creative-glass-card h3 {
-    margin-top: 15px;
-    margin-bottom: 8px;
-    font-size: 1.3rem;
-    color: #fff !important;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 15px 0 10px 0;
+    letter-spacing: 0.5px;
 }
 
 .creative-glass-card p {
-    color: #cbd5e1 !important;
     font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 15px;
+    color: #b0b8c4;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-weight: 400;
 }
 
-/* కార్డు లోపల ఐకాన్స్ కలర్ (Gradient) */
+/* Icons Style (Gradient Color) */
 .creative-glass-card .icon-box i {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
-    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    font-size: 2.5rem;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    transition: transform 0.4s ease;
+}
+
+.creative-glass-card:hover .icon-box i {
+    transform: scale(1.1) rotate(5deg); /* ఐకాన్ చిన్నగా కదులుతుంది */
+}
+
+/* "View All Clicks" Button Style */
+.creative-glass-card .view-cert {
     display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #00d2ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.creative-glass-card:hover .view-cert {
+    color: #fff;
+    border-bottom-color: #a855f7; /* కింద లైన్ వస్తుంది */
 }
