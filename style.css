@@ -5187,3 +5187,100 @@ html {
     border-bottom-color: #a855f7;    /* లైన్ కలర్ మారుతుంది (Purple) */
     transform: translateX(5px);      /* కొంచెం కుడి వైపు జరుగుతుంది */
 }
+
+
+
+
+/* =========================================
+   Creative Glass Cards (Neon Style)
+   ========================================= */
+
+.creative-glass-card {
+    position: relative;
+    background: linear-gradient(145deg, #1a1f2e, #11151f); /* Dark Background */
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Hover Effects */
+.creative-glass-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient Border Effect */
+.creative-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 20px;
+    padding: 2px;
+    background: linear-gradient(45deg, #00d2ff, transparent, #a855f7);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.creative-glass-card:hover::before {
+    opacity: 1;
+}
+
+/* Icons Style */
+.creative-glass-card .icon-box i {
+    font-size: 2.5rem;
+    background: linear-gradient(to right, #00d2ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.4s ease;
+}
+
+.creative-glass-card:hover .icon-box i {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.creative-glass-card h3 {
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 15px 0 10px 0;
+}
+
+.creative-glass-card p {
+    font-size: 0.95rem;
+    color: #b0b8c4;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   THE MAIN FIX FOR LINES (Single Line Only)
+   ========================================= */
+.creative-glass-card .view-cert {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #00d2ff !important;
+    
+    /* పాత గీతను తీసేసే కోడ్ ఇదే */
+    text-decoration: none !important; 
+    
+    /* మన కొత్త సింగిల్ లైన్ */
+    border-bottom: 2px solid #00d2ff; 
+    
+    padding-bottom: 3px;
+    transition: all 0.3s ease;
+}
+
+.creative-glass-card:hover .view-cert {
+    color: #fff !important;
+    border-bottom-color: #a855f7; /* Hover చేస్తే పర్పుల్ అవుతుంది */
+}
