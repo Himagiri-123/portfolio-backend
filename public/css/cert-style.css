@@ -1,0 +1,155 @@
+:root {
+    --primary: #00d2ff;
+    --secondary: #a855f7;
+    --bg: #030712;
+    --card-bg: rgba(255, 255, 255, 0.03);
+}
+
+body {
+    background-color: var(--bg);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 40px 10px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* అన్నీ స్క్రీన్ మధ్యలో ఉండేలా */
+}
+
+.container {
+    max-width: 1100px;
+    width: 100%;
+}
+
+header { text-align: center; margin-bottom: 40px; }
+
+header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- One Page Grid Layout --- */
+.cert-grid {
+    display: flex;
+    flex-wrap: wrap; /* స్క్రీన్ చిన్నగా ఉంటే కిందకు వస్తాయి */
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.sub-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px 15px;
+    width: 220px; /* సైజు తగ్గించాను */
+    border-radius: 20px;
+    text-align: center;
+    transition: 0.4s;
+}
+
+.sub-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
+}
+
+.sub-card i { font-size: 2.2rem; color: var(--primary); margin-bottom: 15px; }
+
+.sub-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+
+.sub-card p { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+
+/* --- Stylish Button --- */
+.view-btn {
+    text-decoration: none;
+    padding: 8px 15px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    display: inline-block;
+}
+
+/* --- Modern Back Button --- */
+.back-home-btn {
+    text-decoration: none;
+    color: #94a3b8;
+    padding: 12px 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    transition: 0.3s;
+}
+
+.back-home-btn:hover {
+    background: var(--primary);
+    color: #000;
+}
+
+
+/* --- Top Left Navigation Buttons (For Certificate Pages) --- */
+
+.top-nav-buttons {
+    position: fixed; /* పేజీ స్క్రోల్ చేసినా కదలకుండా ఉంటుంది */
+    top: 25px;
+    left: 25px;
+    display: flex;
+    gap: 15px; /* బటన్ల మధ్య గ్యాప్ */
+    z-index: 9999; /* అన్నిటికంటే పైన కనిపించడానికి */
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: #ffffff;
+    /* గ్లాస్ ఎఫెక్ట్ కోసం */
+    background: rgba(255, 255, 255, 0.1); 
+    padding: 10px 20px;
+    border-radius: 30px; /* రౌండ్ ఎడ్జెస్ */
+    font-size: 0.9rem;
+    font-weight: 600;
+    /* సన్నని వైట్ బోర్డర్ */
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(8px); /* బ్లర్ ఎఫెక్ట్ */
+    transition: all 0.3s ease;
+    
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ఐకాన్ కి టెక్స్ట్ కి గ్యాప్ */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn i {
+    color: #00d2ff; /* ఐకాన్ బ్లూ కలర్ */
+    transition: 0.3s;
+}
+
+/* --- Hover Effect (మౌస్ పెట్టినప్పుడు) --- */
+.nav-btn:hover {
+    background: #00d2ff; /* బ్లూ బ్యాక్‌గ్రౌండ్ వస్తుంది */
+    color: #000000; /* టెక్స్ట్ బ్లాక్ అవుతుంది */
+    border-color: #00d2ff;
+    transform: translateY(-3px); /* పైకి లేస్తుంది */
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); /* గ్లో అవుతుంది */
+}
+
+.nav-btn:hover i {
+    color: #000000; /* ఐకాన్ కూడా బ్లాక్ అవుతుంది */
+}
+
+/* --- Mobile View --- */
+@media (max-width: 600px) {
+    .top-nav-buttons {
+        top: 15px;
+        left: 15px;
+        gap: 10px;
+    }
+    
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+}

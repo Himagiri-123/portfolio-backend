@@ -1,0 +1,195 @@
+/* Google Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #020617;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- మారుతున్న రంగుల బ్యాక్‌గ్రౌండ్ (Moving Background) --- */
+body::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(#00d2ff, #a855f7);
+    border-radius: 50%;
+    filter: blur(80px);
+    top: -50px;
+    left: -50px;
+    animation: moveCircle 10s infinite alternate;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(#f472b6, #fb923c);
+    border-radius: 50%;
+    filter: blur(80px);
+    bottom: -50px;
+    right: -50px;
+    animation: moveCircle 8s infinite alternate-reverse;
+}
+
+@keyframes moveCircle {
+    from { transform: translate(0, 0); }
+    to { transform: translate(100px, 100px); }
+}
+
+/* --- Glassmorphism Login Box --- */
+.login-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 50px 40px;
+    border-radius: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: floatBox 4s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes floatBox {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.glow-text {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(to bottom right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+p {
+    color: #64748b;
+    margin-bottom: 35px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* --- Interactive Input Fields --- */
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a855f7;
+    transition: 0.3s;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 50px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: #fff;
+    outline: none;
+    transition: 0.4s;
+}
+
+.input-group input:focus {
+    border-color: #00d2ff;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+}
+
+.input-group input:focus + i {
+    color: #00d2ff;
+}
+
+/* --- Animated Login Button --- */
+.login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+}
+
+.login-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+    transition: 0.5s;
+}
+
+.login-btn:hover::after {
+    left: 120%;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.back-link:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+
+/* --- Forgot Password Link Style --- */
+.forgot-link {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.forgot-link a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.forgot-link a:hover {
+    color: #00d2ff; /* Blue Glow */
+    text-decoration: underline;
+}
