@@ -48,7 +48,7 @@ function toggleMenu() {
 }
 
 // --- Particles Background Logic ---
-if (document.getElementById('particles-js')) {
+if (document.getElementById('particles-js') && typeof particlesJS === 'function') {
     particlesJS("particles-js", {
         "particles": {
             "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
@@ -92,63 +92,51 @@ document.getElementById('contact-form').addEventListener('submit', function(even
 });
 
 // --- Homepage "Selected Professional Projects" ---
-// Frontend (Vercel) and backend (Render) are separate domains, so this
-// points at the full Render URL explicitly.
-const API_URL = "https://himagiri-portfolio.onrender.com/api/get-media";
+// Homepage content that comes from the database: featured projects and the About photo.
+// The 3 project cards written in index.html are the default shown when nothing is featured.
+const projectsContainer = document.getElementById('projects-container');
+const defaultProjectsHTML = projectsContainer ? projectsContainer.innerHTML : '';
 
-// The 3 project-cards already written in index.html act as the default
-// fallback. If the admin has marked any projects as "featured" in the
-// dashboard, those replace the defaults here (max 3 shown). If none are
-// marked featured yet (or the request fails), the defaults stay untouched.
-async function loadPortfolioContent() {
-    const container = document.getElementById('projects-container');
-    if (!container) return;
+function renderProjectCard(item) {
+    const techTags = (item.techStack || '')
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean)
+        .map(t => `<span>${escapeHtml(t)}</span>`)
+        .join('');
 
-    try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
+    const links = `
+        ${item.liveLink ? `<a href="${escapeHtml(item.liveLink)}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> View Project</a>` : ''}
+        ${item.repoLink ? `<a href="${escapeHtml(item.repoLink)}" target="_blank" class="btn-link"><i class="fab fa-github"></i> Source Code</a>` : ''}
+    `;
 
-        const featuredProjects = data
-            .filter(item => item.category === 'Projects' && item.featured)
-            .slice(0, 3);
+    return `
+        <div class="project-card">
+            <div class="card-image">
+                <img src="${optimizedImage(item.url, 800)}" alt="${escapeHtml(item.title)}" loading="lazy" decoding="async">
+            </div>
+            <div class="card-content">
+                <span class="project-tag">Project</span>
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>${escapeHtml(item.description || '')}</p>
+                <div class="tech-stack">${techTags}</div>
+                <div class="card-links">${links}</div>
+            </div>
+        </div>`;
+}
 
-        if (featuredProjects.length === 0) return; // keep the default 3 cards
-
-        container.innerHTML = featuredProjects.map(item => {
-            const techTags = (item.techStack || '')
-                .split(',')
-                .map(t => t.trim())
-                .filter(Boolean)
-                .map(t => `<span>${t}</span>`)
-                .join('');
-
-            const links = `
-                ${item.liveLink ? `<a href="${item.liveLink}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> View Project</a>` : ''}
-                ${item.repoLink ? `<a href="${item.repoLink}" target="_blank" class="btn-link"><i class="fab fa-github"></i> Source Code</a>` : ''}
-            `;
-
-            return `
-                <div class="project-card">
-                    <div class="card-image">
-                        <img src="${item.url}" alt="${item.title}">
-                    </div>
-                    <div class="card-content">
-                        <span class="project-tag">Project</span>
-                        <h3>${item.title}</h3>
-                        <p>${item.description || ''}</p>
-                        <div class="tech-stack">${techTags}</div>
-                        <div class="card-links">${links}</div>
-                    </div>
-                </div>`;
-        }).join('');
-    } catch (error) {
-        console.error("Error loading featured projects:", error);
-        // Fetch failed - the default 3 cards already in the HTML stay as-is.
+function renderHomepageContent(data) {
+    if (projectsContainer) {
+        const featured = data.filter(item => item.category === 'Projects' && item.featured).slice(0, 3);
+        projectsContainer.innerHTML = featured.length ? featured.map(renderProjectCard).join('') : defaultProjectsHTML;
     }
+
+    const aboutPhoto = document.getElementById('about-photo');
+    const aboutItem = data.find(item => item.category === 'About');
+    if (aboutPhoto && aboutItem) aboutPhoto.src = optimizedImage(aboutItem.url, 700);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     type();
-    loadPortfolioContent(); // డేటా లోడ్ అవుతుంది
-    console.log("Portfolio Interactions Loaded!");
+    loadMedia(renderHomepageContent).catch(error => console.error("Error loading homepage content:", error));
 });

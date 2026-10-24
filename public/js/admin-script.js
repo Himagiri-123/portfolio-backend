@@ -1,17 +1,18 @@
-// --- Global Variables ---
+// API_BASE_URL and optimizedImage()/videoPoster() come from api.js
+const CLOUDINARY_CLOUD = "dlwzq8sbe";
+const UPLOAD_PRESET = "himagiri_preset";
+
+const TABS = {
+    Photography: { nav: 'nav-photos',   title: 'Manage Photography', accept: 'image/*', multiple: true,  mediaType: 'image',   resource: 'image' },
+    Videos:      { nav: 'nav-videos',   title: 'Manage Videos',      accept: 'video/*', multiple: true,  mediaType: 'video',   resource: 'video' },
+    Projects:    { nav: 'nav-projects', title: 'Manage Projects',    accept: 'image/*', multiple: false, mediaType: 'project', resource: 'image' },
+    About:       { nav: 'nav-about',    title: 'Manage About Photo', accept: 'image/*', multiple: false, mediaType: 'image',   resource: 'image' },
+};
+
 let currentTab = 'Photography';
 let allMediaData = [];
-let editingId = null; // set while editing an existing item, null while adding new
+let editingId = null;
 
-// --- API Base URL ---
-// Frontend (Vercel) and backend (Render) are separate services/domains now,
-// so every request must point at the full Render URL explicitly.
-const API_BASE_URL = "https://himagiri-portfolio.onrender.com";
-
-// --- Notify helper ---
-// Wraps showToast() (from toast.js) with a safe fallback. If toast.js ever
-// fails to load for some reason, the admin still sees a message instead of
-// the action silently doing nothing.
 function notify(message, type = 'info', duration = 3500) {
     if (typeof window.showToast === 'function') {
         window.showToast(message, type, duration);
@@ -20,15 +21,10 @@ function notify(message, type = 'info', duration = 3500) {
     }
 }
 
-// =====================================================================
-// SESSION HANDLING (1 hour, client-side)
-// A logged-in admin stays in for 1 hour, shown as a live countdown at the
-// top of the dashboard. After 1 hour (or on Logout) they're sent back to
-// the login page. This is a lightweight convenience timer, not a
-// server-verified session - fine for a single-admin personal dashboard.
-// =====================================================================
+// ---------- Session (1 hour, stored in the browser) ----------
+// A convenience timer for a single-admin dashboard; it is not verified by the server.
 const SESSION_KEY = 'adminSessionExpiry';
-const SESSION_DURATION_MS = 60 * 60 * 1000; // 1 hour
+const SESSION_DURATION_MS = 60 * 60 * 1000;
 
 function startSession() {
     localStorage.setItem(SESSION_KEY, Date.now() + SESSION_DURATION_MS);
@@ -40,8 +36,7 @@ function clearSession() {
 
 function getSessionMillisLeft() {
     const expiry = parseInt(localStorage.getItem(SESSION_KEY), 10);
-    if (!expiry) return 0;
-    return expiry - Date.now();
+    return expiry ? expiry - Date.now() : 0;
 }
 
 function logout(message) {
@@ -50,7 +45,6 @@ function logout(message) {
 }
 
 function initSessionGuard() {
-    // Only runs on the dashboard page
     if (!document.querySelector('.dashboard-container')) return;
 
     if (getSessionMillisLeft() <= 0) {
@@ -80,20 +74,16 @@ function initSessionGuard() {
     tick();
     setInterval(tick, 1000);
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            clearSession();
-            window.location.href = 'index.html';
-        });
-    }
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSession();
+        window.location.href = 'index.html';
+    });
 }
 
-// --- 1. Login Logic (verified on the server, not hardcoded here) ---
+// ---------- Login ----------
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    // If redirected here after a session expiry / logout with a message
     const urlMsg = new URLSearchParams(window.location.search).get('msg');
     if (urlMsg) notify(urlMsg, 'info', 5000);
 
@@ -115,79 +105,57 @@ if (loginForm) {
             if (response.ok) {
                 startSession();
                 window.location.href = 'admin-dashboard.html';
-                return; // don't restore the button text - we're navigating away
-            } else {
-                notify('Access denied - invalid credentials.', 'error');
-                document.getElementById('password').value = '';
+                return;
             }
+            notify('Access denied - invalid credentials.', 'error');
+            document.getElementById('password').value = '';
         } catch (err) {
-            notify('Could not reach the server. Please try again.', 'error');
+            notify('Could not reach the server. It may be waking up - please try again in a few seconds.', 'error', 5000);
         } finally {
             submitBtn.innerHTML = originalText;
         }
     });
 }
 
-// --- 2. Forgot Password ---
-// A real reset flow (email link, etc.) needs the backend. For now this just
-// tells the admin to update ADMIN_PASS in the server's .env file directly -
-// it no longer reveals the password in plain text on the page.
 function forgotPassword() {
     notify('To reset your password, update ADMIN_PASS in the server .env file and redeploy.', 'info', 6000);
 }
 
-// --- 3. Dashboard Tabs Logic ---
-if (document.querySelector('.dashboard-container')) {
-    const navPhotos = document.getElementById('nav-photos');
-    const navVideos = document.getElementById('nav-videos');
-    const navProjects = document.getElementById('nav-projects');
-    const pageTitle = document.getElementById('page-title');
-    const projectFields = document.getElementById('projectFields');
-
-    function switchTab(tabName, title) {
-        currentTab = tabName;
-        pageTitle.innerText = title;
-
-        navPhotos.classList.remove('active');
-        navVideos.classList.remove('active');
-        navProjects.classList.remove('active');
-
-        if (tabName === 'Photography') navPhotos.classList.add('active');
-        if (tabName === 'Videos') navVideos.classList.add('active');
-        if (tabName === 'Projects') navProjects.classList.add('active');
-
-        projectFields.style.display = tabName === 'Projects' ? 'block' : 'none';
-
-        renderGrid();
-    }
-
-    navPhotos.addEventListener('click', () => { cancelEdit(); switchTab('Photography', 'Manage Photography'); });
-    navVideos.addEventListener('click', () => { cancelEdit(); switchTab('Videos', 'Manage Videos'); });
-    navProjects.addEventListener('click', () => { cancelEdit(); switchTab('Projects', 'Manage Projects'); });
-}
-
-// --- 4. Upload / Update Logic ---
-// While editingId is null, submitting the form creates a new item
-// (uploads the file to Cloudinary first). While editingId is set, submitting
-// only updates the text fields of that existing item - no new file needed.
+// ---------- Dashboard ----------
 const uploadForm = document.getElementById('uploadForm');
 const formSubmitBtn = document.getElementById('formSubmitBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const fileInput = document.getElementById('mediaFile');
+const titleInput = document.getElementById('mediaTitle');
+
+function applyTabUI(tabName) {
+    const tab = TABS[tabName];
+    currentTab = tabName;
+
+    document.getElementById('page-title').innerText = tab.title;
+    Object.entries(TABS).forEach(([name, t]) => {
+        document.getElementById(t.nav).classList.toggle('active', name === tabName);
+    });
+
+    document.getElementById('projectFields').style.display = tabName === 'Projects' ? 'block' : 'none';
+    document.getElementById('titleBox').style.display = tabName === 'About' ? 'none' : 'block';
+
+    fileInput.accept = tab.accept;
+    fileInput.multiple = tab.multiple;
+    document.getElementById('fileLabel').textContent = tab.multiple ? 'Choose Files (select many at once)' : 'Choose File';
+    document.getElementById('fileHint').textContent =
+        tabName === 'About' ? 'The new photo replaces the current About photo.'
+        : tab.multiple ? 'Hold Ctrl (or Shift) to select many. Title is optional - leave it blank to use file names.'
+        : '';
+
+    renderGrid();
+}
 
 function startEdit(item) {
     editingId = item._id;
+    applyTabUI(item.category);
 
-    // Make sure we're on the right tab so the right fields are visible
-    const tabToTitle = { Photography: 'Manage Photography', Videos: 'Manage Videos', Projects: 'Manage Projects' };
-    currentTab = item.category;
-    document.getElementById('page-title').innerText = tabToTitle[item.category] || item.category;
-    document.getElementById('nav-photos').classList.toggle('active', item.category === 'Photography');
-    document.getElementById('nav-videos').classList.toggle('active', item.category === 'Videos');
-    document.getElementById('nav-projects').classList.toggle('active', item.category === 'Projects');
-    document.getElementById('projectFields').style.display = item.category === 'Projects' ? 'block' : 'none';
-
-    document.getElementById('mediaTitle').value = item.title || '';
+    titleInput.value = item.title || '';
     if (item.category === 'Projects') {
         document.getElementById('projDesc').value = item.description || '';
         document.getElementById('projTech').value = item.techStack || '';
@@ -196,134 +164,177 @@ function startEdit(item) {
         document.getElementById('projFeatured').checked = !!item.featured;
     }
 
-    // Editing metadata only - no new file required
-    fileInput.required = false;
-    fileInput.parentElement.style.display = 'none';
-
-    formSubmitBtn.textContent = 'Update Project';
+    fileInput.closest('.input-box').style.display = 'none';
+    formSubmitBtn.textContent = 'Save Changes';
     cancelEditBtn.style.display = 'inline-block';
-
     uploadForm.scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelEdit() {
     editingId = null;
     uploadForm.reset();
-    fileInput.required = true;
-    fileInput.parentElement.style.display = 'block';
+    fileInput.closest('.input-box').style.display = 'block';
     formSubmitBtn.textContent = 'Upload to Live Site';
     cancelEditBtn.style.display = 'none';
 }
 
-if (cancelEditBtn) cancelEditBtn.addEventListener('click', cancelEdit);
+function getProjectFields() {
+    return {
+        description: document.getElementById('projDesc').value,
+        techStack: document.getElementById('projTech').value,
+        liveLink: document.getElementById('projLive').value,
+        repoLink: document.getElementById('projRepo').value,
+        featured: document.getElementById('projFeatured').checked,
+    };
+}
+
+// Phone photos are often 5-10 MB; resize before upload so many files upload quickly
+async function compressImage(file) {
+    const MAX_SIDE = 2400;
+    if (file.size < 600 * 1024 || /gif|svg|png/.test(file.type)) return file;
+    try {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+        return blob && blob.size < file.size ? blob : file;
+    } catch (err) {
+        return file;
+    }
+}
+
+async function uploadOne(file, title) {
+    const tab = TABS[currentTab];
+    const body = tab.resource === 'image' ? await compressImage(file) : file;
+
+    const formData = new FormData();
+    formData.append('file', body, file.name);
+    formData.append('upload_preset', UPLOAD_PRESET);
+
+    const cloudResponse = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${tab.resource}/upload`, { method: 'POST', body: formData });
+    const cloudData = await cloudResponse.json();
+    if (!cloudData.secure_url) throw new Error(cloudData.error?.message || 'Cloudinary upload failed');
+
+    const payload = { title, url: cloudData.secure_url, mediaType: tab.mediaType, category: currentTab };
+    if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
+
+    const saveResponse = await fetch(`${API_BASE_URL}/api/upload-media`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    if (!saveResponse.ok) throw new Error('Saving to the server failed');
+}
+
+function titleForFile(file, index, total, baseTitle) {
+    if (currentTab === 'About') return 'About Photo';
+    if (baseTitle) return total > 1 ? `${baseTitle} ${index + 1}` : baseTitle;
+    return file.name.replace(/\.[^.]+$/, '');
+}
+
+async function submitEdit(title) {
+    if (!title) {
+        notify('Please enter a title.', 'error');
+        return;
+    }
+    const payload = { title };
+    if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
+
+    const response = await fetch(`${API_BASE_URL}/api/update-media/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error('Update failed');
+
+    notify('Changes saved!', 'success');
+    cancelEdit();
+    loadAdminPhotos();
+}
+
+async function submitUploads(baseTitle) {
+    const tab = TABS[currentTab];
+    const files = Array.from(fileInput.files);
+
+    if (!files.length) {
+        notify('Please select at least one file.', 'error');
+        return;
+    }
+    if (currentTab === 'Projects' && !baseTitle) {
+        notify('Please enter the project name.', 'error');
+        return;
+    }
+    const wrongType = files.filter((f) => !f.type.startsWith(tab.resource));
+    if (wrongType.length) {
+        notify(`${wrongType.length} selected file(s) are not ${tab.resource}s. Please remove them.`, 'error', 5000);
+        return;
+    }
+
+    let uploaded = 0;
+    const failed = [];
+    for (let i = 0; i < files.length; i++) {
+        formSubmitBtn.textContent = `Uploading ${i + 1} of ${files.length}...`;
+        try {
+            await uploadOne(files[i], titleForFile(files[i], i, files.length, baseTitle));
+            uploaded++;
+        } catch (err) {
+            console.error(files[i].name, err);
+            failed.push(files[i].name);
+        }
+    }
+
+    if (failed.length) {
+        notify(`${uploaded} uploaded, ${failed.length} failed: ${failed.join(', ')}`, 'error', 7000);
+    } else {
+        notify(uploaded === 1 ? 'Upload successful!' : `${uploaded} files uploaded successfully!`, 'success');
+    }
+    uploadForm.reset();
+    loadAdminPhotos();
+}
 
 if (uploadForm) {
+    Object.entries(TABS).forEach(([name, tab]) => {
+        document.getElementById(tab.nav).addEventListener('click', () => {
+            cancelEdit();
+            applyTabUI(name);
+        });
+    });
+
+    cancelEditBtn.addEventListener('click', cancelEdit);
+
     uploadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const originalText = formSubmitBtn.innerHTML;
-        const titleInput = document.getElementById('mediaTitle');
-
-        // --- EDIT MODE: just update the text fields, no file involved ---
-        if (editingId) {
-            formSubmitBtn.innerHTML = 'Updating... ⏳';
-            try {
-                const payload = { title: titleInput.value };
-                if (currentTab === 'Projects') {
-                    payload.description = document.getElementById('projDesc').value;
-                    payload.techStack = document.getElementById('projTech').value;
-                    payload.liveLink = document.getElementById('projLive').value;
-                    payload.repoLink = document.getElementById('projRepo').value;
-                    payload.featured = document.getElementById('projFeatured').checked;
-                }
-
-                await fetch(`${API_BASE_URL}/api/update-media/${editingId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                });
-
-                notify('Project updated!', 'success');
-                cancelEdit();
-                loadAdminPhotos();
-            } catch (err) {
-                notify('Update failed: ' + err.message, 'error');
-            } finally {
-                formSubmitBtn.innerHTML = originalText;
-            }
-            return;
-        }
-
-        // --- CREATE MODE: upload file to Cloudinary, then save metadata ---
-        formSubmitBtn.innerHTML = 'Uploading... ⏳';
-        const file = fileInput.files[0];
-
-        if (!file) {
-            notify('Please select a file first.', 'error');
-            formSubmitBtn.innerHTML = originalText;
-            return;
-        }
-
-        let type = 'image';
-        if (file.type.includes('video')) type = 'video';
-        if (currentTab === 'Projects') type = 'project';
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'himagiri_preset');
+        formSubmitBtn.disabled = true;
 
         try {
-            const cloudUrl = `https://api.cloudinary.com/v1_1/dlwzq8sbe/${type === 'video' ? 'video' : 'image'}/upload`;
-            const cloudResponse = await fetch(cloudUrl, { method: 'POST', body: formData });
-            const cloudData = await cloudResponse.json();
-
-            if (!cloudData.secure_url) {
-                throw new Error('Cloudinary upload failed');
-            }
-
-            const payload = {
-                title: titleInput.value,
-                url: cloudData.secure_url,
-                mediaType: type,
-                category: currentTab,
-            };
-
-            if (currentTab === 'Projects') {
-                payload.description = document.getElementById('projDesc').value;
-                payload.techStack = document.getElementById('projTech').value;
-                payload.liveLink = document.getElementById('projLive').value;
-                payload.repoLink = document.getElementById('projRepo').value;
-                payload.featured = document.getElementById('projFeatured').checked;
-            }
-
-            await fetch(`${API_BASE_URL}/api/upload-media`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-
-            notify('Upload successful!', 'success');
-            uploadForm.reset();
-            loadAdminPhotos();
+            const title = titleInput.value.trim();
+            if (editingId) await submitEdit(title);
+            else await submitUploads(title);
         } catch (err) {
-            notify('Upload failed: ' + err.message, 'error');
+            notify(err.message, 'error');
         } finally {
-            formSubmitBtn.innerHTML = originalText;
+            formSubmitBtn.disabled = false;
+            formSubmitBtn.textContent = editingId ? 'Save Changes' : 'Upload to Live Site';
         }
     });
 }
 
-// --- 5. Fetch & Render Media Grid ---
+// ---------- Media grid ----------
 async function loadAdminPhotos() {
     const grid = document.querySelector('.preview-grid');
     if (!grid) return;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/get-media`);
+        const response = await fetch(`${API_BASE_URL}/api/get-media`, { cache: 'no-store' });
         allMediaData = await response.json();
+        try { localStorage.removeItem(MEDIA_CACHE_KEY); } catch (e) { /* storage blocked */ }
         renderGrid();
     } catch (error) {
         console.error('Error loading data:', error);
+        grid.innerHTML = '<p style="color:#f87171;">Could not load items. The server may be waking up - refresh in a few seconds.</p>';
     }
 }
 
@@ -332,48 +343,52 @@ function renderGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    const filteredData = allMediaData.filter((item) => item.category === currentTab);
-
-    if (filteredData.length === 0) {
+    const items = allMediaData.filter((item) => item.category === currentTab);
+    if (items.length === 0) {
         grid.innerHTML = `<p style="color:#64748b;">No ${currentTab} found.</p>`;
         return;
     }
 
-    filteredData.forEach((item) => {
-        let mediaEl = `<img src="${item.url}" style="width:100%; height:120px; object-fit:cover;">`;
-        if (item.mediaType === 'video') {
-            mediaEl = `<video src="${item.url}" style="width:100%; height:120px; object-fit:cover;"></video>`;
-        }
+    items.forEach((item) => {
+        const media = item.mediaType === 'video'
+            ? `<video src="${item.url}#t=0.1" poster="${videoPoster(item.url, 300)}" preload="metadata" muted playsinline style="width:100%; height:120px; object-fit:cover;"></video>`
+            : `<img src="${optimizedImage(item.url, 300)}" loading="lazy" style="width:100%; height:120px; object-fit:cover;">`;
 
-        const featuredBadge = item.featured ? '<span title="Shown in homepage highlights">⭐</span>' : '';
         const card = document.createElement('div');
         card.className = 'preview-item';
         card.innerHTML = `
-            ${mediaEl}
+            ${media}
             <div class="item-info">
-                <span>${featuredBadge} ${item.title}</span>
+                <span>${item.featured ? '<span title="Shown in homepage highlights">⭐</span> ' : ''}${escapeHtml(item.title)}</span>
                 <span>
-                    <button class="edit-btn" title="Edit"><i class="fas fa-pen"></i></button>
+                    ${currentTab === 'About' ? '' : '<button class="edit-btn" title="Edit"><i class="fas fa-pen"></i></button>'}
                     <button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
                 </span>
             </div>`;
 
-        card.querySelector('.edit-btn').addEventListener('click', () => startEdit(item));
-        card.querySelector('.delete-btn').addEventListener('click', () => deletePhoto(item._id));
-
+        const editBtn = card.querySelector('.edit-btn');
+        if (editBtn) editBtn.addEventListener('click', () => startEdit(item));
+        card.querySelector('.delete-btn').addEventListener('click', () => deleteItem(item._id));
         grid.appendChild(card);
     });
 }
 
-// --- 6. Delete ---
-async function deletePhoto(id) {
+async function deleteItem(id) {
     if (!confirm('Delete this?')) return;
     if (editingId === id) cancelEdit();
-    await fetch(`${API_BASE_URL}/api/delete-media/${id}`, { method: 'DELETE' });
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/delete-media/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Delete failed');
+        notify('Deleted.', 'success');
+    } catch (err) {
+        notify(err.message, 'error');
+    }
     loadAdminPhotos();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initSessionGuard();
+    if (uploadForm) applyTabUI(currentTab);
     loadAdminPhotos();
 });

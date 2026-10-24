@@ -16,6 +16,7 @@
                 <li id="nav-photos" class="active"><i class="fas fa-camera"></i> Photography</li>
                 <li id="nav-videos"><i class="fas fa-video"></i> Videos</li>
                 <li id="nav-projects"><i class="fas fa-project-diagram"></i> Projects</li>
+                <li id="nav-about"><i class="fas fa-user-circle"></i> About Photo</li>
                 <li class="logout-link"><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -36,9 +37,9 @@
                     <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Media</h3>
                     
                     <form id="uploadForm">
-                        <div class="input-box">
-                            <label>Title / Project Name</label>
-                            <input type="text" id="mediaTitle" placeholder="Enter title..." required>
+                        <div class="input-box" id="titleBox">
+                            <label id="titleLabel">Title / Project Name</label>
+                            <input type="text" id="mediaTitle" placeholder="Enter title...">
                         </div>
                         
                         <div id="projectFields" style="display: none;">
@@ -70,8 +71,9 @@
                         </div>
 
                         <div class="input-box">
-                            <label>Choose File (Image or Video)</label>
-                            <input type="file" id="mediaFile" accept="image/*, video/*" required>
+                            <label id="fileLabel">Choose Files</label>
+                            <input type="file" id="mediaFile" accept="image/*" multiple>
+                            <small id="fileHint" style="color:#64748b; display:block; margin-top:6px;"></small>
                         </div>
 
                         <button type="submit" class="submit-btn" id="formSubmitBtn">Upload to Live Site</button>
@@ -88,6 +90,7 @@
         </main>
     </div>
 
+    <script src="js/api.js"></script>
     <script src="js/toast.js"></script>
 <script src="js/admin-script.js"></script>
 

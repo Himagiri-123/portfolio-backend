@@ -58,3 +58,11 @@ npm start
 - Add basic rate-limiting to `/api/login` since it's a public endpoint.
 - Consider a signed/expiring session instead of a plain success response
   from `/api/login`, so the dashboard page itself checks you're logged in.
+
+## Performance notes
+
+- `public/js/api.js` holds the backend address, Cloudinary URL helpers (`optimizedImage`, `videoPoster`) and a cached media loader. Every page uses it, so the URL is defined in one place.
+- Images are requested from Cloudinary as resized, auto-format copies; originals are only used for videos.
+- Media lists are cached in the browser, so repeat visits render instantly while fresh data loads in the background.
+- Every public page pings `/health` to wake the free Render instance early. For zero cold starts, add a free UptimeRobot monitor that calls `https://himagiri-portfolio.onrender.com/health` every 5 minutes.
+- The admin dashboard compresses photos in the browser before upload and supports selecting many files at once.

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Himagiri | MERN Developer & Photographer</title>
+    <link rel="preconnect" href="https://res.cloudinary.com">
+    <link rel="preconnect" href="https://himagiri-portfolio.onrender.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 
@@ -73,7 +75,7 @@
     
     <div class="about-wrapper">
         <div class="about-image-col">
-            <img src="images/my-photo.jpg" alt="Himagiri Profile">
+            <img id="about-photo" src="images/my-photo.jpg" alt="Himagiri Profile" decoding="async"
         </div>
         
         <div class="about-text-col">
@@ -193,7 +195,7 @@
         
         <div class="project-card">
             <div class="card-image">
-                <img src="images/ngo-building.jpg" alt="Grameena Vikas Sangham NGO">
+                <img loading="lazy" decoding="async" src="images/ngo-building.jpg" alt="Grameena Vikas Sangham NGO">
             </div>
             <div class="card-content">
                 <span class="project-tag">Live Project</span>
@@ -212,7 +214,7 @@
 
         <div class="project-card">
             <div class="card-image">
-                <img src="images/my-portfolio.jpg" alt="My Developer Portfolio">
+                <img loading="lazy" decoding="async" src="images/my-portfolio.jpg" alt="My Developer Portfolio">
             </div>
             <div class="card-content">
                 <span class="project-tag">MERN Stack</span>
@@ -231,7 +233,7 @@
 
         <div class="project-card">
             <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=1000&auto=format&fit=crop" alt="Quiz Game">
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=60&w=600&auto=format&fit=crop" alt="Quiz Game">
             </div>
             <div class="card-content">
                 <span class="project-tag">Mini Project</span>
@@ -362,6 +364,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+<script src="js/api.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/main.js"></script>
 </body>
