@@ -64,7 +64,11 @@
             const grid = document.getElementById('all-projects-grid');
             grid.querySelectorAll('[data-dynamic]').forEach(card => card.remove());
 
-            data.filter(item => item.category === 'Projects').forEach(proj => {
+            const projects = data.filter(item => item.category === 'Projects');
+            // Built-in cards are only the fallback for an empty database (see "Import default projects" in the dashboard)
+            grid.querySelectorAll('.project-card:not([data-dynamic])').forEach(card => { card.hidden = projects.length > 0; });
+
+            projects.forEach(proj => {
                 const techSpans = proj.techStack
                     ? proj.techStack.split(',').map(t => `<span>${escapeHtml(t.trim())}</span>`).join('')
                     : '';
@@ -77,7 +81,7 @@
                         <img src="${optimizedImage(proj.url, 800)}" alt="${escapeHtml(proj.title)}" loading="lazy" decoding="async">
                     </div>
                     <div class="card-content">
-                        <span class="project-tag">Latest</span>
+                        <span class="project-tag">${escapeHtml(proj.tag || "Project")}</span>
                         <h3>${escapeHtml(proj.title)}</h3>
                         <p>${escapeHtml(proj.description || 'No description provided.')}</p>
                         <div class="tech-stack">${techSpans}</div>

@@ -17,6 +17,7 @@
                 <li id="nav-videos"><i class="fas fa-video"></i> Videos</li>
                 <li id="nav-projects"><i class="fas fa-project-diagram"></i> Projects</li>
                 <li id="nav-about"><i class="fas fa-user-circle"></i> About Photo</li>
+                <li id="nav-abouttext"><i class="fas fa-address-card"></i> About Content</li>
                 <li class="logout-link"><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -32,8 +33,10 @@
                 </div>
             </header>
 
+            <div id="toolsBar" class="tools-bar" hidden></div>
+
             <section class="upload-section">
-                <div class="upload-card">
+                <div class="upload-card" id="uploadCard">
                     <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Media</h3>
                     
                     <form id="uploadForm">
@@ -43,6 +46,11 @@
                         </div>
                         
                         <div id="projectFields" style="display: none;">
+                            <div class="input-box">
+                                <label>Card Label (small tag, e.g. Live Project)</label>
+                                <input type="text" id="projTag" placeholder="Live Project">
+                            </div>
+
                             <div class="input-box">
                                 <label>Description</label>
                                 <textarea id="projDesc" rows="3" placeholder="Write about the project..." 
@@ -66,7 +74,7 @@
 
                             <div class="input-box" style="display:flex; align-items:center; gap:10px;">
                                 <input type="checkbox" id="projFeatured" style="width:auto;">
-                                <label for="projFeatured" style="margin:0;">⭐ Show in Homepage Highlights (top 3 shown there)</label>
+                                <label for="projFeatured" style="margin:0;">⭐ Show on the homepage slider</label>
                             </div>
                         </div>
 
@@ -80,10 +88,35 @@
                         <button type="button" id="cancelEditBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
                     </form>
                 </div>
+
+                <div class="upload-card" id="aboutCard" style="display:none;">
+                    <h3 id="aboutCardTitle"><i class="fas fa-pen"></i> Add About Content</h3>
+                    <form id="aboutForm">
+                        <div class="input-box" id="aboutKindBox">
+                            <label>Type</label>
+                            <select id="aboutKind">
+                                <option value="paragraph">Paragraph</option>
+                                <option value="stat">Info card (Role, Education...)</option>
+                            </select>
+                        </div>
+                        <div class="input-box" id="aboutLabelBox" style="display:none;">
+                            <label>Card Label (e.g. Role:)</label>
+                            <input type="text" id="aboutLabel" placeholder="Role:">
+                        </div>
+                        <div class="input-box">
+                            <label id="aboutTextLabel">Text</label>
+                            <textarea id="aboutText" rows="5" placeholder="Write here..."
+                                style="width:100%; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; outline:none;"></textarea>
+                            <small id="aboutHint" style="color:#64748b; display:block; margin-top:6px;">Tip: **bold text** and *italic text* work inside paragraphs.</small>
+                        </div>
+                        <button type="submit" class="submit-btn" id="aboutSubmitBtn">Add to About</button>
+                        <button type="button" id="aboutCancelBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
+                    </form>
+                </div>
             </section>
 
             <section class="recent-uploads">
-                <h3>Recent Uploads</h3>
+                <h3 id="gridTitle">Recent Uploads</h3>
                 <div class="preview-grid">
                     </div>
             </section>

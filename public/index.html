@@ -79,7 +79,7 @@
         </div>
         
         <div class="about-text-col">
-            <h2 class="main-title" style="text-align: left; margin-bottom: 20px;">
+            <h2 class="main-title" id="about-heading" style="text-align: left; margin-bottom: 20px;">
                 About <span class="gradient-text">Me</span>
             </h2>
 
@@ -98,7 +98,7 @@
                 I have learned the value of empathy, leadership, and community problem-solving.
             </p>
 
-            <div class="about-details-grid">
+            <div class="about-details-grid" id="about-details">
                 <div class="detail-item">
                     <span class="detail-label">Role:</span>
                     <span class="detail-value">MERN Developer</span>
@@ -191,7 +191,9 @@
         <div class="title-bar-center"></div>
     </div>
 
-    <div class="projects-grid" id="projects-container">
+    <div class="projects-carousel">
+    <button type="button" class="carousel-btn carousel-prev" id="projectsPrev" aria-label="Previous project" hidden><i class="fas fa-chevron-left"></i></button>
+    <div class="projects-track" id="projects-container">
         
         <div class="project-card">
             <div class="card-image">
@@ -250,7 +252,11 @@
             </div>
         </div>
 
-    </div> <div class="projects-footer-content">
+    </div>
+    <button type="button" class="carousel-btn carousel-next" id="projectsNext" aria-label="Next project" hidden><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <div class="projects-footer-content">
         <p>
             These are just a few highlights of my development journey. I actively build real-world applications using the MERN stack to solve practical problems. From responsive front-end designs to complex back-end architectures, I love turning ideas into code. Click below to explore my complete project archive, including experimental works and upcoming ideas.
         </p>

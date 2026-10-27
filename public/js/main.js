@@ -47,6 +47,11 @@ function toggleMenu() {
     if (navLinks) navLinks.classList.toggle('active');
 }
 
+// Close the mobile menu after a link is tapped
+document.querySelectorAll('#nav-links a').forEach((link) => {
+    link.addEventListener('click', () => document.getElementById('nav-links').classList.remove('active'));
+});
+
 // --- Particles Background Logic ---
 if (document.getElementById('particles-js') && typeof particlesJS === 'function') {
     particlesJS("particles-js", {
@@ -67,35 +72,40 @@ if (document.getElementById('particles-js') && typeof particlesJS === 'function'
     });
 }
 
-// --- EmailJS Logic ---
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+// --- Contact form (EmailJS) ---
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.noValidate = true;
 
-    const btn = document.querySelector('.submit-btn-modern');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+    contactForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (!window.validateForm(contactForm)) return;
 
-    const serviceID = "service_6pn7qwl"; 
-    const templateID = "template_wgjs27o";
-    const publicKey = "ziJLHC6Y41VzbXq11";
+        const btn = contactForm.querySelector('.submit-btn-modern');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
 
-    emailjs.sendForm(serviceID, templateID, this, publicKey)
-        .then(function() {
+        try {
+            if (typeof emailjs === 'undefined') throw new Error('EmailJS is not available');
+            await emailjs.sendForm("service_6pn7qwl", "template_wgjs27o", contactForm, "ziJLHC6Y41VzbXq11");
             notify("Message sent successfully!", "success");
-            btn.innerHTML = originalText;
-            document.getElementById('contact-form').reset();
-        }, function(error) {
+            contactForm.reset();
+        } catch (error) {
+            console.error('Contact form error:', error);
             notify("Failed to send message. Please try again.", "error");
+        } finally {
             btn.innerHTML = originalText;
-            console.log('FAILED...', error); 
-        });
-});
+            btn.disabled = false;
+        }
+    });
+}
 
-// --- Homepage "Selected Professional Projects" ---
-// Homepage content that comes from the database: featured projects and the About photo.
-// The 3 project cards written in index.html are the default shown when nothing is featured.
+// --- Homepage content that comes from the database ---
 const projectsContainer = document.getElementById('projects-container');
 const defaultProjectsHTML = projectsContainer ? projectsContainer.innerHTML : '';
+const aboutColumn = document.querySelector('.about-text-col');
+const defaultAboutHTML = aboutColumn ? aboutColumn.innerHTML : '';
 
 function renderProjectCard(item) {
     const techTags = (item.techStack || '')
@@ -116,7 +126,7 @@ function renderProjectCard(item) {
                 <img src="${optimizedImage(item.url, 800)}" alt="${escapeHtml(item.title)}" loading="lazy" decoding="async">
             </div>
             <div class="card-content">
-                <span class="project-tag">Project</span>
+                <span class="project-tag">${escapeHtml(item.tag || 'Project')}</span>
                 <h3>${escapeHtml(item.title)}</h3>
                 <p>${escapeHtml(item.description || '')}</p>
                 <div class="tech-stack">${techTags}</div>
@@ -125,18 +135,118 @@ function renderProjectCard(item) {
         </div>`;
 }
 
-function renderHomepageContent(data) {
-    if (projectsContainer) {
-        const featured = data.filter(item => item.category === 'Projects' && item.featured).slice(0, 3);
-        projectsContainer.innerHTML = featured.length ? featured.map(renderProjectCard).join('') : defaultProjectsHTML;
+// Auto-sliding carousel: one card per view on phones, three on desktop.
+// It only slides (and shows arrows) when there are more cards than fit.
+function initProjectsCarousel() {
+    const track = projectsContainer;
+    const prevBtn = document.getElementById('projectsPrev');
+    const nextBtn = document.getElementById('projectsNext');
+    if (!track || !prevBtn || !nextBtn) return { refresh() {} };
+
+    const AUTO_SLIDE_MS = 10000;
+    let paused = false;
+
+    const hasOverflow = () => track.scrollWidth - track.clientWidth > 8;
+
+    function stepSize() {
+        const card = track.querySelector('.project-card');
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        return card ? card.offsetWidth + gap : track.clientWidth;
     }
 
+    function slide(direction) {
+        const max = track.scrollWidth - track.clientWidth;
+        if (direction > 0 && track.scrollLeft >= max - 8) track.scrollTo({ left: 0 });
+        else if (direction < 0 && track.scrollLeft <= 8) track.scrollTo({ left: max });
+        else track.scrollBy({ left: direction * stepSize() });
+    }
+
+    function updateArrows() {
+        prevBtn.hidden = nextBtn.hidden = !hasOverflow();
+    }
+
+    prevBtn.addEventListener('click', () => slide(-1));
+    nextBtn.addEventListener('click', () => slide(1));
+    window.addEventListener('resize', updateArrows);
+
+    // Pause while the visitor is interacting; resume shortly after
+    let resumeTimer;
+    const pause = () => { paused = true; clearTimeout(resumeTimer); };
+    const resume = (delay) => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { paused = false; }, delay); };
+    track.addEventListener('mouseenter', pause);
+    track.addEventListener('mouseleave', () => resume(0));
+    track.addEventListener('touchstart', pause, { passive: true });
+    track.addEventListener('touchend', () => resume(4000), { passive: true });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+        setInterval(() => {
+            if (!paused && !document.hidden && hasOverflow()) slide(1);
+        }, AUTO_SLIDE_MS);
+    }
+
+    return {
+        refresh() {
+            track.scrollTo({ left: 0, behavior: 'instant' });
+            updateArrows();
+        },
+    };
+}
+
+const projectsCarousel = initProjectsCarousel();
+
+function renderProjects(data) {
+    if (!projectsContainer) return;
+
+    const projects = data.filter(item => item.category === 'Projects');
+    if (projects.length === 0) {
+        projectsContainer.innerHTML = defaultProjectsHTML;
+    } else {
+        const featured = projects.filter(item => item.featured);
+        const shown = featured.length ? featured : projects.slice(0, 3);
+        projectsContainer.innerHTML = shown.map(renderProjectCard).join('');
+    }
+    projectsCarousel.refresh();
+}
+
+function renderAboutPhoto(data) {
     const aboutPhoto = document.getElementById('about-photo');
     const aboutItem = data.find(item => item.category === 'About');
     if (aboutPhoto && aboutItem) aboutPhoto.src = optimizedImage(aboutItem.url, 700);
 }
 
+function renderAboutText(blocks) {
+    if (!aboutColumn) return;
+    aboutColumn.innerHTML = defaultAboutHTML;
+    if (blocks.length === 0) return;
+
+    const heading = blocks.find(b => b.kind === 'heading');
+    if (heading) {
+        const words = heading.text.trim().split(/\s+/);
+        const lastWord = words.pop();
+        document.getElementById('about-heading').innerHTML =
+            `${escapeHtml(words.join(' '))} <span class="gradient-text">${escapeHtml(lastWord)}</span>`;
+    }
+
+    aboutColumn.querySelectorAll('p').forEach(p => p.remove());
+    const grid = document.getElementById('about-details');
+    blocks.filter(b => b.kind === 'paragraph').forEach(b => {
+        const p = document.createElement('p');
+        p.innerHTML = formatRichText(b.text);
+        aboutColumn.insertBefore(p, grid);
+    });
+
+    grid.innerHTML = blocks.filter(b => b.kind === 'stat').map(b => `
+        <div class="detail-item">
+            <span class="detail-label">${escapeHtml(b.label)}</span>
+            <span class="detail-value">${escapeHtml(b.text)}</span>
+        </div>`).join('');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     type();
-    loadMedia(renderHomepageContent).catch(error => console.error("Error loading homepage content:", error));
+    loadMedia((data) => { renderProjects(data); renderAboutPhoto(data); })
+        .catch(error => console.error("Error loading homepage content:", error));
+    loadAboutBlocks(renderAboutText)
+        .catch(error => console.error("Error loading About content:", error));
 });

@@ -108,3 +108,70 @@ body { background: #020617; color: white; overflow-x: hidden; }
     .dashboard-container { flex-direction: column; }
     .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
 }
+/* --- Uniform media cards: edit top-left, delete top-right, name below --- */
+.preview-item { display: flex; flex-direction: column; }
+.preview-media { position: relative; }
+.preview-media img, .preview-media video { display: block; width: 100%; height: 130px; object-fit: cover; }
+.card-action {
+    position: absolute;
+    top: 8px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s;
+}
+.card-action:hover { transform: scale(1.1); }
+.card-action.edit { left: 8px; background: rgba(2, 132, 199, 0.9); }
+.card-action.delete { right: 8px; background: rgba(220, 38, 38, 0.9); }
+.card-action.star { top: auto; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #94a3b8; }
+.card-action.star.on { color: #facc15; }
+.item-name {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: #e2e8f0;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- About content cards --- */
+.block-card { background: #1e293b; border-radius: 15px; padding: 52px 14px 14px; position: relative; min-height: 120px; }
+.block-card .badge { display: inline-block; font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; background: rgba(0, 210, 255, 0.12); color: #00d2ff; margin-bottom: 8px; }
+.block-card .block-label { color: #94a3b8; font-size: 0.8rem; margin-bottom: 4px; }
+.block-card .block-text { font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.block-card .card-action { top: 10px; }
+.preview-grid.blocks { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+/* --- Notice bar with action button --- */
+.tools-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.35); color: #e2e8f0; padding: 14px 18px; border-radius: 14px; margin-bottom: 24px; font-size: 0.9rem; line-height: 1.5; max-width: 760px; }
+.tools-bar[hidden] { display: none; }
+.tools-bar .tools-actions { display: flex; gap: 8px; }
+.tools-bar button { background: linear-gradient(135deg, #00d2ff, #a855f7); color: #fff; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+.tools-bar button.secondary { background: rgba(255, 255, 255, 0.1); }
+.input-box select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; }
+
+/* --- Phones: sidebar becomes a scrollable tab bar --- */
+@media (max-width: 768px) {
+    .sidebar { padding: 12px; flex-direction: row; align-items: center; overflow-x: auto; gap: 8px; }
+    .sidebar .logo { display: none; }
+    .sidebar nav { flex: 1; }
+    .sidebar ul { display: flex; gap: 8px; }
+    .sidebar li { white-space: nowrap; margin: 0; padding: 10px 14px; font-size: 0.85rem; gap: 8px; flex-shrink: 0; }
+    .logout-link { margin-top: 0; }
+    .main-content { padding: 20px 14px; }
+    .content-header h2 { font-size: 1.5rem; }
+    .upload-card { padding: 20px; }
+    .preview-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .preview-grid.blocks { grid-template-columns: 1fr; }
+}

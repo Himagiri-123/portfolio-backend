@@ -66,3 +66,10 @@ npm start
 - Media lists are cached in the browser, so repeat visits render instantly while fresh data loads in the background.
 - Every public page pings `/health` to wake the free Render instance early. For zero cold starts, add a free UptimeRobot monitor that calls `https://himagiri-portfolio.onrender.com/health` every 5 minutes.
 - The admin dashboard compresses photos in the browser before upload and supports selecting many files at once.
+
+## Admin dashboard notes
+
+- Uploads without a title are named `Himagiri_Photos_clicks_0001`, `Himagiri_Videos_clicks_0001`, ... A typed title is always used as given.
+- Projects marked with the star appear on the homepage slider (it auto-slides every 10 seconds when more cards exist than fit on screen).
+- "Import" buttons copy the built-in projects and About text into the dashboard so they can be edited or deleted. Once any project exists in the dashboard, the built-in ones are hidden on the site until imported.
+- About text supports `**bold**` and `*italic*`.

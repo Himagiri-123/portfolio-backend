@@ -1,6 +1,7 @@
 // Shared by every page: backend address, Cloudinary URL helpers and a cached media loader.
 const API_BASE_URL = "https://himagiri-portfolio.onrender.com";
 const MEDIA_CACHE_KEY = "mediaCache";
+const ABOUT_CACHE_KEY = "aboutCache";
 
 // Wake the free Render instance up while the visitor is still on the first page
 fetch(`${API_BASE_URL}/health`, { mode: "no-cors" }).catch(() => {});
@@ -27,23 +28,33 @@ function escapeHtml(text) {
 
 // Calls render() with cached data immediately (if any), then again with fresh data
 // from the server when it differs. Repeat visits show content instantly.
-async function loadMedia(render) {
+async function loadCached(cacheKey, path, render) {
     let cachedRaw = null;
     try {
-        cachedRaw = localStorage.getItem(MEDIA_CACHE_KEY);
+        cachedRaw = localStorage.getItem(cacheKey);
         if (cachedRaw) render(JSON.parse(cachedRaw));
     } catch (e) {
         cachedRaw = null;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/get-media`);
+        const response = await fetch(`${API_BASE_URL}${path}`);
         if (!response.ok) throw new Error(`Request failed: ${response.status}`);
         const freshRaw = JSON.stringify(await response.json());
 
-        try { localStorage.setItem(MEDIA_CACHE_KEY, freshRaw); } catch (e) { /* storage full or blocked */ }
+        try { localStorage.setItem(cacheKey, freshRaw); } catch (e) { /* storage full or blocked */ }
         if (freshRaw !== cachedRaw) render(JSON.parse(freshRaw));
     } catch (error) {
         if (!cachedRaw) throw error;
     }
+}
+
+const loadMedia = (render) => loadCached(MEDIA_CACHE_KEY, "/api/get-media", render);
+const loadAboutBlocks = (render) => loadCached(ABOUT_CACHE_KEY, "/api/about-blocks", render);
+
+// Escapes HTML, then turns **bold** and *italic* into tags (used for About paragraphs)
+function formatRichText(text) {
+    return escapeHtml(text)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>");
 }

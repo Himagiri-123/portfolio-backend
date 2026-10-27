@@ -7,6 +7,7 @@ const MediaSchema = new mongoose.Schema({
     category: { type: String },                  // 'Photography' | 'Videos' | 'Projects'
 
     // Optional fields used only when category === 'Projects'
+    tag: { type: String },            // small label on the card, e.g. "Live Project"
     description: { type: String },
     techStack: { type: String },
     liveLink: { type: String },

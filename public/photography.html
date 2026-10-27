@@ -55,10 +55,19 @@
         .lightbox:fullscreen .lb-caption { display: none; }
         .lightbox.maximized .lb-stage { inset: 0; }
         @media (max-width: 600px) {
-            .lb-stage { inset: 56px 0 50px; }
+            .lb-stage { inset: 0; }
             .lb-nav { width: 40px; height: 40px; background: rgba(0,0,0,0.5); }
             .lb-prev { left: 6px; } .lb-next { right: 6px; }
+            .lb-topbar { background: linear-gradient(rgba(0,0,0,0.6), transparent); }
+            .lb-caption { background: linear-gradient(transparent, rgba(0,0,0,0.6)); padding: 24px 16px 12px; }
             .gallery-container.view-large { --min: 220px; }
+        }
+        /* On touch screens the controls fade out after 3 seconds; a tap brings them back */
+        .lb-topbar, .lb-nav, .lb-caption { transition: opacity 0.3s; }
+        @media (hover: none), (max-width: 600px) {
+            .lightbox.controls-hidden .lb-topbar,
+            .lightbox.controls-hidden .lb-nav,
+            .lightbox.controls-hidden .lb-caption { opacity: 0; pointer-events: none; }
         }
 
         .back-nav { position: fixed; top: 20px; left: 20px; z-index: 100; }
@@ -205,6 +214,7 @@
                 preloadNeighbours();
             }
 
+            if (isTouchScreen()) showControls();
             lbCounter.textContent = `${currentIndex + 1} / ${items.length}`;
             lbCaption.textContent = item.title || '';
             document.getElementById('lbPrev').style.visibility = document.getElementById('lbNext').style.visibility = items.length > 1 ? 'visible' : 'hidden';
@@ -217,7 +227,17 @@
             });
         }
 
+        // Controls auto-hide (touch screens only, see CSS) after 3 seconds without interaction
+        let hideTimer;
+        function showControls() {
+            lightbox.classList.remove('controls-hidden');
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => lightbox.classList.add('controls-hidden'), 3000);
+        }
+        const isTouchScreen = () => window.matchMedia('(hover: none), (max-width: 600px)').matches;
+
         function openLightbox(index) {
+            showControls();
             lightbox.classList.add('open');
             lightbox.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -225,6 +245,7 @@
         }
 
         function closeLightbox() {
+            clearTimeout(hideTimer);
             if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
             lightbox.classList.remove('open', 'maximized');
             lightbox.setAttribute('aria-hidden', 'true');
@@ -255,7 +276,15 @@
         document.getElementById('lbFullscreen').addEventListener('click', toggleFullscreen);
         document.getElementById('lbPrev').addEventListener('click', () => showItem(currentIndex - 1));
         document.getElementById('lbNext').addEventListener('click', () => showItem(currentIndex + 1));
-        document.getElementById('lbStage').addEventListener('click', (e) => { if (e.target.id === 'lbStage') closeLightbox(); });
+        // Mouse: clicking the dark area closes. Touch: tapping toggles the controls instead.
+        document.getElementById('lbStage').addEventListener('click', (e) => {
+            if (!isTouchScreen()) {
+                if (e.target.id === 'lbStage') closeLightbox();
+            } else if (e.target !== lbVideo) {
+                lightbox.classList.contains('controls-hidden') ? showControls() : lightbox.classList.add('controls-hidden');
+            }
+        });
+
 
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('open')) return;
