@@ -135,65 +135,75 @@ function renderProjectCard(item) {
         </div>`;
 }
 
-// Auto-sliding carousel: one card per view on phones, three on desktop.
-// It only slides (and shows arrows) when there are more cards than fit.
-function initProjectsCarousel() {
-    const track = projectsContainer;
-    const prevBtn = document.getElementById('projectsPrev');
-    const nextBtn = document.getElementById('projectsNext');
-    if (!track || !prevBtn || !nextBtn) return { refresh() {} };
+const byId = (id) => document.getElementById(id);
+const noCarousel = { refresh() {} };
 
-    const AUTO_SLIDE_MS = 10000;
-    let paused = false;
+const projectsCarousel = projectsContainer
+    ? createCarousel(projectsContainer, { dotsEl: byId('projectsDots'), prevBtn: byId('projectsPrev'), nextBtn: byId('projectsNext') })
+    : noCarousel;
 
-    const hasOverflow = () => track.scrollWidth - track.clientWidth > 8;
+// --- Technical Core / Creative Vision sliders ---
+const technicalTrack = byId('technical-container');
+const creativeTrack = byId('creative-container');
+const defaultTechnicalHTML = technicalTrack ? technicalTrack.innerHTML : '';
+const defaultCreativeHTML = creativeTrack ? creativeTrack.innerHTML : '';
 
-    function stepSize() {
-        const card = track.querySelector('.project-card');
-        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-        return card ? card.offsetWidth + gap : track.clientWidth;
+const technicalCarousel = technicalTrack ? createCarousel(technicalTrack, { dotsEl: byId('technicalDots') }) : noCarousel;
+const creativeCarousel = creativeTrack ? createCarousel(creativeTrack, { dotsEl: byId('creativeDots') }) : noCarousel;
+
+const isExternalLink = (url) => /^https?:\/\//i.test(url) || /\.pdf$/i.test(url);
+const safeIcon = (icon) => (/^[a-z0-9\- ]+$/i.test(icon || '') ? icon : 'fas fa-star');
+
+function renderSkillCard(card, index) {
+    const accent = `accent-${(index % 4) + 1}`;
+    const url = card.linkUrl || '';
+    const target = isExternalLink(url) ? ' target="_blank" rel="noopener"' : '';
+    const link = url ? `<a href="${escapeHtml(url)}" class="view-cert"${target}>${escapeHtml(card.linkText || 'VIEW')}</a>` : '';
+    const dataHref = url ? ` data-href="${escapeHtml(url)}"` : '';
+
+    if (card.section === 'technical') {
+        return `
+            <div class="skill-card tech-card ${accent}"${dataHref}>
+                <div class="icon-box"><i class="${safeIcon(card.icon)}"></i></div>
+                <div class="card-info">
+                    <h3 class="stylish-heading">${escapeHtml(card.title)}</h3>
+                    <p>${escapeHtml(card.description)}</p>
+                    ${link}
+                </div>
+            </div>`;
     }
-
-    function slide(direction) {
-        const max = track.scrollWidth - track.clientWidth;
-        if (direction > 0 && track.scrollLeft >= max - 8) track.scrollTo({ left: 0 });
-        else if (direction < 0 && track.scrollLeft <= 8) track.scrollTo({ left: max });
-        else track.scrollBy({ left: direction * stepSize() });
-    }
-
-    function updateArrows() {
-        prevBtn.hidden = nextBtn.hidden = !hasOverflow();
-    }
-
-    prevBtn.addEventListener('click', () => slide(-1));
-    nextBtn.addEventListener('click', () => slide(1));
-    window.addEventListener('resize', updateArrows);
-
-    // Pause while the visitor is interacting; resume shortly after
-    let resumeTimer;
-    const pause = () => { paused = true; clearTimeout(resumeTimer); };
-    const resume = (delay) => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { paused = false; }, delay); };
-    track.addEventListener('mouseenter', pause);
-    track.addEventListener('mouseleave', () => resume(0));
-    track.addEventListener('touchstart', pause, { passive: true });
-    track.addEventListener('touchend', () => resume(4000), { passive: true });
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduceMotion) {
-        setInterval(() => {
-            if (!paused && !document.hidden && hasOverflow()) slide(1);
-        }, AUTO_SLIDE_MS);
-    }
-
-    return {
-        refresh() {
-            track.scrollTo({ left: 0, behavior: 'instant' });
-            updateArrows();
-        },
-    };
+    return `
+        <div class="skill-card creative-glass-card ${accent}"${dataHref}>
+            <div class="icon-box"><i class="${safeIcon(card.icon)}"></i></div>
+            <h3 class="stylish-heading">${escapeHtml(card.title)}</h3>
+            <p>${escapeHtml(card.description)}</p>
+            ${link}
+        </div>`;
 }
 
-const projectsCarousel = initProjectsCarousel();
+function renderSkillCards(cards) {
+    [
+        ['technical', technicalTrack, defaultTechnicalHTML, technicalCarousel],
+        ['creative', creativeTrack, defaultCreativeHTML, creativeCarousel],
+    ].forEach(([section, track, defaultHTML, carousel]) => {
+        if (!track) return;
+        const list = cards.filter((card) => card.section === section);
+        track.innerHTML = list.length ? list.map(renderSkillCard).join('') : defaultHTML;
+        carousel.refresh();
+    });
+}
+
+// Whole card is clickable (cards from the dashboard carry a data-href)
+[technicalTrack, creativeTrack].forEach((track) => {
+    if (!track) return;
+    track.addEventListener('click', (event) => {
+        const card = event.target.closest('.skill-card[data-href]');
+        if (!card || event.target.closest('a')) return;
+        const url = card.dataset.href;
+        if (isExternalLink(url)) window.open(url, '_blank', 'noopener');
+        else window.location.href = url;
+    });
+});
 
 function renderProjects(data) {
     if (!projectsContainer) return;
@@ -247,6 +257,8 @@ document.addEventListener("DOMContentLoaded", () => {
     type();
     loadMedia((data) => { renderProjects(data); renderAboutPhoto(data); })
         .catch(error => console.error("Error loading homepage content:", error));
+    loadSkillCards(renderSkillCards)
+        .catch(error => console.error("Error loading skill cards:", error));
     loadAboutBlocks(renderAboutText)
         .catch(error => console.error("Error loading About content:", error));
 });

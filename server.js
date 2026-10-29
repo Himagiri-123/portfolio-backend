@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const mediaRoutes = require('./routes/media');
 const authRoutes = require('./routes/auth');
 const aboutRoutes = require('./routes/about');
+const skillRoutes = require('./routes/skills');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
 app.use(authRoutes);
 app.use(mediaRoutes);
 app.use(aboutRoutes);
+app.use(skillRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -7,9 +7,11 @@
     <link rel="preconnect" href="https://res.cloudinary.com">
     <link rel="preconnect" href="https://himagiri-portfolio.onrender.com">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        .pin-badge { position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-radius: 50%; background: rgba(250,204,21,0.92); color: #422006; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; pointer-events: none; }
         .gallery-header { text-align: center; padding: 40px 20px 10px; color: white; }
         .gallery-header h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, #00d2ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
@@ -96,6 +98,8 @@
         <div class="status-msg"><div class="spinner"></div>Loading gallery... the server may take a few seconds to wake up.</div>
     </div>
 
+    <div class="pager" id="pager" hidden></div>
+
     <div id="lightbox" class="lightbox" aria-hidden="true">
         <div class="lb-topbar">
             <span id="lbCounter"></span>
@@ -114,9 +118,11 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
         const isVideos = params.get('type') === 'videos';
+        const galleryName = params.get('gallery') || '';
 
         const gallery = document.getElementById('gallery');
         const lightbox = document.getElementById('lightbox');
@@ -127,41 +133,69 @@
 
         let items = [];
         let currentIndex = 0;
+        let currentPage = 1;
+        const PAGE_SIZES = { small: 24, medium: 12, large: 8 };
+        let currentView = 'medium';
+        const pager = document.getElementById('pager');
 
         // ---------- Page setup ----------
-        document.getElementById('page-title').innerText = isVideos ? 'Cinematic Video Edits 🎬' : 'Creative Photography 📸';
-        document.getElementById('page-desc').innerText = isVideos ? 'A collection of my video editing experiments.' : 'Capturing moments through my lens.';
-        document.title = isVideos ? 'My Videos - Himagiri' : 'My Photography - Himagiri';
+        if (galleryName) {
+            document.getElementById('page-title').innerText = galleryName;
+            document.getElementById('page-desc').innerText = isVideos ? 'A collection of videos.' : 'A collection of my work.';
+            document.title = `${galleryName} - Himagiri`;
+        } else {
+            document.getElementById('page-title').innerText = isVideos ? 'Cinematic Video Edits 🎬' : 'Creative Photography 📸';
+            document.getElementById('page-desc').innerText = isVideos ? 'A collection of my video editing experiments.' : 'Capturing moments through my lens.';
+            document.title = isVideos ? 'My Videos - Himagiri' : 'My Photography - Himagiri';
+        }
 
         // ---------- Grid size switcher ----------
         const viewButtons = document.querySelectorAll('#viewSwitch button');
         function setView(view) {
+            const changed = view !== currentView;
+            currentView = view;
             gallery.classList.remove('view-small', 'view-medium', 'view-large');
             gallery.classList.add(`view-${view}`);
             viewButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
             try { localStorage.setItem('galleryView', view); } catch (e) { /* storage blocked */ }
+            if (changed && items.length) { currentPage = 1; renderPage(); }
         }
         viewButtons.forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
         setView(localStorage.getItem('galleryView') || 'medium');
 
         // ---------- Rendering ----------
         function belongsToPage(item) {
+            if ((item.gallery || '') !== galleryName) return false;
             const wanted = isVideos ? 'Videos' : 'Photography';
             if (item.category) return item.category === wanted;
             return item.mediaType === (isVideos ? 'video' : 'image');
         }
 
         function renderGallery(data) {
-            items = data.filter(belongsToPage);
+            // Pinned items first, then newest first (the server already sends newest first)
+            items = data.filter(belongsToPage).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
+            const pages = Math.max(1, Math.ceil(items.length / PAGE_SIZES[currentView]));
+            currentPage = Math.min(currentPage, pages);
+            renderPage();
+        }
+
+        // Only the current page is drawn, so large galleries stay fast
+        function renderPage() {
             gallery.innerHTML = '';
 
             if (items.length === 0) {
                 gallery.innerHTML = '<p class="status-msg">No content found yet.</p>';
+                pager.hidden = true;
                 return;
             }
 
+            const size = PAGE_SIZES[currentView];
+            const pages = Math.ceil(items.length / size);
+            const start = (currentPage - 1) * size;
+
             const fragment = document.createDocumentFragment();
-            items.forEach((item, index) => {
+            items.slice(start, start + size).forEach((item, offset) => {
+                const index = start + offset;
                 const card = document.createElement('div');
                 card.className = 'gallery-item';
                 card.tabIndex = 0;
@@ -171,10 +205,27 @@
                     ? `<video src="${item.url}#t=0.1" poster="${videoPoster(item.url)}" preload="metadata" muted playsinline></video><span class="play-badge"><i class="fas fa-play"></i></span>`
                     : `<img src="${optimizedImage(item.url, 600)}" alt="${escapeHtml(item.title)}" loading="lazy" decoding="async">`;
 
-                card.innerHTML = `${media}<div class="gallery-info"><h3>${escapeHtml(item.title)}</h3></div>`;
+                const pin = item.pinned ? '<span class="pin-badge" title="Pinned"><i class="fas fa-thumbtack"></i></span>' : '';
+                card.innerHTML = `${media}${pin}<div class="gallery-info"><h3>${escapeHtml(item.title)}</h3></div>`;
                 fragment.appendChild(card);
             });
             gallery.appendChild(fragment);
+
+            renderPager(pager, {
+                page: currentPage,
+                pages,
+                onChange: (page) => {
+                    currentPage = page;
+                    renderPage();
+                    document.querySelector('.gallery-header').scrollIntoView({ behavior: 'smooth' });
+                },
+            });
+            if (pages > 1) {
+                const info = document.createElement('div');
+                info.className = 'pager-info';
+                info.textContent = `Showing ${start + 1}-${Math.min(start + size, items.length)} of ${items.length}`;
+                pager.prepend(info);
+            }
         }
 
         gallery.addEventListener('click', (e) => {

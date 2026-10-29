@@ -18,6 +18,8 @@
                 <li id="nav-projects"><i class="fas fa-project-diagram"></i> Projects</li>
                 <li id="nav-about"><i class="fas fa-user-circle"></i> About Photo</li>
                 <li id="nav-abouttext"><i class="fas fa-address-card"></i> About Content</li>
+                <li id="nav-tech"><i class="fas fa-laptop-code"></i> Technical Skills</li>
+                <li id="nav-creative"><i class="fas fa-palette"></i> Creative Skills</li>
                 <li class="logout-link"><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -45,6 +47,13 @@
                             <input type="text" id="mediaTitle" placeholder="Enter title...">
                         </div>
                         
+                        <div class="input-box" id="galleryBox">
+                            <label>Collection (optional)</label>
+                            <input type="text" id="mediaGallery" list="galleryNames" placeholder="Leave blank for the main gallery, or type e.g. Drawing">
+                            <datalist id="galleryNames"></datalist>
+                            <small style="color:#64748b; display:block; margin-top:6px;">Items in a collection open from their own skill card instead of the main gallery.</small>
+                        </div>
+
                         <div id="projectFields" style="display: none;">
                             <div class="input-box">
                                 <label>Card Label (small tag, e.g. Live Project)</label>
@@ -111,6 +120,53 @@
                         </div>
                         <button type="submit" class="submit-btn" id="aboutSubmitBtn">Add to About</button>
                         <button type="button" id="aboutCancelBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
+                    </form>
+                </div>
+
+                <div class="upload-card" id="skillCard" style="display:none;">
+                    <h3 id="skillCardTitle"><i class="fas fa-pen"></i> Add Skill Card</h3>
+                    <form id="skillForm">
+                        <div class="input-box">
+                            <label>Skill Name</label>
+                            <input type="text" id="skillTitle" placeholder="e.g. Drawing">
+                        </div>
+                        <div class="input-box">
+                            <label>Short Description</label>
+                            <textarea id="skillDesc" rows="3" placeholder="What is this skill about?"
+                                style="width:100%; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; outline:none;"></textarea>
+                        </div>
+                        <div class="input-box">
+                            <label>Icon (Font Awesome class)</label>
+                            <input type="text" id="skillIcon" list="iconChoices" placeholder="fas fa-paint-brush">
+                            <datalist id="iconChoices">
+                                <option value="fas fa-paint-brush"></option><option value="fas fa-pencil-alt"></option>
+                                <option value="fas fa-camera"></option><option value="fas fa-video"></option>
+                                <option value="fas fa-music"></option><option value="fas fa-microphone"></option>
+                                <option value="fas fa-pen-nib"></option><option value="fas fa-palette"></option>
+                                <option value="fas fa-code"></option><option value="fab fa-react"></option>
+                                <option value="fab fa-node-js"></option><option value="fab fa-js"></option>
+                                <option value="fab fa-python"></option><option value="fab fa-html5"></option>
+                                <option value="fab fa-css3-alt"></option><option value="fas fa-database"></option>
+                                <option value="fas fa-server"></option><option value="fas fa-mobile-alt"></option>
+                                <option value="fas fa-laptop-code"></option><option value="fas fa-award"></option>
+                                <option value="fas fa-graduation-cap"></option><option value="fas fa-star"></option>
+                            </datalist>
+                            <small style="color:#64748b; display:block; margin-top:6px;">Pick from the list or type any Font Awesome 6 icon class.</small>
+                        </div>
+                        <div class="input-box">
+                            <label>Where should the card open? (quick pick)</label>
+                            <select id="skillQuickLink"></select>
+                        </div>
+                        <div class="input-box">
+                            <label>Link (page or website address)</label>
+                            <input type="text" id="skillLink" placeholder="photography.html?type=photos&gallery=Drawing">
+                        </div>
+                        <div class="input-box">
+                            <label>Link Text</label>
+                            <input type="text" id="skillLinkText" placeholder="VIEW ALL DRAWINGS">
+                        </div>
+                        <button type="submit" class="submit-btn" id="skillSubmitBtn">Add Skill Card</button>
+                        <button type="button" id="skillCancelBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
                     </form>
                 </div>
             </section>

@@ -15,7 +15,7 @@ async function destroyCloudinaryAsset(media) {
 // Saves metadata for a file the dashboard already uploaded to Cloudinary
 router.post('/api/upload-media', async (req, res) => {
     try {
-        const { title, url, category, mediaType, tag, description, techStack, liveLink, repoLink, featured } = req.body;
+        const { title, url, category, gallery, mediaType, tag, description, techStack, liveLink, repoLink, featured } = req.body;
 
         // The About photo is a single item: a new upload replaces the old one
         if (category === 'About') {
@@ -26,7 +26,7 @@ router.post('/api/upload-media', async (req, res) => {
             }
         }
 
-        const newMedia = new Media({ title, url, category, mediaType, tag, description, techStack, liveLink, repoLink, featured });
+        const newMedia = new Media({ title, url, category, gallery, mediaType, tag, description, techStack, liveLink, repoLink, featured });
         await newMedia.save();
         res.status(201).json({ message: 'Saved Successfully!', data: newMedia });
     } catch (err) {
@@ -48,7 +48,7 @@ router.get('/api/get-media', async (req, res) => {
 // Update text fields only; the uploaded file itself is untouched
 router.put('/api/update-media/:id', async (req, res) => {
     try {
-        const allowedFields = ['title', 'tag', 'description', 'techStack', 'liveLink', 'repoLink', 'featured'];
+        const allowedFields = ['title', 'gallery', 'pinned', 'tag', 'description', 'techStack', 'liveLink', 'repoLink', 'featured'];
         const updates = {};
         for (const field of allowedFields) {
             if (req.body[field] !== undefined) updates[field] = req.body[field];

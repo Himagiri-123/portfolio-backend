@@ -4,6 +4,8 @@ const MediaSchema = new mongoose.Schema({
     title: { type: String, required: true },
     url: { type: String, required: true },       // Cloudinary URL
     mediaType: { type: String, required: true }, // 'image' | 'video' | 'project'
+    gallery: { type: String, default: "" }, // optional named collection, e.g. "Drawing"
+    pinned: { type: Boolean, default: false }, // pinned items are shown first in galleries
     category: { type: String },                  // 'Photography' | 'Videos' | 'Projects'
 
     // Optional fields used only when category === 'Projects'

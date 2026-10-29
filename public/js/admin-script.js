@@ -8,11 +8,15 @@ const TABS = {
     Projects:    { nav: 'nav-projects',  title: 'Manage Projects',    accept: 'image/*', multiple: false, mediaType: 'project', resource: 'image' },
     About:       { nav: 'nav-about',     title: 'Manage About Photo', accept: 'image/*', multiple: false, mediaType: 'image',   resource: 'image' },
     AboutText:   { nav: 'nav-abouttext', title: 'Manage About Content', text: true },
+    Technical:   { nav: 'nav-tech',      title: 'Manage Technical Skills', skills: 'technical' },
+    Creative:    { nav: 'nav-creative',  title: 'Manage Creative Skills',  skills: 'creative' },
 };
 
 let currentTab = 'Photography';
 let allMediaData = [];
 let aboutBlocks = [];
+let skillCards = [];
+let editingSkillId = null;
 let editingId = null;
 let editingBlockId = null;
 
@@ -136,6 +140,7 @@ const cancelEditBtn = document.getElementById('cancelEditBtn');
 const fileInput = document.getElementById('mediaFile');
 const titleInput = document.getElementById('mediaTitle');
 const aboutForm = document.getElementById('aboutForm');
+const skillForm = document.getElementById('skillForm');
 
 // ---------- Current homepage content, read from index.html ----------
 // Used by the "Import" buttons so the built-in content can be edited like anything else.
@@ -176,7 +181,22 @@ function getSiteDefaults() {
                     text: item.querySelector('.detail-value').textContent.trim(),
                 }));
 
-                return { projects, about };
+                const readCards = (selector, section) => Array.from(doc.querySelectorAll(`${selector} .skill-card`)).map((card) => {
+                    const onclick = card.getAttribute('onclick') || '';
+                    const link = card.querySelector('a.view-cert');
+                    const label = card.querySelector('.view-cert');
+                    return {
+                        section,
+                        title: card.querySelector('h3').textContent.trim(),
+                        description: card.querySelector('p').textContent.trim(),
+                        icon: card.querySelector('i').className.trim(),
+                        linkText: label ? label.textContent.trim() : '',
+                        linkUrl: (link && link.getAttribute('href')) || (onclick.match(/['"]([^'"]+)['"]/) || [])[1] || '',
+                    };
+                });
+                const skills = [...readCards('#technical-container', 'technical'), ...readCards('#creative-container', 'creative')];
+
+                return { projects, about, skills };
             });
     }
     return siteDefaultsPromise;
@@ -193,12 +213,18 @@ function applyTabUI(tabName) {
     });
 
     const isText = !!tab.text;
-    document.getElementById('uploadCard').style.display = isText ? 'none' : 'block';
+    const isSkills = !!tab.skills;
+    const isMedia = !isText && !isSkills;
+    document.getElementById('uploadCard').style.display = isMedia ? 'block' : 'none';
     document.getElementById('aboutCard').style.display = isText ? 'block' : 'none';
-    document.getElementById('gridTitle').textContent = isText ? 'Current About Content' : 'Recent Uploads';
-    document.querySelector('.preview-grid').classList.toggle('blocks', isText);
+    document.getElementById('skillCard').style.display = isSkills ? 'block' : 'none';
+    document.getElementById('gridTitle').textContent = isText ? 'Current About Content' : isSkills ? `Current ${tab.title.replace('Manage ', '')}` : 'Recent Uploads';
+    document.querySelector('.preview-grid').classList.toggle('blocks', !isMedia);
+    if (isSkills) populateQuickLinks();
 
-    if (!isText) {
+    if (isMedia) {
+        document.getElementById('galleryBox').style.display = tab.autoPrefix ? 'block' : 'none';
+        refreshGalleryNames();
         document.getElementById('projectFields').style.display = tabName === 'Projects' ? 'block' : 'none';
         document.getElementById('titleBox').style.display = tabName === 'About' ? 'none' : 'block';
 
@@ -281,6 +307,11 @@ function renderTools() {
         }).catch(() => {});
     }
 
+    if (tab.skills && !skillCards.some((c) => c.section === tab.skills)) {
+        show('This slider is showing the built-in cards. Import them to edit or delete each card, or add your own.',
+            [{ label: 'Import current cards', onClick: () => importSkillCards(tab.skills) }]);
+    }
+
     if (currentTab === 'AboutText' && aboutBlocks.length === 0) {
         show('The About section is showing the built-in text. Import it here to edit or delete every paragraph and card.',
             [{ label: 'Import current About content', onClick: importAboutContent }]);
@@ -333,6 +364,22 @@ async function importDefaultProjects() {
     }
 }
 
+async function importSkillCards(section) {
+    try {
+        const { skills } = await getSiteDefaults();
+        const response = await fetch(`${API_BASE_URL}/api/skill-cards/bulk`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(skills.filter((card) => card.section === section)),
+        });
+        if (!response.ok) throw new Error('Import failed');
+        notify('Cards imported. You can now edit each one.', 'success');
+        loadSkillCardsAdmin();
+    } catch (err) {
+        notify('Could not import the cards.', 'error');
+    }
+}
+
 async function importAboutContent() {
     try {
         const { about } = await getSiteDefaults();
@@ -350,11 +397,17 @@ async function importAboutContent() {
 }
 
 // ---------- Media edit / upload ----------
+function refreshGalleryNames() {
+    const names = new Set(allMediaData.filter((m) => m.category === currentTab && m.gallery).map((m) => m.gallery));
+    document.getElementById('galleryNames').innerHTML = Array.from(names).map((n) => `<option value="${escapeHtml(n)}"></option>`).join('');
+}
+
 function startEdit(item) {
     editingId = item._id;
     applyTabUI(item.category);
 
     titleInput.value = item.title || '';
+    document.getElementById('mediaGallery').value = item.gallery || '';
     if (item.category === 'Projects') {
         document.getElementById('projTag').value = item.tag || '';
         document.getElementById('projDesc').value = item.description || '';
@@ -420,6 +473,7 @@ async function uploadOne(file, title) {
     if (!cloudData.secure_url) throw new Error(cloudData.error?.message || 'Cloudinary upload failed');
 
     const payload = { title, url: cloudData.secure_url, mediaType: tab.mediaType, category: currentTab };
+    if (tab.autoPrefix) payload.gallery = document.getElementById('mediaGallery').value.trim();
     if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
 
     const saveResponse = await fetch(`${API_BASE_URL}/api/upload-media`, {
@@ -436,6 +490,7 @@ async function submitEdit(title) {
         return;
     }
     const payload = { title };
+    if (TABS[currentTab].autoPrefix) payload.gallery = document.getElementById('mediaGallery').value.trim();
     if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
 
     const response = await fetch(`${API_BASE_URL}/api/update-media/${editingId}`, {
@@ -548,6 +603,94 @@ async function deleteBlock(id) {
     loadAboutBlocksAdmin();
 }
 
+// ---------- Skill cards (Technical Core / Creative Vision sliders) ----------
+function populateQuickLinks() {
+    const options = [
+        ['', '-- choose a page, or type your own link below --'],
+        ['frontend-certs.html', 'Frontend certificates page'],
+        ['backend-certs.html', 'Backend certificates page'],
+        ['photography.html?type=photos', 'Main photo gallery'],
+        ['photography.html?type=videos', 'Main video gallery'],
+    ];
+    const seen = new Set();
+    allMediaData.filter((m) => m.gallery && (m.category === 'Photography' || m.category === 'Videos')).forEach((m) => {
+        const type = m.category === 'Videos' ? 'videos' : 'photos';
+        const url = `photography.html?type=${type}&gallery=${encodeURIComponent(m.gallery)}`;
+        if (!seen.has(url)) {
+            seen.add(url);
+            options.push([url, `${m.category === 'Videos' ? 'Videos' : 'Photos'} collection: ${m.gallery}`]);
+        }
+    });
+    document.getElementById('skillQuickLink').innerHTML = options
+        .map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
+}
+
+function startSkillEdit(card) {
+    editingSkillId = card._id;
+    document.getElementById('skillTitle').value = card.title || '';
+    document.getElementById('skillDesc').value = card.description || '';
+    document.getElementById('skillIcon').value = card.icon || '';
+    document.getElementById('skillLink').value = card.linkUrl || '';
+    document.getElementById('skillLinkText').value = card.linkText || '';
+    document.getElementById('skillCardTitle').innerHTML = '<i class="fas fa-pen"></i> Edit Skill Card';
+    document.getElementById('skillSubmitBtn').textContent = 'Save Changes';
+    document.getElementById('skillCancelBtn').style.display = 'inline-block';
+    skillForm.scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelSkillEdit() {
+    editingSkillId = null;
+    skillForm.reset();
+    document.getElementById('skillCardTitle').innerHTML = '<i class="fas fa-pen"></i> Add Skill Card';
+    document.getElementById('skillSubmitBtn').textContent = 'Add Skill Card';
+    document.getElementById('skillCancelBtn').style.display = 'none';
+}
+
+async function loadSkillCardsAdmin() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/skill-cards`, { cache: 'no-store' });
+        skillCards = await response.json();
+        try { localStorage.removeItem(SKILLS_CACHE_KEY); } catch (e) { /* storage blocked */ }
+    } catch (error) {
+        console.error('Error loading skill cards:', error);
+    }
+    renderGrid();
+    renderTools();
+}
+
+async function deleteSkillCard(id) {
+    if (!(await askConfirm('Delete this skill card?'))) return;
+    if (editingSkillId === id) cancelSkillEdit();
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/skill-cards/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Delete failed');
+        notify('Deleted.', 'success');
+    } catch (err) {
+        notify(err.message, 'error');
+    }
+    loadSkillCardsAdmin();
+}
+
+function renderSkillCardsGrid(grid) {
+    const section = TABS[currentTab].skills;
+    const cards = skillCards.filter((c) => c.section === section);
+    if (cards.length === 0) {
+        grid.innerHTML = '<p style="color:#64748b;">Nothing here yet - the site shows its built-in cards. Use the Import button above, or add your own.</p>';
+        return;
+    }
+    cards.forEach((c) => {
+        const card = document.createElement('div');
+        card.className = 'block-card';
+        card.innerHTML = `
+            <div class="block-icon"><i class="${/^[a-z0-9\- ]+$/i.test(c.icon || '') ? c.icon : 'fas fa-star'}"></i></div>
+            <div class="block-label">${escapeHtml(c.title)}</div>
+            <div class="block-text">${escapeHtml(c.description)}</div>`;
+        card.appendChild(actionButton('edit', 'fas fa-pen', 'Edit', () => startSkillEdit(c)));
+        card.appendChild(actionButton('delete', 'fas fa-trash', 'Delete', () => deleteSkillCard(c._id)));
+        grid.appendChild(card);
+    });
+}
+
 // ---------- Media grid ----------
 async function loadAdminPhotos() {
     const grid = document.querySelector('.preview-grid');
@@ -581,8 +724,11 @@ function renderGrid() {
     grid.innerHTML = '';
 
     if (TABS[currentTab].text) return renderAboutBlocks(grid);
+    if (TABS[currentTab].skills) return renderSkillCardsGrid(grid);
 
-    const items = allMediaData.filter((item) => item.category === currentTab);
+    const items = allMediaData
+        .filter((item) => item.category === currentTab)
+        .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
     if (items.length === 0) {
         grid.innerHTML = `<p style="color:#64748b;">No ${currentTab} found.</p>`;
         return;
@@ -595,11 +741,17 @@ function renderGrid() {
 
         const card = document.createElement('div');
         card.className = 'preview-item';
-        card.innerHTML = `<div class="preview-media">${media}</div><div class="item-name" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</div>`;
+        const galleryTag = item.gallery ? `<span class="item-gallery">${escapeHtml(item.gallery)}</span>` : '';
+        card.innerHTML = `<div class="preview-media">${media}</div><div class="item-name" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}${galleryTag}</div>`;
 
         const mediaBox = card.querySelector('.preview-media');
         if (currentTab !== 'About') mediaBox.appendChild(actionButton('edit', 'fas fa-pen', 'Edit', () => startEdit(item)));
         mediaBox.appendChild(actionButton('delete', 'fas fa-trash', 'Delete', () => deleteItem(item._id)));
+        if (TABS[currentTab].autoPrefix) {
+            mediaBox.appendChild(actionButton(`pin${item.pinned ? ' on' : ''}`, 'fas fa-thumbtack',
+                item.pinned ? 'Pinned to the top of the gallery (click to unpin)' : 'Pin to the top of the gallery',
+                () => togglePinned(item)));
+        }
         if (currentTab === 'Projects') {
             mediaBox.appendChild(actionButton(`star${item.featured ? ' on' : ''}`, 'fas fa-star',
                 item.featured ? 'Shown on homepage slider (click to remove)' : 'Click to show on homepage slider',
@@ -627,6 +779,21 @@ function renderAboutBlocks(grid) {
         card.appendChild(actionButton('delete', 'fas fa-trash', 'Delete', () => deleteBlock(block._id)));
         grid.appendChild(card);
     });
+}
+
+async function togglePinned(item) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/update-media/${item._id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pinned: !item.pinned }),
+        });
+        if (!response.ok) throw new Error('Update failed');
+        notify(item.pinned ? 'Unpinned.' : 'Pinned - it now shows first in the gallery.', 'success');
+    } catch (err) {
+        notify(err.message, 'error');
+    }
+    loadAdminPhotos();
 }
 
 async function toggleFeatured(item) {
@@ -664,6 +831,7 @@ if (uploadForm) {
         document.getElementById(tab.nav).addEventListener('click', () => {
             cancelEdit();
             cancelBlockEdit();
+            cancelSkillEdit();
             applyTabUI(name);
         });
     });
@@ -671,6 +839,43 @@ if (uploadForm) {
     cancelEditBtn.addEventListener('click', cancelEdit);
     document.getElementById('aboutCancelBtn').addEventListener('click', cancelBlockEdit);
     aboutKind.addEventListener('change', syncAboutFormFields);
+    document.getElementById('skillCancelBtn').addEventListener('click', cancelSkillEdit);
+    document.getElementById('skillQuickLink').addEventListener('change', (e) => {
+        if (e.target.value) document.getElementById('skillLink').value = e.target.value;
+    });
+
+    skillForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('skillTitle').value.trim();
+        if (!title) return notify('Please enter the skill name.', 'error');
+
+        const payload = {
+            section: TABS[currentTab].skills,
+            title,
+            description: document.getElementById('skillDesc').value.trim(),
+            icon: document.getElementById('skillIcon').value.trim() || 'fas fa-star',
+            linkUrl: document.getElementById('skillLink').value.trim(),
+            linkText: document.getElementById('skillLinkText').value.trim(),
+        };
+
+        const submitBtn = document.getElementById('skillSubmitBtn');
+        submitBtn.disabled = true;
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/skill-cards${editingSkillId ? `/${editingSkillId}` : ''}`, {
+                method: editingSkillId ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) throw new Error('Saving failed');
+            notify(editingSkillId ? 'Changes saved!' : 'Skill card added!', 'success');
+            cancelSkillEdit();
+            loadSkillCardsAdmin();
+        } catch (err) {
+            notify(err.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
 
     uploadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -724,6 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTabUI(currentTab);
         syncAboutFormFields();
         loadAboutBlocksAdmin();
+        loadSkillCardsAdmin();
     }
     loadAdminPhotos();
 });

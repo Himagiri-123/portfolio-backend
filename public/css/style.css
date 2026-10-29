@@ -5376,3 +5376,58 @@ html {
 .about-details-grid .detail-item:nth-child(4n+4) .detail-value { color: #22c55e; }
 
 .project-card[hidden] { display: none !important; }
+
+/* --- Technical Core / Creative Vision sliders --- */
+.skills-split-layout {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 30px auto 0;
+}
+.skills-column { flex: 1 1 0; min-width: 0; width: auto; max-width: none; display: block; }
+.skills-track {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 12px 4px 18px;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.skills-track::-webkit-scrollbar { display: none; }
+.skills-track .skill-card { flex: 0 0 86%; min-width: 0; margin: 0; height: auto; scroll-snap-align: start; }
+@media (max-width: 768px) {
+    .skills-split-layout { flex-direction: column; align-items: stretch; gap: 36px; }
+    .skills-column { width: 100%; max-width: none; }
+    .skills-track .skill-card { flex-basis: 90%; }
+}
+
+/* Colours for cards added from the dashboard (repeat every 4 cards) */
+.skill-card.accent-1 .icon-box i { color: #00d2ff; }
+.skill-card.accent-2 .icon-box i { color: #22c55e; }
+.skill-card.accent-3 .icon-box i { color: #f59e0b; }
+.skill-card.accent-4 .icon-box i { color: #a855f7; }
+.skill-card.accent-1:hover { border-color: rgba(0, 210, 255, 0.6); }
+.skill-card.accent-2:hover { border-color: rgba(34, 197, 94, 0.6); }
+.skill-card.accent-3:hover { border-color: rgba(245, 158, 11, 0.6); }
+.skill-card.accent-4:hover { border-color: rgba(168, 85, 247, 0.6); }
+
+/* --- About info cards: two per row on phones --- */
+@media (max-width: 768px) {
+    .about-details-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .about-details-grid .detail-item { padding: 12px 10px; min-width: 0; }
+    .about-details-grid .detail-value { font-size: 0.9rem; overflow-wrap: anywhere; }
+}
+
+/* --- Fit every screen size: nothing wider than the viewport, long words wrap --- */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.skills-split-layout, .projects-carousel { width: 100%; min-width: 0; }
+.project-card h3, .skill-card h3 { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+.project-card p, .skill-card p, .about-text-col p, .detail-value { overflow-wrap: anywhere; }
+.main-title, .section-title h2 { font-size: clamp(1.6rem, 8vw, 2.5rem); overflow-wrap: anywhere; }
+.main-title .gradient-text, .section-title .gradient-text { display: inline; }

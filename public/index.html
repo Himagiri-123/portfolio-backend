@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://himagiri-portfolio.onrender.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ui.css">
 
     <title>Himagiri | MERN Stack Developer & Photographer</title>
 <meta name="description" content="Portfolio of Himagiri - A passionate MERN Stack Developer, Photographer, and Video Editor based in Srikakulam. Check out my projects and gallery.">
@@ -129,7 +130,7 @@
         
         <div class="skills-column left-col">
             <h3 class="col-title">Technical <span class="highlight">Core</span></h3>
-            
+            <div class="skills-track" id="technical-container">
             <div class="skill-card tech-card frontend-glow">
                 <div class="icon-box"><i class="fab fa-react"></i></div>
                 <div class="card-info">
@@ -156,11 +157,13 @@
                     <span class="view-cert gold-btn">VIEW CERTIFICATE</span>
                 </div>
             </div>
+            </div>
+            <div class="carousel-dots" id="technicalDots" hidden></div>
         </div>
 
         <div class="skills-column right-col">
             <h3 class="col-title">Creative <span class="highlight">Vision</span></h3>
-
+            <div class="skills-track" id="creative-container">
             <div class="skill-card creative-glass-card" onclick="window.location.href='photography.html?type=photos'">
                 <div class="icon-box photo-icon"><i class="fas fa-camera"></i></div>
                 <h3 class="stylish-heading">Mobile Photography</h3>
@@ -168,16 +171,14 @@
                 <span class="view-cert">VIEW ALL CLICKS</span>
             </div>
             
-            <div class="admin-entry" style="text-align: right; margin: 15px 0;">
-                <a href="admin-login.html" class="admin-lock-mini"><i class="fas fa-lock"></i> Admin Access</a>
-            </div>
-
             <div class="skill-card creative-glass-card" onclick="window.location.href='photography.html?type=videos'">
                 <div class="icon-box video-icon"><i class="fas fa-video"></i></div>
                 <h3 class="stylish-heading">Video Editing Hobby</h3>
                 <p>Creating fun, cinematic edits, adding music, and bringing life to video moments as a creative pastime.</p>
                 <span class="view-cert">WATCH ALL EDITS</span>
             </div>
+            </div>
+            <div class="carousel-dots" id="creativeDots" hidden></div>
         </div>
 
     </div>
@@ -255,6 +256,7 @@
     </div>
     <button type="button" class="carousel-btn carousel-next" id="projectsNext" aria-label="Next project" hidden><i class="fas fa-chevron-right"></i></button>
     </div>
+    <div class="carousel-dots" id="projectsDots" hidden></div>
 
     <div class="projects-footer-content">
         <p>
@@ -371,6 +373,7 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 <script src="js/api.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/main.js"></script>
 </body>

@@ -73,3 +73,10 @@ npm start
 - Projects marked with the star appear on the homepage slider (it auto-slides every 10 seconds when more cards exist than fit on screen).
 - "Import" buttons copy the built-in projects and About text into the dashboard so they can be edited or deleted. Once any project exists in the dashboard, the built-in ones are hidden on the site until imported.
 - About text supports `**bold**` and `*italic*`.
+
+## Sliders, galleries and skill cards
+
+- Projects, Technical Core and Creative Vision are auto-sliding carousels with one dot per card (`public/js/ui.js`).
+- Galleries and certificate pages are paginated and have a Small / Medium / Large switcher.
+- Skill cards (Technical / Creative) are managed in the dashboard. A card can open a page or a named collection: type a Collection name when uploading photos or videos, then pick "Photos collection: <name>" as the card link.
+- Pinned photos and videos (thumbtack button) always appear first in their gallery.

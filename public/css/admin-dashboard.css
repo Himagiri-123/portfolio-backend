@@ -175,3 +175,8 @@ body { background: #020617; color: white; overflow-x: hidden; }
     .preview-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .preview-grid.blocks { grid-template-columns: 1fr; }
 }
+
+.card-action.pin { top: auto; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #94a3b8; }
+.card-action.pin.on { color: #facc15; }
+.item-gallery { display: block; margin-top: 3px; font-size: 0.7rem; color: #00d2ff; }
+.block-card .block-icon { font-size: 1.4rem; color: #00d2ff; margin-bottom: 6px; }
