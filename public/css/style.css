@@ -5433,7 +5433,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .main-title .gradient-text, .section-title .gradient-text { display: inline; }
 
 /* Technical and creative cards share one size and design */
-.skills-track .skill-card { min-height: 280px; cursor: default; }
+.skills-track .skill-card { min-height: 310px; cursor: default; }
 .skills-track .skill-card[data-href] { cursor: pointer; }
 .skills-track .skill-card.creative-glass-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .skills-track .skill-card .view-cert { text-decoration: none; }
@@ -5441,3 +5441,29 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .skill-card.accent-2 .view-cert { color: #22c55e; }
 .skill-card.accent-3 .view-cert { color: #f59e0b; }
 .skill-card.accent-4 .view-cert { color: #a855f7; }
+
+/* --- Technical Core | Creative Vision: clear gap, centre divider, soft fade at the card edges --- */
+.skills-track { --fade: 70px; }
+.skills-track.fade-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(to right, #000 calc(100% - var(--fade)), transparent); }
+.skills-track.fade-left { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(to left, #000 calc(100% - var(--fade)), transparent); }
+.skills-track.fade-left.fade-right { -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); }
+
+@media (min-width: 769px) {
+    .skills-split-layout { gap: 96px; }
+    .skills-split-layout .skills-column:first-child { position: relative; }
+    .skills-split-layout .skills-column:first-child::after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        right: -48px;
+        width: 2px;
+        border-radius: 2px;
+        background: linear-gradient(to bottom, transparent, #00d2ff 30%, #a855f7 70%, transparent);
+        box-shadow: 0 0 14px rgba(0, 210, 255, 0.45), 0 0 14px rgba(168, 85, 247, 0.3);
+        opacity: 0.8;
+    }
+}
+@media (max-width: 768px) {
+    .skills-track { --fade: 36px; }
+}

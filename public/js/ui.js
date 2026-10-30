@@ -40,7 +40,7 @@ function renderPager(container, { page, pages, onChange }) {
 // Turns a scrollable row of cards into a slider: auto-slides, optional arrow buttons,
 // and one dot per card (the current card's dot stretches into a short line).
 // It only slides, and only shows arrows/dots, when there are more cards than fit.
-function createCarousel(track, { dotsEl, prevBtn, nextBtn, intervalMs = 10000 } = {}) {
+function createCarousel(track, { dotsEl, prevBtn, nextBtn, intervalMs = 10000, fadeEdges = false } = {}) {
     let paused = false;
     let resumeTimer;
 
@@ -70,7 +70,16 @@ function createCarousel(track, { dotsEl, prevBtn, nextBtn, intervalMs = 10000 } 
         else track.scrollBy({ left: direction * stepSize() });
     }
 
+    // Cards that are cut off at an edge fade out softly instead of ending abruptly
+    function updateFade() {
+        if (!fadeEdges) return;
+        const max = track.scrollWidth - track.clientWidth;
+        track.classList.toggle('fade-left', max > 8 && track.scrollLeft > 8);
+        track.classList.toggle('fade-right', max > 8 && track.scrollLeft < max - 8);
+    }
+
     function updateDots() {
+        updateFade();
         if (!dotsEl) return;
         const active = currentIndex();
         Array.from(dotsEl.children).forEach((dot, i) => dot.classList.toggle('active', i === active));

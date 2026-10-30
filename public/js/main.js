@@ -148,8 +148,8 @@ const creativeTrack = byId('creative-container');
 const defaultTechnicalHTML = technicalTrack ? technicalTrack.innerHTML : '';
 const defaultCreativeHTML = creativeTrack ? creativeTrack.innerHTML : '';
 
-const technicalCarousel = technicalTrack ? createCarousel(technicalTrack, { dotsEl: byId('technicalDots') }) : noCarousel;
-const creativeCarousel = creativeTrack ? createCarousel(creativeTrack, { dotsEl: byId('creativeDots') }) : noCarousel;
+const technicalCarousel = technicalTrack ? createCarousel(technicalTrack, { dotsEl: byId('technicalDots'), fadeEdges: true }) : noCarousel;
+const creativeCarousel = creativeTrack ? createCarousel(creativeTrack, { dotsEl: byId('creativeDots'), fadeEdges: true }) : noCarousel;
 
 const isExternalLink = (url) => /^https?:\/\//i.test(url) || /\.pdf$/i.test(url);
 const safeIcon = (icon) => (/^[a-z0-9\- ]+$/i.test(icon || '') ? icon : 'fas fa-star');
