@@ -1,5 +1,6 @@
 const express = require('express');
 const SkillCard = require('../models/SkillCard');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 const FIELDS = ['section', 'title', 'description', 'icon', 'linkText', 'linkUrl', 'order'];
@@ -20,7 +21,7 @@ router.get('/api/skill-cards', async (req, res) => {
     }
 });
 
-router.post('/api/skill-cards', async (req, res) => {
+router.post('/api/skill-cards', requireAuth, async (req, res) => {
     try {
         const data = pick(req.body);
         if (data.order === undefined) {
@@ -34,7 +35,7 @@ router.post('/api/skill-cards', async (req, res) => {
 });
 
 // Used by the dashboard's "Import" buttons; keeps the given order per section
-router.post('/api/skill-cards/bulk', async (req, res) => {
+router.post('/api/skill-cards/bulk', requireAuth, async (req, res) => {
     try {
         if (!Array.isArray(req.body) || req.body.length === 0) return res.status(400).json({ error: 'Expected a non-empty array' });
         const counters = {};
@@ -49,7 +50,7 @@ router.post('/api/skill-cards/bulk', async (req, res) => {
     }
 });
 
-router.put('/api/skill-cards/:id', async (req, res) => {
+router.put('/api/skill-cards/:id', requireAuth, async (req, res) => {
     try {
         const updated = await SkillCard.findByIdAndUpdate(req.params.id, pick(req.body), { new: true, runValidators: true });
         if (!updated) return res.status(404).json({ message: 'Not found' });
@@ -59,7 +60,7 @@ router.put('/api/skill-cards/:id', async (req, res) => {
     }
 });
 
-router.delete('/api/skill-cards/:id', async (req, res) => {
+router.delete('/api/skill-cards/:id', requireAuth, async (req, res) => {
     try {
         const deleted = await SkillCard.findByIdAndDelete(req.params.id);
         if (!deleted) return res.status(404).json({ message: 'Not found' });

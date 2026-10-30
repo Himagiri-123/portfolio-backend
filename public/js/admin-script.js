@@ -10,13 +10,41 @@ const TABS = {
     AboutText:   { nav: 'nav-abouttext', title: 'Manage About Content', text: true },
     Technical:   { nav: 'nav-tech',      title: 'Manage Technical Skills', skills: 'technical' },
     Creative:    { nav: 'nav-creative',  title: 'Manage Creative Skills',  skills: 'creative' },
+    Certificates: { nav: 'nav-certs',    title: 'Manage Certificates', certs: true },
+    Hero:        { nav: 'nav-hero',      title: 'Manage Hero Section', settings: 'hero' },
+    Contact:     { nav: 'nav-contact',   title: 'Manage Contact Details', settings: 'contact' },
 };
+
+// Editable homepage texts. "lines" fields hold one item per line.
+const SETTINGS_FIELDS = {
+    hero: [
+        { key: 'heroGreeting', label: 'Greeting (small text above your name)' },
+        { key: 'heroName', label: 'Your name (big text)' },
+        { key: 'typingWords', label: 'Typing words - one per line', lines: true },
+        { key: 'heroBullets', label: 'Intro points under the typing text - one per line', lines: true },
+    ],
+    contact: [
+        { key: 'contactIntro', label: 'Contact section intro line' },
+        { key: 'email', label: 'Email address' },
+        { key: 'location', label: 'Location' },
+        { key: 'linkedin', label: 'LinkedIn link' },
+        { key: 'github', label: 'GitHub link' },
+        { key: 'instagram', label: 'Instagram link' },
+        { key: 'footerName', label: 'Footer name' },
+        { key: 'footerRole', label: 'Footer role line' },
+    ],
+};
+const BUILTIN_CERT_GROUPS = ['frontend', 'backend'];
 
 let currentTab = 'Photography';
 let allMediaData = [];
 let aboutBlocks = [];
 let skillCards = [];
 let editingSkillId = null;
+let certificates = [];
+let editingCertId = null;
+let savedSettings = {};
+let adminPage = 1;
 let editingId = null;
 let editingBlockId = null;
 
@@ -35,12 +63,37 @@ async function askConfirm(message, okLabel = 'Delete') {
 const SESSION_KEY = 'adminSessionExpiry';
 const SESSION_DURATION_MS = 60 * 60 * 1000;
 
-function startSession() {
-    localStorage.setItem(SESSION_KEY, Date.now() + SESSION_DURATION_MS);
+const TOKEN_KEY = 'adminToken';
+
+// The server signs a login token (JWT) valid for one hour; the timer follows its expiry
+function startSession(token) {
+    let expiry = Date.now() + SESSION_DURATION_MS;
+    try { expiry = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).exp * 1000; } catch (e) { /* keep the default */ }
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(SESSION_KEY, expiry);
 }
 
 function clearSession() {
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+}
+
+// fetch() for everything that changes data: sends the login token, and signs the admin
+// out if the server says the session is no longer valid
+async function adminFetch(path, options = {}) {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {}),
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+        },
+    });
+    if (response.status === 401) {
+        logout('Your session expired. Please sign in again.');
+        throw new Error('Session expired');
+    }
+    return response;
 }
 
 function getSessionMillisLeft() {
@@ -56,8 +109,8 @@ function logout(message) {
 function initSessionGuard() {
     if (!document.querySelector('.dashboard-container')) return;
 
-    if (getSessionMillisLeft() <= 0) {
-        logout('Your session expired. Please sign in again.');
+    if (getSessionMillisLeft() <= 0 || !localStorage.getItem(TOKEN_KEY)) {
+        logout('Please sign in to open the dashboard.');
         return;
     }
 
@@ -115,11 +168,12 @@ if (loginForm) {
             });
 
             if (response.ok) {
-                startSession();
+                startSession((await response.json()).token);
                 window.location.href = 'admin-dashboard.html';
                 return;
             }
-            notify('Access denied - invalid credentials.', 'error');
+            const message = response.status === 429 ? 'Too many failed attempts. Please try again in 15 minutes.' : 'Access denied - invalid credentials.';
+            notify(message, 'error', 5000);
             document.getElementById('password').value = '';
         } catch (err) {
             notify('Could not reach the server. It may be waking up - please try again in a few seconds.', 'error', 5000);
@@ -184,6 +238,7 @@ function getSiteDefaults() {
                 const readCards = (selector, section) => Array.from(doc.querySelectorAll(`${selector} .skill-card`)).map((card) => {
                     const onclick = card.getAttribute('onclick') || '';
                     const link = card.querySelector('a.view-cert');
+                    const target = card.dataset.href || (link && link.getAttribute('href')) || (onclick.match(/['"]([^'"]+)['"]/) || [])[1] || '';
                     const label = card.querySelector('.view-cert');
                     return {
                         section,
@@ -191,12 +246,32 @@ function getSiteDefaults() {
                         description: card.querySelector('p').textContent.trim(),
                         icon: card.querySelector('i').className.trim(),
                         linkText: label ? label.textContent.trim() : '',
-                        linkUrl: (link && link.getAttribute('href')) || (onclick.match(/['"]([^'"]+)['"]/) || [])[1] || '',
+                        linkUrl: target,
                     };
                 });
                 const skills = [...readCards('#technical-container', 'technical'), ...readCards('#creative-container', 'creative')];
 
-                return { projects, about, skills };
+                const text = (selector) => (doc.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
+                const href = (selector) => doc.querySelector(selector)?.getAttribute('href') || '';
+                const settings = {
+                    heroGreeting: text('[data-setting="heroGreeting"]'),
+                    heroName: text('[data-setting="heroName"]'),
+                    typingWords: (doc.getElementById('typing-text')?.dataset.words || '').split('|').filter(Boolean),
+                    heroBullets: (doc.querySelector('[data-setting="heroBullets"]')?.innerHTML || '')
+                        .split(/<br\s*\/?>/i)
+                        .map((line) => line.replace(/<[^>]+>/g, '').replace(/&bull;|\u2022/g, '').replace(/\s+/g, ' ').trim())
+                        .filter(Boolean),
+                    contactIntro: text('[data-setting="contactIntro"]'),
+                    email: text('[data-setting="email"]'),
+                    location: text('[data-setting="location"]'),
+                    linkedin: href('.mini-icon.linkedin') || href('.s-btn.linkedin'),
+                    github: href('.mini-icon.github') || href('.s-btn.github'),
+                    instagram: href('.s-btn.instagram'),
+                    footerName: text('[data-setting="footerName"]'),
+                    footerRole: text('[data-setting="footerRole"]'),
+                };
+
+                return { projects, about, skills, settings };
             });
     }
     return siteDefaultsPromise;
@@ -214,13 +289,21 @@ function applyTabUI(tabName) {
 
     const isText = !!tab.text;
     const isSkills = !!tab.skills;
-    const isMedia = !isText && !isSkills;
+    const isCerts = !!tab.certs;
+    const isSettings = !!tab.settings;
+    const isMedia = !isText && !isSkills && !isCerts && !isSettings;
     document.getElementById('uploadCard').style.display = isMedia ? 'block' : 'none';
     document.getElementById('aboutCard').style.display = isText ? 'block' : 'none';
     document.getElementById('skillCard').style.display = isSkills ? 'block' : 'none';
-    document.getElementById('gridTitle').textContent = isText ? 'Current About Content' : isSkills ? `Current ${tab.title.replace('Manage ', '')}` : 'Recent Uploads';
+    document.getElementById('certCard').style.display = isCerts ? 'block' : 'none';
+    document.getElementById('settingsCard').style.display = isSettings ? 'block' : 'none';
+    document.getElementById('recentPanel').style.display = isSettings ? 'none' : 'block';
+    document.getElementById('adminWorkspace').classList.toggle('single', isSettings);
+    document.getElementById('gridTitle').textContent = isText ? 'Current About Content' : (isSkills || isCerts) ? `Current ${tab.title.replace('Manage ', '')}` : 'Recent Uploads';
     document.querySelector('.preview-grid').classList.toggle('blocks', !isMedia);
     if (isSkills) populateQuickLinks();
+    if (isCerts) populateCertGroups();
+    if (isSettings) renderSettingsForm();
 
     if (isMedia) {
         document.getElementById('galleryBox').style.display = tab.autoPrefix ? 'block' : 'none';
@@ -312,6 +395,15 @@ function renderTools() {
             [{ label: 'Import current cards', onClick: () => importSkillCards(tab.skills) }]);
     }
 
+    if (tab.certs) {
+        const have = new Set(certificates.map((c) => c.group.toLowerCase()));
+        const missing = BUILTIN_CERT_GROUPS.filter((g) => !have.has(g));
+        if (missing.length) {
+            show(`The built-in ${missing.join(' and ')} certificates are not in the dashboard yet. Import them to edit, delete, or add new ones next to them.`,
+                [{ label: 'Import built-in certificates', onClick: () => importCertificates(missing) }]);
+        }
+    }
+
     if (currentTab === 'AboutText' && aboutBlocks.length === 0) {
         show('The About section is showing the built-in text. Import it here to edit or delete every paragraph and card.',
             [{ label: 'Import current About content', onClick: importAboutContent }]);
@@ -328,7 +420,7 @@ async function renameOldItems(items) {
     let done = 0;
     for (const item of sorted) {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/update-media/${item._id}`, {
+            const response = await adminFetch(`/api/update-media/${item._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title: `${tab.autoPrefix}${pad4(number)}` }),
@@ -350,7 +442,7 @@ async function importDefaultProjects() {
         const existing = new Set(allMediaData.filter((m) => m.category === 'Projects').map((m) => m.title));
         let added = 0;
         for (const project of projects.filter((p) => !existing.has(p.title))) {
-            const response = await fetch(`${API_BASE_URL}/api/upload-media`, {
+            const response = await adminFetch(`/api/upload-media`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...project, mediaType: 'project', category: 'Projects', featured: true }),
@@ -367,7 +459,7 @@ async function importDefaultProjects() {
 async function importSkillCards(section) {
     try {
         const { skills } = await getSiteDefaults();
-        const response = await fetch(`${API_BASE_URL}/api/skill-cards/bulk`, {
+        const response = await adminFetch(`/api/skill-cards/bulk`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(skills.filter((card) => card.section === section)),
@@ -383,7 +475,7 @@ async function importSkillCards(section) {
 async function importAboutContent() {
     try {
         const { about } = await getSiteDefaults();
-        const response = await fetch(`${API_BASE_URL}/api/about-blocks/bulk`, {
+        const response = await adminFetch(`/api/about-blocks/bulk`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(about),
@@ -476,7 +568,7 @@ async function uploadOne(file, title) {
     if (tab.autoPrefix) payload.gallery = document.getElementById('mediaGallery').value.trim();
     if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
 
-    const saveResponse = await fetch(`${API_BASE_URL}/api/upload-media`, {
+    const saveResponse = await adminFetch(`/api/upload-media`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -493,7 +585,7 @@ async function submitEdit(title) {
     if (TABS[currentTab].autoPrefix) payload.gallery = document.getElementById('mediaGallery').value.trim();
     if (currentTab === 'Projects') Object.assign(payload, getProjectFields());
 
-    const response = await fetch(`${API_BASE_URL}/api/update-media/${editingId}`, {
+    const response = await adminFetch(`/api/update-media/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -594,7 +686,7 @@ async function deleteBlock(id) {
     if (!(await askConfirm('Delete this About item?'))) return;
     if (editingBlockId === id) cancelBlockEdit();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/about-blocks/${id}`, { method: 'DELETE' });
+        const response = await adminFetch(`/api/about-blocks/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Delete failed');
         notify('Deleted.', 'success');
     } catch (err) {
@@ -613,6 +705,13 @@ function populateQuickLinks() {
         ['photography.html?type=videos', 'Main video gallery'],
     ];
     const seen = new Set();
+    certificates.filter((c) => !BUILTIN_CERT_GROUPS.includes(c.group.toLowerCase())).forEach((c) => {
+        const url = `certificates.html?group=${encodeURIComponent(c.group)}`;
+        if (!seen.has(url)) {
+            seen.add(url);
+            options.push([url, `Certificates: ${c.group}`]);
+        }
+    });
     allMediaData.filter((m) => m.gallery && (m.category === 'Photography' || m.category === 'Videos')).forEach((m) => {
         const type = m.category === 'Videos' ? 'videos' : 'photos';
         const url = `photography.html?type=${type}&gallery=${encodeURIComponent(m.gallery)}`;
@@ -662,7 +761,7 @@ async function deleteSkillCard(id) {
     if (!(await askConfirm('Delete this skill card?'))) return;
     if (editingSkillId === id) cancelSkillEdit();
     try {
-        const response = await fetch(`${API_BASE_URL}/api/skill-cards/${id}`, { method: 'DELETE' });
+        const response = await adminFetch(`/api/skill-cards/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Delete failed');
         notify('Deleted.', 'success');
     } catch (err) {
@@ -678,7 +777,7 @@ function renderSkillCardsGrid(grid) {
         grid.innerHTML = '<p style="color:#64748b;">Nothing here yet - the site shows its built-in cards. Use the Import button above, or add your own.</p>';
         return;
     }
-    cards.forEach((c) => {
+    paginate(cards).forEach((c) => {
         const card = document.createElement('div');
         card.className = 'block-card';
         card.innerHTML = `
@@ -687,6 +786,223 @@ function renderSkillCardsGrid(grid) {
             <div class="block-text">${escapeHtml(c.description)}</div>`;
         card.appendChild(actionButton('edit', 'fas fa-pen', 'Edit', () => startSkillEdit(c)));
         card.appendChild(actionButton('delete', 'fas fa-trash', 'Delete', () => deleteSkillCard(c._id)));
+        grid.appendChild(card);
+    });
+}
+
+// ---------- Pagination for every list ----------
+const isPhoneLayout = () => window.matchMedia('(max-width: 768px)').matches;
+
+function paginate(list, { thumbnails = false } = {}) {
+    const size = thumbnails ? (isPhoneLayout() ? 6 : 12) : (isPhoneLayout() ? 4 : 8);
+    const pages = Math.max(1, Math.ceil(list.length / size));
+    adminPage = Math.min(adminPage, pages);
+
+    renderPager(document.getElementById('adminPager'), {
+        page: adminPage,
+        pages,
+        onChange: (page) => {
+            adminPage = page;
+            renderGrid();
+            document.getElementById('recentPanel').scrollIntoView({ behavior: 'smooth' });
+        },
+    });
+    return list.slice((adminPage - 1) * size, adminPage * size);
+}
+
+// ---------- Hero / Contact texts ----------
+async function loadSettingsAdmin() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/settings`, { cache: 'no-store' });
+        savedSettings = await response.json();
+        try { localStorage.removeItem(SETTINGS_CACHE_KEY); } catch (e) { /* storage blocked */ }
+    } catch (error) {
+        console.error('Error loading settings:', error);
+    }
+    if (TABS[currentTab].settings) renderSettingsForm();
+}
+
+async function renderSettingsForm() {
+    const tab = TABS[currentTab];
+    const fields = SETTINGS_FIELDS[tab.settings];
+    document.getElementById('settingsCardTitle').innerHTML = `<i class="fas fa-sliders-h"></i> ${tab.title.replace('Manage ', 'Edit ')}`;
+
+    let defaults = {};
+    try { defaults = (await getSiteDefaults()).settings; } catch (e) { /* form still works with empty defaults */ }
+
+    const container = document.getElementById('settingsFields');
+    container.innerHTML = '';
+    fields.forEach((field) => {
+        const saved = savedSettings[field.key];
+        const hasSaved = field.lines ? Array.isArray(saved) && saved.length : !!(saved || '').trim();
+        const value = hasSaved ? saved : defaults[field.key];
+        const text = field.lines ? (value || []).join('\n') : (value || '');
+
+        const box = document.createElement('div');
+        box.className = 'input-box';
+        box.innerHTML = `<label for="setting-${field.key}">${escapeHtml(field.label)}</label>`;
+        const input = document.createElement(field.lines ? 'textarea' : 'input');
+        input.id = `setting-${field.key}`;
+        if (field.lines) {
+            input.rows = 4;
+            input.style.cssText = 'width:100%; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; outline:none;';
+        } else {
+            input.type = 'text';
+        }
+        input.value = text;
+        box.appendChild(input);
+        container.appendChild(box);
+    });
+}
+
+function collectSettings(reset) {
+    const body = {};
+    SETTINGS_FIELDS[TABS[currentTab].settings].forEach((field) => {
+        const value = reset ? '' : document.getElementById(`setting-${field.key}`).value;
+        body[field.key] = field.lines ? value.split('\n').map((line) => line.trim()).filter(Boolean) : value.trim();
+    });
+    return body;
+}
+
+async function saveSettings(reset) {
+    if (reset && !(await askConfirm('Go back to the text written in the page?', 'Use built-in'))) return;
+    try {
+        const response = await adminFetch('/api/settings', { method: 'PUT', body: JSON.stringify(collectSettings(reset)) });
+        if (!response.ok) throw new Error('Saving failed');
+        notify(reset ? 'Built-in text restored.' : 'Saved! The site shows the new text.', 'success');
+        try { localStorage.removeItem(SETTINGS_CACHE_KEY); } catch (e) { /* storage blocked */ }
+        await loadSettingsAdmin();
+    } catch (err) {
+        if (err.message !== 'Session expired') notify(err.message, 'error');
+    }
+}
+
+// ---------- Certificates ----------
+let certDefaultsPromise = null;
+
+function getCertDefaults() {
+    if (!certDefaultsPromise) {
+        certDefaultsPromise = Promise.all(BUILTIN_CERT_GROUPS.map(async (group) => {
+            const html = await (await fetch(`${group}-certs.html`, { cache: 'no-store' })).text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            return Array.from(doc.querySelectorAll('.cert-grid .sub-card')).map((card) => ({
+                group,
+                title: card.querySelector('h3').textContent.trim(),
+                description: card.querySelector('p')?.textContent.trim() || '',
+                icon: card.querySelector('i')?.className.trim() || 'fas fa-certificate',
+                url: card.querySelector('a')?.getAttribute('href') || '',
+            }));
+        })).then((lists) => lists.flat());
+    }
+    return certDefaultsPromise;
+}
+
+async function importCertificates(groups) {
+    try {
+        const all = await getCertDefaults();
+        const response = await adminFetch('/api/certificates/bulk', {
+            method: 'POST',
+            body: JSON.stringify(all.filter((c) => groups.includes(c.group))),
+        });
+        if (!response.ok) throw new Error('Import failed');
+        notify('Certificates imported.', 'success');
+        loadCertificatesAdmin();
+    } catch (err) {
+        if (err.message !== 'Session expired') notify('Could not import the certificates.', 'error');
+    }
+}
+
+function certificateGroups() {
+    const groups = new Map(BUILTIN_CERT_GROUPS.map((g) => [g, g]));
+    certificates.forEach((c) => { if (!groups.has(c.group.toLowerCase())) groups.set(c.group.toLowerCase(), c.group); });
+    return Array.from(groups.values());
+}
+
+function populateCertGroups(selected) {
+    const select = document.getElementById('certGroup');
+    const current = selected || select.value;
+    select.innerHTML = certificateGroups().map((g) => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('')
+        + '<option value="__new__">+ New group...</option>';
+    if (current) select.value = current;
+    if (select.value !== current) select.selectedIndex = 0;
+    document.getElementById('certNewGroupBox').style.display = select.value === '__new__' ? 'block' : 'none';
+}
+
+function startCertEdit(cert) {
+    editingCertId = cert._id;
+    populateCertGroups(certificateGroups().find((g) => g.toLowerCase() === cert.group.toLowerCase()) || cert.group);
+    document.getElementById('certTitle').value = cert.title || '';
+    document.getElementById('certDesc').value = cert.description || '';
+    document.getElementById('certIcon').value = cert.icon || '';
+    document.getElementById('certUrl').value = cert.url || '';
+    document.getElementById('certCardTitle').innerHTML = '<i class="fas fa-certificate"></i> Edit Certificate';
+    document.getElementById('certSubmitBtn').textContent = 'Save Changes';
+    document.getElementById('certCancelBtn').style.display = 'inline-block';
+    document.getElementById('certForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelCertEdit() {
+    editingCertId = null;
+    document.getElementById('certForm').reset();
+    document.getElementById('certCardTitle').innerHTML = '<i class="fas fa-certificate"></i> Add Certificate';
+    document.getElementById('certSubmitBtn').textContent = 'Add Certificate';
+    document.getElementById('certCancelBtn').style.display = 'none';
+    populateCertGroups();
+}
+
+async function loadCertificatesAdmin() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/certificates`, { cache: 'no-store' });
+        certificates = await response.json();
+        try { localStorage.removeItem(CERTS_CACHE_KEY); } catch (e) { /* storage blocked */ }
+    } catch (error) {
+        console.error('Error loading certificates:', error);
+    }
+    if (TABS[currentTab].certs) populateCertGroups();
+    renderGrid();
+    renderTools();
+}
+
+async function deleteCertificate(id) {
+    if (!(await askConfirm('Delete this certificate?'))) return;
+    if (editingCertId === id) cancelCertEdit();
+    try {
+        const response = await adminFetch(`/api/certificates/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Delete failed');
+        notify('Deleted.', 'success');
+    } catch (err) {
+        if (err.message !== 'Session expired') notify(err.message, 'error');
+    }
+    loadCertificatesAdmin();
+}
+
+// PDFs are stored as "raw" files on Cloudinary; images as normal images
+async function uploadCertificateFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    const type = file.type === 'application/pdf' ? 'raw' : 'image';
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${type}/upload`, { method: 'POST', body: formData });
+    const data = await response.json();
+    if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+    return data.secure_url;
+}
+
+function renderCertificatesGrid(grid) {
+    if (certificates.length === 0) {
+        grid.innerHTML = '<p style="color:#64748b;">No certificates here yet - the certificate pages show their built-in cards. Use the Import button above, or add your own.</p>';
+        return;
+    }
+    paginate(certificates).forEach((cert) => {
+        const card = document.createElement('div');
+        card.className = 'block-card';
+        card.innerHTML = `
+            <span class="badge">${escapeHtml(cert.group)}</span>
+            <div class="block-icon"><i class="${/^[a-z0-9\- ]+$/i.test(cert.icon || '') ? cert.icon : 'fas fa-certificate'}"></i></div>
+            <div class="block-label">${escapeHtml(cert.title)}</div>
+            <div class="block-text">${escapeHtml(cert.description)}</div>`;
+        card.appendChild(actionButton('edit', 'fas fa-pen', 'Edit', () => startCertEdit(cert)));
+        card.appendChild(actionButton('delete', 'fas fa-trash', 'Delete', () => deleteCertificate(cert._id)));
         grid.appendChild(card);
     });
 }
@@ -723,8 +1039,11 @@ function renderGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
+    document.getElementById('adminPager').hidden = true;
+    if (TABS[currentTab].settings) return;
     if (TABS[currentTab].text) return renderAboutBlocks(grid);
     if (TABS[currentTab].skills) return renderSkillCardsGrid(grid);
+    if (TABS[currentTab].certs) return renderCertificatesGrid(grid);
 
     const items = allMediaData
         .filter((item) => item.category === currentTab)
@@ -734,7 +1053,7 @@ function renderGrid() {
         return;
     }
 
-    items.forEach((item) => {
+    paginate(items, { thumbnails: true }).forEach((item) => {
         const media = item.mediaType === 'video'
             ? `<video src="${item.url}#t=0.1" poster="${videoPoster(item.url, 300)}" preload="metadata" muted playsinline></video>`
             : `<img src="${optimizedImage(item.url, 300)}" loading="lazy" alt="">`;
@@ -768,7 +1087,7 @@ function renderAboutBlocks(grid) {
     }
     const kindNames = { heading: 'Heading', paragraph: 'Paragraph', stat: 'Info card' };
 
-    aboutBlocks.forEach((block) => {
+    paginate(aboutBlocks).forEach((block) => {
         const card = document.createElement('div');
         card.className = 'block-card';
         card.innerHTML = `
@@ -783,7 +1102,7 @@ function renderAboutBlocks(grid) {
 
 async function togglePinned(item) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/update-media/${item._id}`, {
+        const response = await adminFetch(`/api/update-media/${item._id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pinned: !item.pinned }),
@@ -798,7 +1117,7 @@ async function togglePinned(item) {
 
 async function toggleFeatured(item) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/update-media/${item._id}`, {
+        const response = await adminFetch(`/api/update-media/${item._id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ featured: !item.featured }),
@@ -816,7 +1135,7 @@ async function deleteItem(id) {
     if (editingId === id) cancelEdit();
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/delete-media/${id}`, { method: 'DELETE' });
+        const response = await adminFetch(`/api/delete-media/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Delete failed');
         notify('Deleted.', 'success');
     } catch (err) {
@@ -832,6 +1151,8 @@ if (uploadForm) {
             cancelEdit();
             cancelBlockEdit();
             cancelSkillEdit();
+            cancelCertEdit();
+            adminPage = 1;
             applyTabUI(name);
         });
     });
@@ -840,6 +1161,53 @@ if (uploadForm) {
     document.getElementById('aboutCancelBtn').addEventListener('click', cancelBlockEdit);
     aboutKind.addEventListener('change', syncAboutFormFields);
     document.getElementById('skillCancelBtn').addEventListener('click', cancelSkillEdit);
+    document.getElementById('certCancelBtn').addEventListener('click', cancelCertEdit);
+    document.getElementById('certGroup').addEventListener('change', (e) => {
+        document.getElementById('certNewGroupBox').style.display = e.target.value === '__new__' ? 'block' : 'none';
+    });
+
+    document.getElementById('settingsForm').addEventListener('submit', (e) => { e.preventDefault(); saveSettings(false); });
+    document.getElementById('settingsResetBtn').addEventListener('click', () => saveSettings(true));
+
+    document.getElementById('certForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('certSubmitBtn');
+        const groupChoice = document.getElementById('certGroup').value;
+        const group = groupChoice === '__new__' ? document.getElementById('certNewGroup').value.trim() : groupChoice;
+        const title = document.getElementById('certTitle').value.trim();
+        if (!group) return notify('Please enter the group name.', 'error');
+        if (!title) return notify('Please enter the certificate name.', 'error');
+
+        submitBtn.disabled = true;
+        try {
+            let url = document.getElementById('certUrl').value.trim();
+            const file = document.getElementById('certFile').files[0];
+            if (file) {
+                submitBtn.textContent = 'Uploading...';
+                url = await uploadCertificateFile(file);
+            }
+            const payload = {
+                group,
+                title,
+                description: document.getElementById('certDesc').value.trim(),
+                icon: document.getElementById('certIcon').value.trim() || 'fas fa-certificate',
+                url,
+            };
+            const response = await adminFetch(`/api/certificates${editingCertId ? `/${editingCertId}` : ''}`, {
+                method: editingCertId ? 'PUT' : 'POST',
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) throw new Error('Saving failed');
+            notify(editingCertId ? 'Changes saved!' : 'Certificate added!', 'success');
+            cancelCertEdit();
+            loadCertificatesAdmin();
+        } catch (err) {
+            if (err.message !== 'Session expired') notify(err.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = editingCertId ? 'Save Changes' : 'Add Certificate';
+        }
+    });
     document.getElementById('skillQuickLink').addEventListener('change', (e) => {
         if (e.target.value) document.getElementById('skillLink').value = e.target.value;
     });
@@ -861,7 +1229,7 @@ if (uploadForm) {
         const submitBtn = document.getElementById('skillSubmitBtn');
         submitBtn.disabled = true;
         try {
-            const response = await fetch(`${API_BASE_URL}/api/skill-cards${editingSkillId ? `/${editingSkillId}` : ''}`, {
+            const response = await adminFetch(`/api/skill-cards${editingSkillId ? `/${editingSkillId}` : ''}`, {
                 method: editingSkillId ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -906,7 +1274,7 @@ if (uploadForm) {
         const submitBtn = document.getElementById('aboutSubmitBtn');
         submitBtn.disabled = true;
         try {
-            const response = await fetch(`${API_BASE_URL}/api/about-blocks${editing ? `/${editing._id}` : ''}`, {
+            const response = await adminFetch(`/api/about-blocks${editing ? `/${editing._id}` : ''}`, {
                 method: editing ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ kind, text, label: kind === 'stat' ? label : '' }),
@@ -930,6 +1298,8 @@ document.addEventListener('DOMContentLoaded', () => {
         syncAboutFormFields();
         loadAboutBlocksAdmin();
         loadSkillCardsAdmin();
+        loadCertificatesAdmin();
+        loadSettingsAdmin();
     }
     loadAdminPhotos();
 });

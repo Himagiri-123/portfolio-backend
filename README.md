@@ -80,3 +80,14 @@ npm start
 - Galleries and certificate pages are paginated and have a Small / Medium / Large switcher.
 - Skill cards (Technical / Creative) are managed in the dashboard. A card can open a page or a named collection: type a Collection name when uploading photos or videos, then pick "Photos collection: <name>" as the card link.
 - Pinned photos and videos (thumbtack button) always appear first in their gallery.
+
+## Security (JWT)
+
+- Logging in returns a signed token (JWT) valid for one hour. Every route that adds, changes or deletes data requires it; reading data stays public.
+- Set `JWT_SECRET` (any long random text) in the Render environment variables. If it is missing, a secret is derived from the admin login so the site still works, but set it anyway.
+- Login is limited to 10 failed attempts per 15 minutes per visitor.
+- Photo/video uploads still go straight to Cloudinary with an unsigned preset (`himagiri_preset`); restrict that preset in the Cloudinary dashboard (allowed formats, max file size) if you want to limit abuse.
+
+## Editable from the dashboard
+
+Photos, videos, projects, About photo and text, Technical and Creative skill cards, certificates (any number of groups), Hero texts (name, typing words, intro points) and Contact/footer details (email, location, social links). Each section has an Import button that copies the text currently written in the HTML so it can be edited.

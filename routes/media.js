@@ -1,6 +1,7 @@
 const express = require('express');
 const Media = require('../models/Media');
 const cloudinary = require('../config/cloudinary');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ async function destroyCloudinaryAsset(media) {
 }
 
 // Saves metadata for a file the dashboard already uploaded to Cloudinary
-router.post('/api/upload-media', async (req, res) => {
+router.post('/api/upload-media', requireAuth, async (req, res) => {
     try {
         const { title, url, category, gallery, mediaType, tag, description, techStack, liveLink, repoLink, featured } = req.body;
 
@@ -46,7 +47,7 @@ router.get('/api/get-media', async (req, res) => {
 });
 
 // Update text fields only; the uploaded file itself is untouched
-router.put('/api/update-media/:id', async (req, res) => {
+router.put('/api/update-media/:id', requireAuth, async (req, res) => {
     try {
         const allowedFields = ['title', 'gallery', 'pinned', 'tag', 'description', 'techStack', 'liveLink', 'repoLink', 'featured'];
         const updates = {};
@@ -64,7 +65,7 @@ router.put('/api/update-media/:id', async (req, res) => {
 });
 
 // Delete a media item
-router.delete('/api/delete-media/:id', async (req, res) => {
+router.delete('/api/delete-media/:id', requireAuth, async (req, res) => {
     try {
         const media = await Media.findById(req.params.id);
         if (!media) return res.status(404).json({ message: 'Not found' });

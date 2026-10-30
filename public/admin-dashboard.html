@@ -6,6 +6,7 @@
     <title>Admin Dashboard - Himagiri Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/ui.css">
 </head>
 <body>
 
@@ -20,6 +21,9 @@
                 <li id="nav-abouttext"><i class="fas fa-address-card"></i> About Content</li>
                 <li id="nav-tech"><i class="fas fa-laptop-code"></i> Technical Skills</li>
                 <li id="nav-creative"><i class="fas fa-palette"></i> Creative Skills</li>
+                <li id="nav-certs"><i class="fas fa-certificate"></i> Certificates</li>
+                <li id="nav-hero"><i class="fas fa-home"></i> Hero Section</li>
+                <li id="nav-contact"><i class="fas fa-address-book"></i> Contact Details</li>
                 <li class="logout-link"><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -37,6 +41,7 @@
 
             <div id="toolsBar" class="tools-bar" hidden></div>
 
+            <div class="admin-workspace" id="adminWorkspace">
             <section class="upload-section">
                 <div class="upload-card" id="uploadCard">
                     <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Media</h3>
@@ -169,17 +174,66 @@
                         <button type="button" id="skillCancelBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
                     </form>
                 </div>
+
+                <div class="upload-card" id="settingsCard" style="display:none;">
+                    <h3 id="settingsCardTitle"><i class="fas fa-sliders-h"></i> Edit Text</h3>
+                    <form id="settingsForm">
+                        <div id="settingsFields"></div>
+                        <button type="submit" class="submit-btn" id="settingsSaveBtn">Save Changes</button>
+                        <button type="button" id="settingsResetBtn" class="submit-btn" style="background:#475569; margin-top:8px;">Use the built-in text</button>
+                    </form>
+                </div>
+
+                <div class="upload-card" id="certCard" style="display:none;">
+                    <h3 id="certCardTitle"><i class="fas fa-certificate"></i> Add Certificate</h3>
+                    <form id="certForm">
+                        <div class="input-box">
+                            <label>Group (which certificates page)</label>
+                            <select id="certGroup"></select>
+                        </div>
+                        <div class="input-box" id="certNewGroupBox" style="display:none;">
+                            <label>New group name (e.g. Python)</label>
+                            <input type="text" id="certNewGroup" placeholder="Python">
+                        </div>
+                        <div class="input-box">
+                            <label>Certificate Name</label>
+                            <input type="text" id="certTitle" placeholder="e.g. Node.js Essentials">
+                        </div>
+                        <div class="input-box">
+                            <label>Short Description</label>
+                            <textarea id="certDesc" rows="2" placeholder="What did you learn?"
+                                style="width:100%; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; outline:none;"></textarea>
+                        </div>
+                        <div class="input-box">
+                            <label>Icon (Font Awesome class)</label>
+                            <input type="text" id="certIcon" list="iconChoices" placeholder="fas fa-certificate">
+                        </div>
+                        <div class="input-box">
+                            <label>Upload the certificate PDF</label>
+                            <input type="file" id="certFile" accept="application/pdf,image/*">
+                        </div>
+                        <div class="input-box">
+                            <label>...or paste a link to it</label>
+                            <input type="text" id="certUrl" placeholder="https://...">
+                        </div>
+                        <button type="submit" class="submit-btn" id="certSubmitBtn">Add Certificate</button>
+                        <button type="button" id="certCancelBtn" class="submit-btn" style="display:none; background:#475569; margin-top:8px;">Cancel Edit</button>
+                    </form>
+                </div>
             </section>
 
-            <section class="recent-uploads">
+            <section class="recent-uploads" id="recentPanel">
                 <h3 id="gridTitle">Recent Uploads</h3>
                 <div class="preview-grid">
                     </div>
+                <div class="pager" id="adminPager" hidden></div>
             </section>
+            </div>
         </main>
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/toast.js"></script>
 <script src="js/admin-script.js"></script>
 

@@ -9,7 +9,7 @@ function notify(message, type = 'info', duration = 3500) {
 }
 
 // --- Typing Animation Logic ---
-const words = ["MERN Stack Developer", "Photographer", "Video Editor"];
+const words = (document.getElementById("typing-text")?.dataset.words || "MERN Stack Developer|Photographer|Video Editor").split("|");
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -161,17 +161,6 @@ function renderSkillCard(card, index) {
     const link = url ? `<a href="${escapeHtml(url)}" class="view-cert"${target}>${escapeHtml(card.linkText || 'VIEW')}</a>` : '';
     const dataHref = url ? ` data-href="${escapeHtml(url)}"` : '';
 
-    if (card.section === 'technical') {
-        return `
-            <div class="skill-card tech-card ${accent}"${dataHref}>
-                <div class="icon-box"><i class="${safeIcon(card.icon)}"></i></div>
-                <div class="card-info">
-                    <h3 class="stylish-heading">${escapeHtml(card.title)}</h3>
-                    <p>${escapeHtml(card.description)}</p>
-                    ${link}
-                </div>
-            </div>`;
-    }
     return `
         <div class="skill-card creative-glass-card ${accent}"${dataHref}>
             <div class="icon-box"><i class="${safeIcon(card.icon)}"></i></div>
@@ -253,10 +242,48 @@ function renderAboutText(blocks) {
         </div>`).join('');
 }
 
+// --- Hero, contact and footer texts (editable in the dashboard) ---
+// The text written in index.html is kept as the default for every field.
+const defaultWords = [...words];
+const defaultSettingText = {};
+document.querySelectorAll('[data-setting]').forEach((el) => {
+    defaultSettingText[el.dataset.setting] = el.dataset.setting === 'heroBullets' ? el.innerHTML : el.textContent;
+});
+document.querySelectorAll('a.linkedin, a.github, a.instagram').forEach((a) => { a.dataset.defaultHref = a.getAttribute('href'); });
+document.querySelectorAll('a.mini-icon.email').forEach((a) => { a.dataset.defaultHref = a.getAttribute('href'); });
+
+function applySettings(settings) {
+    document.querySelectorAll('[data-setting]').forEach((el) => {
+        const key = el.dataset.setting;
+        if (key === 'heroBullets') {
+            const lines = settings.heroBullets || [];
+            el.innerHTML = lines.length ? lines.map((line) => `&bull; ${escapeHtml(line)}`).join('<br>') : defaultSettingText[key];
+        } else {
+            el.textContent = (settings[key] || '').trim() || defaultSettingText[key];
+        }
+    });
+
+    const typingWords = (settings.typingWords || []).filter(Boolean);
+    words.splice(0, words.length, ...(typingWords.length ? typingWords : defaultWords));
+    if (wordIndex >= words.length) wordIndex = 0;
+
+    ['linkedin', 'github', 'instagram'].forEach((network) => {
+        document.querySelectorAll(`a.${network}`).forEach((a) => {
+            a.setAttribute('href', (settings[network] || '').trim() || a.dataset.defaultHref || a.getAttribute('href'));
+        });
+    });
+    document.querySelectorAll('a.mini-icon.email').forEach((a) => {
+        const email = (settings.email || '').trim();
+        a.setAttribute('href', email ? `mailto:${email}` : a.dataset.defaultHref);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     type();
     loadMedia((data) => { renderProjects(data); renderAboutPhoto(data); })
         .catch(error => console.error("Error loading homepage content:", error));
+    loadSettings(applySettings)
+        .catch(error => console.error("Error loading site settings:", error));
     loadSkillCards(renderSkillCards)
         .catch(error => console.error("Error loading skill cards:", error));
     loadAboutBlocks(renderAboutText)

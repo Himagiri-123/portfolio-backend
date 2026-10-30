@@ -5431,3 +5431,13 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .project-card p, .skill-card p, .about-text-col p, .detail-value { overflow-wrap: anywhere; }
 .main-title, .section-title h2 { font-size: clamp(1.6rem, 8vw, 2.5rem); overflow-wrap: anywhere; }
 .main-title .gradient-text, .section-title .gradient-text { display: inline; }
+
+/* Technical and creative cards share one size and design */
+.skills-track .skill-card { min-height: 280px; cursor: default; }
+.skills-track .skill-card[data-href] { cursor: pointer; }
+.skills-track .skill-card.creative-glass-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.skills-track .skill-card .view-cert { text-decoration: none; }
+.skill-card.accent-1 .view-cert { color: #00d2ff; }
+.skill-card.accent-2 .view-cert { color: #22c55e; }
+.skill-card.accent-3 .view-cert { color: #f59e0b; }
+.skill-card.accent-4 .view-cert { color: #a855f7; }

@@ -3,6 +3,8 @@ const API_BASE_URL = "https://himagiri-portfolio.onrender.com";
 const MEDIA_CACHE_KEY = "mediaCache";
 const ABOUT_CACHE_KEY = "aboutCache";
 const SKILLS_CACHE_KEY = "skillsCache";
+const SETTINGS_CACHE_KEY = "settingsCache";
+const CERTS_CACHE_KEY = "certsCache";
 
 // Wake the free Render instance up while the visitor is still on the first page
 fetch(`${API_BASE_URL}/health`, { mode: "no-cors" }).catch(() => {});
@@ -53,6 +55,8 @@ async function loadCached(cacheKey, path, render) {
 const loadMedia = (render) => loadCached(MEDIA_CACHE_KEY, "/api/get-media", render);
 const loadAboutBlocks = (render) => loadCached(ABOUT_CACHE_KEY, "/api/about-blocks", render);
 const loadSkillCards = (render) => loadCached(SKILLS_CACHE_KEY, "/api/skill-cards", render);
+const loadSettings = (render) => loadCached(SETTINGS_CACHE_KEY, "/api/settings", render);
+const loadCertificates = (render) => loadCached(CERTS_CACHE_KEY, "/api/certificates", render);
 
 // Escapes HTML, then turns **bold** and *italic* into tags (used for About paragraphs)
 function formatRichText(text) {

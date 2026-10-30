@@ -52,11 +52,11 @@
 <section id="home" class="hero">
     <div id="particles-js"></div>
     <div class="hero-content">
-        <h4 class="fade-in">Hi, I'm</h4>
-        <h1 class="glow-text">HIMAGIRI</h1>
-        <h2 class="typing-container">I am a <span id="typing-text"></span></h2>
+        <h4 class="fade-in" data-setting="heroGreeting">Hi, I'm</h4>
+        <h1 class="glow-text" data-setting="heroName">HIMAGIRI</h1>
+        <h2 class="typing-container">I am a <span id="typing-text" data-words="MERN Stack Developer|Photographer|Video Editor"></span></h2>
         
-        <p class="hero-description">
+        <p class="hero-description" data-setting="heroBullets">
             • Skilled MERN Stack Developer building high-performance web applications.<br>
             • Passionate Photographer capturing life's finest moments through my lens.<br>
             • Actively seeking remote IT opportunities to build innovative digital solutions.
@@ -131,31 +131,25 @@
         <div class="skills-column left-col">
             <h3 class="col-title">Technical <span class="highlight">Core</span></h3>
             <div class="skills-track" id="technical-container">
-            <div class="skill-card tech-card frontend-glow">
+            <div class="skill-card creative-glass-card accent-1" data-href="frontend-certs.html">
                 <div class="icon-box"><i class="fab fa-react"></i></div>
-                <div class="card-info">
-                    <h3 class="stylish-heading">Frontend Development</h3>
-                    <p>Expertise in building Static, Responsive, and Dynamic web apps with modern UI architectures.</p>
-                    <a href="frontend-certs.html" class="view-cert">VIEW CERTIFICATES</a>
-                </div>
-            </div>
-            
-            <div class="skill-card tech-card backend-glow">
-                <div class="icon-box"><i class="fas fa-server"></i></div>
-                <div class="card-info">
-                    <h3 class="stylish-heading">Backend Development</h3>
-                    <p>Building robust APIs, secure database schemas, and scalable server-side logic using Node.js.</p>
-                    <a href="backend-certs.html" class="view-cert">VIEW CERTIFICATES</a>
-                </div>
+                <h3 class="stylish-heading">Frontend Development</h3>
+                <p>Expertise in building Static, Responsive, and Dynamic web apps with modern UI architectures.</p>
+                <a href="frontend-certs.html" class="view-cert">VIEW CERTIFICATES</a>
             </div>
 
-            <div class="skill-card industry-card" onclick="window.open('certificates/industry-ready.pdf', '_blank')">
-                <div class="award-glow"><i class="fas fa-award"></i></div>
-                <div class="card-info">
-                    <h3 class="stylish-heading">Industry Ready Developer</h3>
-                    <p>Trained rigorously at NxtWave CCBP 4.0, building multiple real-world projects and mastering Full Stack.</p>
-                    <span class="view-cert gold-btn">VIEW CERTIFICATE</span>
-                </div>
+            <div class="skill-card creative-glass-card accent-2" data-href="backend-certs.html">
+                <div class="icon-box"><i class="fas fa-server"></i></div>
+                <h3 class="stylish-heading">Backend Development</h3>
+                <p>Building robust APIs, secure database schemas, and scalable server-side logic using Node.js.</p>
+                <a href="backend-certs.html" class="view-cert">VIEW CERTIFICATES</a>
+            </div>
+
+            <div class="skill-card creative-glass-card accent-3" data-href="certificates/industry-ready.pdf">
+                <div class="icon-box"><i class="fas fa-award"></i></div>
+                <h3 class="stylish-heading">Industry Ready Developer</h3>
+                <p>Trained rigorously at NxtWave CCBP 4.0, building multiple real-world projects and mastering Full Stack.</p>
+                <a href="certificates/industry-ready.pdf" target="_blank" rel="noopener" class="view-cert">VIEW CERTIFICATE</a>
             </div>
             </div>
             <div class="carousel-dots" id="technicalDots" hidden></div>
@@ -164,18 +158,18 @@
         <div class="skills-column right-col">
             <h3 class="col-title">Creative <span class="highlight">Vision</span></h3>
             <div class="skills-track" id="creative-container">
-            <div class="skill-card creative-glass-card" onclick="window.location.href='photography.html?type=photos'">
+            <div class="skill-card creative-glass-card" data-href="photography.html?type=photos">
                 <div class="icon-box photo-icon"><i class="fas fa-camera"></i></div>
                 <h3 class="stylish-heading">Mobile Photography</h3>
                 <p>Capturing the raw beauty of nature, candid portraits, and vibrant landscapes purely through my mobile lens.</p>
-                <span class="view-cert">VIEW ALL CLICKS</span>
+                <a href="photography.html?type=photos" class="view-cert">VIEW ALL CLICKS</a>
             </div>
             
-            <div class="skill-card creative-glass-card" onclick="window.location.href='photography.html?type=videos'">
+            <div class="skill-card creative-glass-card" data-href="photography.html?type=videos">
                 <div class="icon-box video-icon"><i class="fas fa-video"></i></div>
                 <h3 class="stylish-heading">Video Editing Hobby</h3>
                 <p>Creating fun, cinematic edits, adding music, and bringing life to video moments as a creative pastime.</p>
-                <span class="view-cert">WATCH ALL EDITS</span>
+                <a href="photography.html?type=videos" class="view-cert">WATCH ALL EDITS</a>
             </div>
             </div>
             <div class="carousel-dots" id="creativeDots" hidden></div>
@@ -316,16 +310,16 @@
             <div class="info-side">
                 <div class="info-content-modern">
                     <h3>Let's Connect</h3>
-                    <p>Open for Freelance & Job Opportunities.</p>
+                    <p data-setting="contactIntro">Open for Freelance & Job Opportunities.</p>
                     
                     <div class="info-item-modern">
                         <div class="icon-box"><i class="fas fa-envelope"></i></div>
-                        <span>himagirigolla@gmail.com</span>
+                        <span data-setting="email">himagirigolla@gmail.com</span>
                     </div>
 
                     <div class="info-item-modern">
                         <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
-                        <span>Srikakulam, AP</span>
+                        <span data-setting="location">Srikakulam, AP</span>
                     </div>
 
                     <div class="social-modern">
@@ -344,8 +338,8 @@
     <div class="footer-container">
         
         <div class="footer-left">
-            <h3 class="footer-name">Himagiri Golla</h3>
-            <p class="footer-role">MERN Full Stack Developer | Photographer</p>
+            <h3 class="footer-name" data-setting="footerName">Himagiri Golla</h3>
+            <p class="footer-role" data-setting="footerRole">MERN Full Stack Developer | Photographer</p>
             <p class="copyright">&copy; 2026 All rights reserved.</p>
         </div>
 
